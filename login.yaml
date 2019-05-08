@@ -1,0 +1,151 @@
+openapi: 3.0.0
+# Added by API Auto Mocking Plugin
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/611034/Login/1.0.0
+info:
+  description: This is a simple API
+  version: "1.0.0"
+  title: Simple Inventory API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - Register
+      summary: Add a new user
+      requestBody:
+        description: Adding a new user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '201':
+          description: Created
+        "400":
+          description: Unexpected error
+          
+  /users/login:
+    post:
+      tags:
+        - Login
+      summary: Returns an auth token
+      requestBody:
+        description: Logs a user in and return an auth token, if the specified username and password are correct. 
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Token send
+        "400":
+          description: Unexpected error
+        "404":
+          description: User not found
+        
+      
+components:
+  securitySchemes:
+    apikey:         
+      type: apiKey
+      name: x-authtoken
+      in: header
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - officialName
+        - nationality
+        - liabilityToPayTaxIn
+        - dateOfBirth
+        - primaryAddress
+        - mobileNumber
+        - emailAddress
+        - commrcialMessages
+        - preferedLanguage
+      properties:
+        id:
+          type: integer
+        officialName:
+          type: string
+        preferedName:
+          type: string
+        sex:
+          type: string
+          enum: [male, female]
+        nationality:
+          type: string
+        liabilityToPayTaxIn:
+          type: string
+          description: a country to pay taxes
+        dateOfBirth:
+          type: string
+        primaryAddress:
+          $ref: '#/components/schemas/Address'
+        postAddress:
+          $ref: '#/components/schemas/Address'
+        mobileNumber:
+          type: string
+        landlineNumber:
+          type: string
+        emailAddress:
+          type: string
+        commrcialMessages:
+          type: string
+          enum: [by post, by bankmail, by telephon, by email]
+        preferedLanguage:
+          type: string
+          enum: 
+            - Dutch 
+            - English
+        userType:
+          anyOf:    
+            - $ref: '#/components/schemas/Employee'
+              type: object
+            - $ref: '#/components/schemas/Customer'
+              type: object
+          
+      discriminator: 
+        propertyName: id
+    Customer:
+      allOf:    
+        - $ref: '#/components/schemas/User'
+          type: object
+          required:
+          properties:
+            
+    Employee:
+      allOf:    
+        - $ref: '#/components/schemas/User'
+          type: object
+          properties:
+            
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+        houseNumber:
+          type: integer
+        postCode:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
