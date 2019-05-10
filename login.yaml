@@ -18,6 +18,7 @@ paths:
     post:
       tags:
         - Register
+      operationId: createNewUser
       summary: Add a new user
       requestBody:
         description: Adding a new user
@@ -25,7 +26,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/Log'
           text/plain:
             schema:
               type: string
@@ -39,6 +40,7 @@ paths:
     post:
       tags:
         - Login
+      operationId: createUserToken
       summary: Returns an auth token
       requestBody:
         description: Logs a user in and return an auth token, if the specified username and password are correct. 
@@ -46,7 +48,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              $ref: '#/components/schemas/Log'
           text/plain:
             schema:
               type: string
@@ -66,86 +68,16 @@ components:
       name: x-authtoken
       in: header
   schemas:
-    User:
+    Log:
       type: object
       required:
-        - id
-        - officialName
-        - nationality
-        - liabilityToPayTaxIn
-        - dateOfBirth
-        - primaryAddress
-        - mobileNumber
-        - emailAddress
-        - commrcialMessages
-        - preferedLanguage
+        - userId
+        - userName
+        - password
       properties:
-        id:
+        userId:
           type: integer
-        officialName:
+        userName:
           type: string
-        preferedName:
-          type: string
-        sex:
-          type: string
-          enum: [male, female]
-        nationality:
-          type: string
-        liabilityToPayTaxIn:
-          type: string
-          description: a country to pay taxes
-        dateOfBirth:
-          type: string
-        primaryAddress:
-          $ref: '#/components/schemas/Address'
-        postAddress:
-          $ref: '#/components/schemas/Address'
-        mobileNumber:
-          type: string
-        landlineNumber:
-          type: string
-        emailAddress:
-          type: string
-        commrcialMessages:
-          type: string
-          enum: [by post, by bankmail, by telephon, by email]
-        preferedLanguage:
-          type: string
-          enum: 
-            - Dutch 
-            - English
-        userType:
-          anyOf:    
-            - $ref: '#/components/schemas/Employee'
-              type: object
-            - $ref: '#/components/schemas/Customer'
-              type: object
-          
-      discriminator: 
-        propertyName: id
-    Customer:
-      allOf:    
-        - $ref: '#/components/schemas/User'
-          type: object
-          required:
-          properties:
-            
-    Employee:
-      allOf:    
-        - $ref: '#/components/schemas/User'
-          type: object
-          properties:
-            
-    Address:
-      type: object
-      properties:
-        street:
-          type: string
-        houseNumber:
-          type: integer
-        postCode:
-          type: string
-        city:
-          type: string
-        country:
+        password:
           type: string
