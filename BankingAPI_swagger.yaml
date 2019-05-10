@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: Bankining api
   contact:
-    email: 
+    email:
 servers:
 - description: This the is a simple REST API banking application
   url: https://localhost
@@ -85,9 +85,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/Account'
                   
-                  anyOf: #to be discussed
-                    - $ref: '#/components/schemas/CurrentAccount'
-                    - $ref: '#/components/schemas/SavingAccount'
+                anyOf: #to be discussed
+                  - $ref: '#/components/schemas/CurrentAccount'
+                  - $ref: '#/components/schemas/SavingAccount'
         '400':
           description: invalid user id 
         '404':
@@ -138,7 +138,95 @@ paths:
           description: Unexpected error
         "404":
           description: User not found
-          
+  
+  /users/{id}/transaction:
+    post: 
+      tags: 
+        - transaction
+      operationId: createTransaction
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: Int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Transaction'
+              required:
+              - accountTo
+              - accountFrom
+      summary: transaction function
+      description: Transfers money from one user to another user.
+      responses:
+        '201':
+          description: Transaction has successfully been send.
+        '400':
+          description: Transaction failed.
+        '403':
+          description: Insufficient balance.
+  /users/{id}/withdraw:
+    post:
+      tags:
+      - withdraw
+      operationId: withdrawMoney
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: Int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Transaction'
+              required:
+              - accountFrom
+      summary: withdraw function
+      description: User withdraws cash.
+      responses:
+        '201':
+          description: Withdraw was a succes.
+        '400':
+          description: Withdraw has failed.
+        '403':
+          description: Insufficient balance.
+  /user/{id}/deposit:
+    post:
+      tags:
+      - deposit
+      operationId: depositMoney
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: Int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Transaction'
+              required:
+              - accountTo
+      summary: deposit function
+      description: User deposits cash.
+      responses:
+        '201':
+          description: Deposit was a succes.
+        '400':
+          description: Deposit has failed.
+        '403':
+          description: Insufficient balance.
         
 components:
   schemas:
@@ -253,3 +341,36 @@ components:
       properties:
         interestRate:
           type: integer
+    Transaction:
+      type: object
+      required:
+      - transaction_id
+      - amount
+      - userPerforming
+      - timestamp
+      - transactionStatus
+      properties:
+        transaction_id:
+          type: integer
+        accountFrom:
+          type: string
+        accountTo:
+          type: string
+        amount:
+          type: integer
+          minimum: 1
+          maximum: 10000
+        userPerforming:
+          type: string
+          enum:
+          - User
+          - Employee
+        timestamp:
+          type: string
+          format: date-time
+        transactionStatus:
+          type: string
+          enum:
+          - Pending
+          - Succesful
+          - Failed
