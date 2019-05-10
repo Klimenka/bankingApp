@@ -198,7 +198,7 @@ paths:
           description: Withdraw has failed.
         '403':
           description: Insufficient balance.
-  /user/{id}/deposit:
+  /users/{id}/deposit:
     post:
       tags:
       - deposit
