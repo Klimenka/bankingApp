@@ -1,0 +1,126 @@
+openapi: 3.0.0
+info:
+  title: Banking API
+  version: 1.0.0
+  description: Bankining api
+  contact:
+    email: 611252@student.inholland.nl
+servers:
+- description: This the is a simple REST API banking application
+  url: https://localhost
+  
+paths:
+  /Accounts:
+    get:
+      tags:
+      - accounts 
+      summary: get all accounts
+      operationId: getAllAccounts
+      description: Calling this will allow Employees to check data of all accounts
+      responses:
+        '200':
+          description: the accounts data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  anyOf:
+                    - $ref: '#/components/schemas/CurrentAccount'
+                    - $ref: '#/components/schemas/SavingAccount'
+        '404':
+          description: accounts are not found
+        '400':
+          description: bad request (error occured)
+    
+    post:
+      tags:
+      - accounts 
+      summary: create a bank account
+      operationId: createBankAccount
+      description: Calling this will allow epmployees to open an account for a specific customer
+      requestBody:
+        description: create a bank account
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+              
+      responses:
+        '201':
+          description: the account has been created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          description: account has not been created 
+  
+  /Accounts/{userId}:
+    get:
+      tags:
+      - accounts 
+      summary: get one account
+      operationId: getUserAccount
+      description: Calling this will allow both customer and employee to check data of a specific account
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        description: the user id
+        schema:
+          type: integer
+          format: Int64
+          minimum: 1
+      responses:
+        '200':
+          description: the account data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+                  
+                  anyOf: #to be discussed
+                    - $ref: '#/components/schemas/CurrentAccount'
+                    - $ref: '#/components/schemas/SavingAccount'
+        '400':
+          description: invalid user id 
+        '404':
+          description: account cannot be found
+        
+components:
+  schemas:
+    Account:
+      type: object
+      required:
+        - dateOfOpening
+        - userId
+        - accountType
+      properties:
+        accountNumber:
+          type: string
+        balance:
+          type: integer
+        dateOfOpening:
+          type: string
+        userId:
+          type: integer
+        accountType: 
+          type: string
+          enum: ["current","saving"]
+  
+    CurrentAccount:
+      allOf:
+        - $ref: '#/components/schemas/Account'
+        
+    SavingAccount:
+      allOf:
+        - $ref: '#/components/schemas/Account'
+      properties:
+        interestRate:
+          type: integer
