@@ -92,6 +92,53 @@ paths:
           description: invalid user id 
         '404':
           description: account cannot be found
+          
+  /users/register:
+    post:
+      tags:
+        - Register
+      operationId: createNewUser
+      summary: Add a new user
+      requestBody:
+        description: Adding a new user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Log'
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '201':
+          description: Created
+        "400":
+          description: Unexpected error
+          
+  /users/login:
+    post:
+      tags:
+        - Login
+      operationId: createUserToken
+      summary: Returns an auth token
+      requestBody:
+        description: Logs a user in and return an auth token, if the specified username and password are correct. 
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Log'
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: Token send
+        "400":
+          description: Unexpected error
+        "404":
+          description: User not found
+          
         
 components:
   schemas:
@@ -108,6 +155,15 @@ components:
           type: integer
         dateOfOpening:
           type: string
+        userId:
+          type: integer
+    Log:
+      type: object
+      required:
+        - userId
+        - userName
+        - password
+      properties:
         userId:
           type: integer
         accountType: 
