@@ -92,7 +92,101 @@ paths:
           description: invalid user id 
         '404':
           description: account cannot be found
-          
+  /users:
+    get:
+      tags:
+        - users
+      parameters:
+        - in: query
+          name: userType
+          schema:
+            type: string
+            enum: [Customer, Employee]
+          required: false
+      summary: get all users
+      operationId: getUsers
+      description: getting all users (employees and customers) by Employee
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: bad input parameter.
+        '401':
+          description: Authorization information is missing or invalid.
+        '5XX':
+          description: Unexpected error.
+    post:
+      tags:
+        - users
+      operationId: addUser
+      description: Adds a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/Customer'
+              
+                - $ref: '#/components/schemas/Employee'
+      responses:
+        '201':
+          description: the user has been created.
+        '400':
+          description: Bad input parameter. The user has not been created.
+        '401':
+          description: Authorization information is missing or invalid. The user has not been created.
+ 
+  /users/{userId}:
+    get:
+      tags:
+        - users
+      operationId: getUserById
+      description: Gets a user by user ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The id of the user to return
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: a user object
+          content: 
+            application/json: 
+              schema: 
+                oneOf:
+                - $ref: '#/components/schemas/Customer'
+              
+                - $ref: '#/components/schemas/Employee'
+    delete:
+      tags:
+        - users
+      operationId: deleteUserById
+      summary: Delete a user by user ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The id of the user to delete
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: bad input parameter.
+        '401':
+          description: Authorization information is missing or invalid.        
   /users/register:
     post:
       tags:
