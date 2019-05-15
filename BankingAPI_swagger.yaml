@@ -63,7 +63,7 @@ paths:
     get:
       tags:
       - accounts 
-      summary: get one account
+      summary: get user accounts
       operationId: getUserAccount
       description: Calling this will allow both customer and employee to check data of a specific account
       parameters:
@@ -424,6 +424,7 @@ components:
           type: string
         country:
           type: string
+          
     Account:
       type: object
       required:
@@ -439,6 +440,19 @@ components:
           type: string
         userId:
           type: integer
+        accountType: 
+          type: string
+          enum: ["current","saving"]
+    CurrentAccount:
+      allOf:
+        - $ref: '#/components/schemas/Account'
+    SavingAccount:
+      allOf:
+        - $ref: '#/components/schemas/Account'
+      properties:
+        interestRate:
+          type: integer
+          
     Log:
       type: object
       required:
@@ -448,20 +462,7 @@ components:
       properties:
         userId:
           type: integer
-        accountType: 
-          type: string
-          enum: ["current","saving"]
-  
-    CurrentAccount:
-      allOf:
-        - $ref: '#/components/schemas/Account'
-        
-    SavingAccount:
-      allOf:
-        - $ref: '#/components/schemas/Account'
-      properties:
-        interestRate:
-          type: integer
+       
     Transaction:
       type: object
       required:
