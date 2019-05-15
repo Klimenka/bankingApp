@@ -32,6 +32,8 @@ paths:
           description: accounts are not found
         '400':
           description: bad request (error occured)
+        '401':
+          description: Not authenticated
     
     post:
       tags:
@@ -57,7 +59,9 @@ paths:
                 items:
                   $ref: '#/components/schemas/Account'
         '400':
-          description: account has not been created 
+          description: account has not been created
+        '401':
+          description: Not authenticated
   
   /Accounts/{userId}:
     get:
