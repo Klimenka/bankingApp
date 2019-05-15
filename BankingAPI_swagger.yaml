@@ -92,34 +92,7 @@ paths:
           description: invalid user id 
         '404':
           description: account cannot be found
-  /Accounts/{userId}/history:
-    get:
-      tags:
-      - account
-      summary: retrieves all transactions which has been made from a user's account.
-      operationId: getTransactionHistory
-      description: This function will retrieve the transaction acitivities of one account.
-      parameters:
-      - in: path
-        name: userId
-        required: true
-        description: the user id
-        schema:
-          type: integer
-          format: Int64
-          minimum: 1
-      responses:
-        '200':
-          description: Transaction history has succesfully been retrieved.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Transaction'
-        '400':
-          description: Cannot retrieve the transaction history.
-      
+          
   /users:
     get:
       tags:
@@ -261,13 +234,13 @@ paths:
         "404":
           description: User not found
   
-  /users/{id}/transaction:
+  /users/{userId}/transaction:
     post: 
       tags: 
         - transaction
       operationId: createTransaction
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
           schema:
@@ -291,6 +264,32 @@ paths:
           description: Transaction failed.
         '403':
           description: Insufficient balance.
+    get:
+      tags:
+      - account
+      summary: retrieves all transactions which has been made from a user's account.
+      operationId: getTransactionHistory
+      description: This function will retrieve the transaction acitivities of one account.
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        description: the user id
+        schema:
+          type: integer
+          format: Int64
+          minimum: 1
+      responses:
+        '200':
+          description: Transaction history has succesfully been retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Cannot retrieve the transaction history.
   /users/{id}/withdraw:
     post:
       tags:
