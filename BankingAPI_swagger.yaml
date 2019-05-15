@@ -92,6 +92,34 @@ paths:
           description: invalid user id 
         '404':
           description: account cannot be found
+  /Accounts/{userId}/history:
+    get:
+      tags:
+      - account
+      summary: retrieves all transactions which has been made from a user's account.
+      operationId: getTransactionHistory
+      description: This function will retrieve the transaction acitivities of one account.
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        description: the user id
+        schema:
+          type: integer
+          format: Int64
+          minimum: 1
+      responses:
+        '200':
+          description: Transaction history has succesfully been retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Cannot retrieve the transaction history.
+      
   /users:
     get:
       tags:
@@ -254,7 +282,7 @@ paths:
               required:
               - accountTo
               - accountFrom
-      summary: transaction function
+      summary: Transfer money from a user to another user
       description: Transfers money from one user to another user.
       responses:
         '201':
@@ -283,7 +311,7 @@ paths:
                 - $ref: '#/components/schemas/Transaction'
               required:
               - accountFrom
-      summary: withdraw function
+      summary: User can withdraw money
       description: User withdraws cash.
       responses:
         '201':
@@ -312,7 +340,7 @@ paths:
                 - $ref: '#/components/schemas/Transaction'
               required:
               - accountTo
-      summary: deposit function
+      summary: User can deposit money
       description: User deposits cash.
       responses:
         '201':
@@ -333,7 +361,7 @@ components:
         - primaryAddress
         - mobileNumber
         - emailAddress
-        - commrcialMessages
+        - commercialMessages
       properties:
         id:
           type: integer
@@ -356,7 +384,7 @@ components:
           type: string
         commrcialMessages:
           type: string
-          enum: [by post, by bankmail, by telephon, by email]
+          enum: [by post, by bankmail, by telephone, by email]
         preferedLanguage:
           type: string
           enum: 
