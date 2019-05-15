@@ -96,7 +96,32 @@ paths:
           description: invalid user id 
         '404':
           description: account cannot be found
-          
+  
+  /Accounts/{accountNumber}/transaction_history:
+    get:
+      tags:
+      - account
+      summary: retrieves all transactions which has been made from a user's account.
+      operationId: getTransactionHistory
+      description: This function will retrieve the transaction acitivities of one account.
+      parameters:
+      - in: path
+        name: accountNumber
+        required: true
+        description: the user id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Transaction history has succesfully been retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Cannot retrieve the transaction history.
   /users:
     get:
       tags:
@@ -238,18 +263,17 @@ paths:
         "404":
           description: User not found
   
-  /users/{userId}/transaction:
+  /users/{accountNumber}/transaction:
     post: 
       tags: 
         - transaction
       operationId: createTransaction
       parameters:
-        - name: userId
+        - name: accountNumber
           in: path
           required: true
           schema:
-            type: integer
-            format: Int64
+            type: string
       requestBody:
         content:
           application/json:
@@ -268,44 +292,18 @@ paths:
           description: Transaction failed.
         '403':
           description: Insufficient balance.
-    get:
-      tags:
-      - account
-      summary: retrieves all transactions which has been made from a user's account.
-      operationId: getTransactionHistory
-      description: This function will retrieve the transaction acitivities of one account.
-      parameters:
-      - in: path
-        name: userId
-        required: true
-        description: the user id
-        schema:
-          type: integer
-          format: Int64
-          minimum: 1
-      responses:
-        '200':
-          description: Transaction history has succesfully been retrieved.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Transaction'
-        '400':
-          description: Cannot retrieve the transaction history.
-  /users/{id}/withdraw:
+    
+  /users/{accountNumber}/withdraw:
     post:
       tags:
       - withdraw
       operationId: withdrawMoney
       parameters:
-        - name: id
+        - name: accountNumber
           in: path
           required: true
           schema:
-            type: integer
-            format: Int64
+            type: string
       requestBody:
         content:
           application/json:
@@ -323,18 +321,17 @@ paths:
           description: Withdraw has failed.
         '403':
           description: Insufficient balance.
-  /users/{id}/deposit:
+  /users/{accountNumber}/deposit:
     post:
       tags:
       - deposit
       operationId: depositMoney
       parameters:
-        - name: id
+        - name: accountNumber
           in: path
           required: true
           schema:
-            type: integer
-            format: Int64
+            type: string
       requestBody:
         content:
           application/json:
