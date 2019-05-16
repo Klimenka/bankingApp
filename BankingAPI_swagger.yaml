@@ -4,124 +4,12 @@ info:
   version: 1.0.0
   description: Bankining api
   contact:
-    email:
+    email: example@email.com
 servers:
 - description: This the is a simple REST API banking application
   url: https://localhost
   
 paths:
-  /Accounts:
-    get:
-      tags:
-      - accounts 
-      summary: get all accounts
-      operationId: getAllAccounts
-      description: Calling this will allow Employees to check data of all accounts
-      responses:
-        '200':
-          description: the accounts data
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  anyOf:
-                    - $ref: '#/components/schemas/CurrentAccount'
-                    - $ref: '#/components/schemas/SavingAccount'
-        '404':
-          description: accounts are not found
-        '400':
-          description: bad request (error occured)
-        '401':
-          description: Not authenticated
-    
-    post:
-      tags:
-      - accounts 
-      summary: create a bank account
-      operationId: createBankAccount
-      description: Calling this will allow epmployees to open an account for a specific customer
-      requestBody:
-        description: create a bank account
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Account'
-              
-      responses:
-        '201':
-          description: the account has been created
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Account'
-        '400':
-          description: account has not been created
-        '401':
-          description: Not authenticated
-  
-  /Accounts/{userId}:
-    get:
-      tags:
-      - accounts 
-      summary: get user accounts
-      operationId: getUserAccount
-      description: Calling this will allow both customer and employee to check data of a specific account
-      parameters:
-      - in: path
-        name: userId
-        required: true
-        description: the user id
-        schema:
-          type: integer
-          format: Int64
-          minimum: 1
-      responses:
-        '200':
-          description: the account data
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Account'
-                  
-                anyOf: #to be discussed
-                  - $ref: '#/components/schemas/CurrentAccount'
-                  - $ref: '#/components/schemas/SavingAccount'
-        '400':
-          description: invalid user id 
-        '404':
-          description: account cannot be found
-  
-  /Accounts/{accountNumber}/transaction_history:
-    get:
-      tags:
-      - account
-      summary: retrieves all transactions which has been made from a user's account.
-      operationId: getTransactionHistory
-      description: This function will retrieve the transaction acitivities of one account.
-      parameters:
-      - in: path
-        name: accountNumber
-        required: true
-        description: the user id
-        schema:
-          type: string
-      responses:
-        '200':
-          description: Transaction history has succesfully been retrieved.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Transaction'
-        '400':
-          description: Cannot retrieve the transaction history.
   /users:
     get:
       tags:
@@ -220,7 +108,7 @@ paths:
   /users/register:
     post:
       tags:
-        - Register
+        - users
       operationId: createNewUser
       summary: Add a new user
       requestBody:
@@ -229,7 +117,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Log'
+              $ref: '#/components/schemas/Login'
           text/plain:
             schema:
               type: string
@@ -242,7 +130,7 @@ paths:
   /users/login:
     post:
       tags:
-        - Login
+        - users
       operationId: createUserToken
       summary: Returns an auth token
       requestBody:
@@ -251,7 +139,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Log'
+              $ref: '#/components/schemas/Login'
           text/plain:
             schema:
               type: string
@@ -263,10 +151,135 @@ paths:
         "404":
           description: User not found
   
-  /users/{accountNumber}/transaction:
+  /accounts:
+    get:
+      tags:
+      - accounts 
+      summary: get all accounts
+      operationId: getAllAccounts
+      description: Calling this will allow Employees to check data of all accounts
+      responses:
+        '200':
+          description: the accounts data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  anyOf:
+                    - $ref: '#/components/schemas/CurrentAccount'
+                    - $ref: '#/components/schemas/SavingAccount'
+        '404':
+          description: accounts are not found
+        '400':
+          description: bad request (error occured)
+        '401':
+          description: Not authenticated
+    
+    post:
+      tags:
+      - accounts 
+      summary: create a bank account
+      operationId: createBankAccount
+      description: Calling this will allow epmployees to open an account for a specific customer
+      requestBody:
+        description: create a bank account
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+              
+      responses:
+        '201':
+          description: the account has been created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+        '400':
+          description: account has not been created
+        '401':
+          description: Not authenticated
+  
+  /accounts/{userId}:
+    get:
+      tags:
+      - accounts 
+      summary: get user accounts
+      operationId: getUserAccount
+      description: Calling this will allow both customer and employee to check data of a specific account
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        description: the user id
+        schema:
+          type: integer
+          format: Int64
+          minimum: 1
+      responses:
+        '200':
+          description: the account data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Account'
+                  
+                anyOf: #to be discussed
+                  - $ref: '#/components/schemas/CurrentAccount'
+                  - $ref: '#/components/schemas/SavingAccount'
+        '400':
+          description: invalid user id 
+        '404':
+          description: account cannot be found
+  
+  /accounts/{accountNumber}/transaction_history:
+    get:
+      tags:
+      - accounts
+      summary: retrieves all transactions which has been made from a user's account.
+      operationId: getTransactionHistory
+      description: This function will retrieve the transaction acitivities of one account from and to a specific date.
+      parameters:
+      - in: path
+        name: accountNumber
+        required: true
+        description: the user id
+        schema:
+          type: string
+      - in: query
+        name: dateFrom
+        schema:
+          type: string
+          format: date
+        required: false
+      - in: query
+        name: dateTo
+        schema:
+          type: string
+          format: date
+        required: false
+      responses:
+        '200':
+          description: Transaction history has succesfully been retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '400':
+          description: Cannot retrieve the transaction history.
+          
+  /accounts/{accountNumber}/transaction:
     post: 
       tags: 
-        - transaction
+        - accounts
       operationId: createTransaction
       parameters:
         - name: accountNumber
@@ -293,10 +306,10 @@ paths:
         '403':
           description: Insufficient balance.
     
-  /users/{accountNumber}/withdraw:
+  /accounts/{accountNumber}/withdraw:
     post:
       tags:
-      - withdraw
+      - accounts
       operationId: withdrawMoney
       parameters:
         - name: accountNumber
@@ -321,10 +334,11 @@ paths:
           description: Withdraw has failed.
         '403':
           description: Insufficient balance.
-  /users/{accountNumber}/deposit:
+          
+  /accounts/{accountNumber}/deposit:
     post:
       tags:
-      - deposit
+      - accounts
       operationId: depositMoney
       parameters:
         - name: accountNumber
@@ -393,21 +407,17 @@ components:
         userType:
           anyOf:    
             - $ref: '#/components/schemas/Employee'
-              
             - $ref: '#/components/schemas/Customer'
               
-          
       discriminator: 
         propertyName: id
     Customer:
       allOf:    
         - $ref: '#/components/schemas/User'
           
-            
     Employee:
       allOf:    
         - $ref: '#/components/schemas/User'
-         
       properties:
         jobPosition:
           type: string
@@ -436,7 +446,8 @@ components:
         accountNumber:
           type: string
         balance:
-          type: integer
+          type: number
+          format: float
         dateOfOpening:
           type: string
         userId:
@@ -452,9 +463,10 @@ components:
         - $ref: '#/components/schemas/Account'
       properties:
         interestRate:
-          type: integer
+          type: number
+          format: float
           
-    Log:
+    Login:
       type: object
       required:
         - userId
@@ -463,6 +475,10 @@ components:
       properties:
         userId:
           type: integer
+        userName:
+          type: string
+        password:
+          type: string
        
     Transaction:
       type: object
@@ -472,15 +488,19 @@ components:
       - userPerforming
       - timestamp
       - transactionStatus
+      - accountNumber
       properties:
         transaction_id:
           type: integer
+        accountNumber:
+          type: string
         accountFrom:
           type: string
         accountTo:
           type: string
         amount:
-          type: integer
+          type: number
+          format: float
           minimum: 1
           maximum: 10000
         userPerforming:
@@ -495,5 +515,5 @@ components:
           type: string
           enum:
           - Pending
-          - Succesful
+          - Successful
           - Failed
