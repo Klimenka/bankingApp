@@ -33,10 +33,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        '400':
-          description: bad input parameter.
-        '401': 
+        '401':
           $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '5XX':
           description: Unexpected error.
     post:
@@ -59,9 +59,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                oneOf:
+                  - $ref: '#/components/schemas/Customer'
+              
+                  - $ref: '#/components/schemas/Employee'
         '400':
-          description: Bad input parameter. The user has not been created.
+          $ref: '#/components/responses/BadRequest'
         '401': 
           $ref: '#/components/responses/Unauthorized'
  
@@ -89,18 +92,12 @@ paths:
       operationId: deleteUserById
       summary: Delete a user by user ID
       parameters:
-        - name: userId
-          in: path
-          required: true
-          description: The id of the user to delete
-          schema:
-            type: integer
-            minimum: 1
+        - $ref: '#/components/parameters/userId'
       responses:
         '204':
           description: No content
         '400':
-          description: bad input parameter.
+          $ref: '#/components/responses/BadRequest'
         '401': 
           $ref: '#/components/responses/Unauthorized'       
   /users/register:
@@ -123,7 +120,7 @@ paths:
         '201':
           description: Created
         "400":
-          description: Unexpected error
+          $ref: '#/components/responses/BadRequest'
           
   /users/login:
     post:
@@ -559,6 +556,12 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Error'      
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: Bad request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
         
         
