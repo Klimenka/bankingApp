@@ -33,10 +33,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        '401':
+        '400':
+          description: bad input parameter.
+        '401': 
           $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
         '5XX':
           description: Unexpected error.
     post:
@@ -56,26 +56,23 @@ paths:
       responses:
         '201':
           description: the user has been created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         '400':
           description: Bad input parameter. The user has not been created.
-        '401':
+        '401': 
           $ref: '#/components/responses/Unauthorized'
  
   /users/{userId}:
-    parameters:
-        - name: userId
-          in: path
-          required: true
-          description: The id of the user to return
-          schema:
-            type: integer
-            minimum: 1
     get:
       tags:
         - users
       operationId: getUserById
       description: Gets a user by user ID
-      
+      parameters:
+      - $ref: '#/components/parameters/userId'
       responses:
         '200':
           description: a user object
@@ -91,13 +88,21 @@ paths:
         - users
       operationId: deleteUserById
       summary: Delete a user by user ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The id of the user to delete
+          schema:
+            type: integer
+            minimum: 1
       responses:
         '204':
           description: No content
         '400':
           description: bad input parameter.
-        '401':
-          $ref: '#/components/responses/Unauthorized'        
+        '401': 
+          $ref: '#/components/responses/Unauthorized'       
   /users/register:
     post:
       tags:
@@ -139,10 +144,10 @@ paths:
       responses:
         '200':
           description: Token send
-        "400":
+        '400':
           description: Unexpected error
-        "404":
-          description: User not found
+        '404':
+          $ref: '#/components/responses/NotFound'
   
   /accounts:
     get:
@@ -163,11 +168,11 @@ paths:
                     - $ref: '#/components/schemas/CurrentAccount'
                     - $ref: '#/components/schemas/SavingAccount'
         '404':
-          description: accounts are not found
+          $ref: '#/components/responses/NotFound'
         '400':
           description: bad request (error occured)
-        '401':
-          description: Not authenticated
+        '401': 
+          $ref: '#/components/responses/Unauthorized'
     
     post:
       tags:
@@ -189,13 +194,11 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Account'
+                $ref: '#/components/schemas/Account'
         '400':
           description: account has not been created
-        '401':
-          description: Not authenticated
+        '401': 
+          $ref: '#/components/responses/Unauthorized'
   
   /accounts/{userId}:
     get:
@@ -203,16 +206,9 @@ paths:
       - accounts 
       summary: get bank accounts of a specific user
       operationId: getBankAccount
-      description: Calling this will allow both customer and employee to check data of a specific account
+      description: Calling this will allow both customer and employee to check data of a specific account userId
       parameters:
-      - in: path
-        name: userId
-        required: true
-        description: the user id
-        schema:
-          type: integer
-          format: Int64
-          minimum: 1
+      - $ref: '#/components/parameters/userId'
       responses:
         '200':
           description: the account data
@@ -229,7 +225,7 @@ paths:
         '400':
           description: invalid user id 
         '404':
-          description: account cannot be found
+          $ref: '#/components/responses/NotFound'
           
   /accounts/{accountNumber}:
     put:
@@ -251,9 +247,9 @@ paths:
         '400':
           description: invalid account number 
         '404':
-          description: account cannot be found
-        '401':
-          description: Not authenticated
+          $ref: '#/components/responses/NotFound'
+        '401': 
+          $ref: '#/components/responses/Unauthorized'
   
   /accounts/{accountNumber}/transaction_history:
     get:
@@ -263,12 +259,7 @@ paths:
       operationId: getTransactionHistory
       description: This function will retrieve the transaction acitivities of one account from and to a specific date.
       parameters:
-      - in: path
-        name: accountNumber
-        required: true
-        description: the user id
-        schema:
-          type: string
+      - $ref: '#/components/parameters/accountNumberParam'
       - in: query
         name: dateFrom
         schema:
@@ -299,11 +290,7 @@ paths:
         - accounts
       operationId: createTransaction
       parameters:
-        - name: accountNumber
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/accountNumberParam'
       requestBody:
         content:
           application/json:
@@ -329,11 +316,7 @@ paths:
       - accounts
       operationId: withdrawMoney
       parameters:
-        - name: accountNumber
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/accountNumberParam'
       requestBody:
         content:
           application/json:
@@ -358,11 +341,7 @@ paths:
       - accounts
       operationId: depositMoney
       parameters:
-        - name: accountNumber
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/accountNumberParam'
       requestBody:
         content:
           application/json:
@@ -382,31 +361,7 @@ paths:
           description: Insufficient balance.
         
 components:
-  responses: 
-    NotFound:
-      description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
   schemas:
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-      required:
-        - code
-        - message
-  
     User:
       type: object
       required:
@@ -563,3 +518,47 @@ components:
           - Pending
           - Successful
           - Failed
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+        
+  parameters:
+    accountNumberParam:
+      name: accountNumber
+      description: the bank account number
+      in: path
+      required: true
+      schema:
+        type: string
+        
+    userId:
+      in: path
+      name: userId
+      required: true
+      description: The id of the user to return
+      schema:
+        type: integer
+        minimum: 1
+        
+  responses: 
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'      
+        
+        
