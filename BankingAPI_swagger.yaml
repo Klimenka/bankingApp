@@ -33,10 +33,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
-        '400':
-          description: bad input parameter.
         '401':
-          description: Authorization information is missing or invalid.
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '5XX':
           description: Unexpected error.
     post:
@@ -59,15 +59,10 @@ paths:
         '400':
           description: Bad input parameter. The user has not been created.
         '401':
-          description: Authorization information is missing or invalid. The user has not been created.
+          $ref: '#/components/responses/Unauthorized'
  
   /users/{userId}:
-    get:
-      tags:
-        - users
-      operationId: getUserById
-      description: Gets a user by user ID
-      parameters:
+    parameters:
         - name: userId
           in: path
           required: true
@@ -75,6 +70,12 @@ paths:
           schema:
             type: integer
             minimum: 1
+    get:
+      tags:
+        - users
+      operationId: getUserById
+      description: Gets a user by user ID
+      
       responses:
         '200':
           description: a user object
@@ -90,21 +91,13 @@ paths:
         - users
       operationId: deleteUserById
       summary: Delete a user by user ID
-      parameters:
-        - name: userId
-          in: path
-          required: true
-          description: The id of the user to delete
-          schema:
-            type: integer
-            minimum: 1
       responses:
         '204':
           description: No content
         '400':
           description: bad input parameter.
         '401':
-          description: Authorization information is missing or invalid.        
+          $ref: '#/components/responses/Unauthorized'        
   /users/register:
     post:
       tags:
@@ -389,7 +382,31 @@ paths:
           description: Insufficient balance.
         
 components:
+  responses: 
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+  
     User:
       type: object
       required:
