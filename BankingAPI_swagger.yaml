@@ -141,8 +141,8 @@ paths:
       responses:
         '200':
           description: Token send
-        '400':
-          description: Unexpected error
+        '400': 
+          $ref: '#/components/responses/BadRequest'
         '404':
           $ref: '#/components/responses/NotFound'
   
@@ -166,8 +166,8 @@ paths:
                     - $ref: '#/components/schemas/SavingAccount'
         '404':
           $ref: '#/components/responses/NotFound'
-        '400':
-          description: bad request (error occured)
+        '400': 
+          $ref: '#/components/responses/BadRequest'
         '401': 
           $ref: '#/components/responses/Unauthorized'
     
@@ -192,8 +192,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
-        '400':
-          description: account has not been created
+        '400': 
+          $ref: '#/components/responses/BadRequest'
         '401': 
           $ref: '#/components/responses/Unauthorized'
   
@@ -219,8 +219,8 @@ paths:
                 anyOf: #to be discussed
                   - $ref: '#/components/schemas/CurrentAccount'
                   - $ref: '#/components/schemas/SavingAccount'
-        '400':
-          description: invalid user id 
+        '400': 
+          $ref: '#/components/responses/BadRequest'
         '404':
           $ref: '#/components/responses/NotFound'
           
@@ -241,8 +241,8 @@ paths:
       responses:
         '204':
           description: the bank account has successfully been closed
-        '400':
-          description: invalid account number 
+        '400': 
+          $ref: '#/components/responses/BadRequest'
         '404':
           $ref: '#/components/responses/NotFound'
         '401': 
@@ -278,8 +278,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Transaction'
-        '400':
-          description: Cannot retrieve the transaction history.
+        '400': 
+          $ref: '#/components/responses/BadRequest'
           
   /accounts/{accountNumber}/transaction:
     post: 
@@ -302,8 +302,8 @@ paths:
       responses:
         '201':
           description: Transaction has successfully been send.
-        '400':
-          description: Transaction failed.
+        '400': 
+          $ref: '#/components/responses/BadRequest'
         '403':
           description: Insufficient balance.
     
@@ -327,8 +327,8 @@ paths:
       responses:
         '201':
           description: Withdraw was a succes.
-        '400':
-          description: Withdraw has failed.
+        '400': 
+          $ref: '#/components/responses/BadRequest'
         '403':
           description: Insufficient balance.
           
@@ -352,8 +352,8 @@ paths:
       responses:
         '201':
           description: Deposit was a succes.
-        '400':
-          description: Deposit has failed.
+        '400': 
+          $ref: '#/components/responses/BadRequest'
         '403':
           description: Insufficient balance.
         
