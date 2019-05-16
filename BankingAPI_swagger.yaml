@@ -155,8 +155,8 @@ paths:
     get:
       tags:
       - accounts 
-      summary: get all accounts
-      operationId: getAllAccounts
+      summary: get all users' bank accounts
+      operationId: getBankAccounts
       description: Calling this will allow Employees to check data of all accounts
       responses:
         '200':
@@ -208,8 +208,8 @@ paths:
     get:
       tags:
       - accounts 
-      summary: get user accounts
-      operationId: getUserAccount
+      summary: get bank accounts of a specific user
+      operationId: getBankAccount
       description: Calling this will allow both customer and employee to check data of a specific account
       parameters:
       - in: path
@@ -237,6 +237,30 @@ paths:
           description: invalid user id 
         '404':
           description: account cannot be found
+          
+  /accounts/{accountNumber}:
+    put:
+      tags:
+      - accounts 
+      summary: close a user account
+      operationId: closeBankAccount
+      description: Calling this will allow an employee to close a specific bank account
+      parameters:
+      - in: path
+        name: accountNumber
+        required: true
+        description: the account number
+        schema:
+          type: string
+      responses:
+        '204':
+          description: the bank account has successfully been closed
+        '400':
+          description: invalid account number 
+        '404':
+          description: account cannot be found
+        '401':
+          description: Not authenticated
   
   /accounts/{accountNumber}/transaction_history:
     get:
@@ -455,6 +479,11 @@ components:
         accountType: 
           type: string
           enum: ["current","saving"]
+        accountStatus:
+          type: string
+          enum: ["opened", "closed"]
+          default: "opened"
+          
     CurrentAccount:
       allOf:
         - $ref: '#/components/schemas/Account'
