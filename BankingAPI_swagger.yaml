@@ -228,7 +228,7 @@ paths:
     put:
       tags:
       - accounts 
-      summary: close a user account
+      summary: close a bank account
       operationId: closeBankAccount
       description: Calling this will allow an employee to close a specific bank account
       parameters:
