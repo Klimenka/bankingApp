@@ -46,7 +46,8 @@ paths:
       tags:
         - users
       operationId: addUser
-      description: Adds a new user
+      description: Adds a new user and returns it
+      summary: Adds a new user
       requestBody:
         required: true
         content:
@@ -77,6 +78,7 @@ paths:
         - users
       operationId: getUserById
       description: Gets a user by user ID
+      summary: Gets a user by user ID
       parameters:
       - $ref: '#/components/parameters/userId'
       responses:
