@@ -91,6 +91,13 @@ paths:
                 - $ref: '#/components/schemas/Customer'
               
                 - $ref: '#/components/schemas/Employee'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401': 
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        
     delete:
       tags:
         - users
@@ -547,6 +554,7 @@ components:
       description: The id of the user to return
       schema:
         type: integer
+        format: int64
         minimum: 1
         
   responses: 
