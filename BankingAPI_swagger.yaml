@@ -91,13 +91,6 @@ paths:
                 - $ref: '#/components/schemas/Customer'
               
                 - $ref: '#/components/schemas/Employee'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '401': 
-          $ref: '#/components/responses/Unauthorized'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        
     delete:
       tags:
         - users
@@ -260,15 +253,19 @@ paths:
         '401': 
           $ref: '#/components/responses/Unauthorized'
   
-  /accounts/{accountNumber}/transaction_history:
+  /transactions:
     get:
       tags:
-      - accounts
+      - transactions
       summary: retrieves all transactions which has been made from a user's account.
       operationId: getTransactionHistory
-      description: This function will retrieve the transaction acitivities of one account from and to a specific date.
+      description: This function will retrieve the transaction acitivities of one account. The user will have the option to filter the transaction activities by using dates.
       parameters:
-      - $ref: '#/components/parameters/accountNumberParam'
+      - in: query
+        name: accountNumber
+        schema:
+          type: string
+        required: true
       - in: query
         name: dateFrom
         schema:
@@ -304,13 +301,20 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: '#/components/schemas/Transaction'
-              required:
-              - accountTo
-              - accountFrom
-      summary: Transfer money from a user to another user
-      description: Transfers money from one user to another user.
+              type: object
+              properties:
+               Transaction:
+                 allOf:
+                  - $ref: '#/components/schemas/Transaction'
+                 required:
+                 - accountTo
+                 - accountFrom
+            encoding:
+              Transaction:
+                style: form
+                explode: true
+      summary: transfer money from a user to another user
+      description: transfers money from one user to another user.
       responses:
         '201':
           description: Transaction has successfully been send.
@@ -330,12 +334,19 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: '#/components/schemas/Transaction'
-              required:
-              - accountFrom
-      summary: User can withdraw money
-      description: User withdraws cash.
+              type: object
+              properties:
+               Transaction:
+                 allOf:
+                  - $ref: '#/components/schemas/Transaction'
+                 required:
+                 - accountFrom
+            encoding:
+              Transaction:
+                style: form
+                explode: true
+      summary: user can withdraw money.
+      description: user withdraws money from their account.
       responses:
         '201':
           description: Withdraw was a succes.
@@ -355,12 +366,19 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: '#/components/schemas/Transaction'
-              required:
-              - accountTo
-      summary: User can deposit money
-      description: User deposits cash.
+              type: object
+              properties:
+               Transaction:
+                 allOf:
+                  - $ref: '#/components/schemas/Transaction'
+                 required:
+                 - accountTo
+            encoding:
+              Transaction:
+                style: form
+                explode: true
+      summary: user can deposit money
+      description: user deposits money to their account.
       responses:
         '201':
           description: Deposit was a succes.
@@ -498,12 +516,9 @@ components:
       - userPerforming
       - timestamp
       - transactionStatus
-      - accountNumber
       properties:
         transaction_id:
           type: integer
-        accountNumber:
-          type: string
         accountFrom:
           type: string
         accountTo:
@@ -516,7 +531,7 @@ components:
         userPerforming:
           type: string
           enum:
-          - User
+          - Customer
           - Employee
         timestamp:
           type: string
@@ -554,7 +569,6 @@ components:
       description: The id of the user to return
       schema:
         type: integer
-        format: int64
         minimum: 1
         
   responses: 
@@ -576,5 +590,3 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
-        
-        
