@@ -427,13 +427,7 @@ components:
           enum: 
             - Dutch 
             - English
-        userType:
-          anyOf:    
-            - $ref: '#/components/schemas/Employee'
-            - $ref: '#/components/schemas/Customer'
-              
-      discriminator: 
-        propertyName: id
+       
     Customer:
       allOf:    
         - $ref: '#/components/schemas/User'
