@@ -23,6 +23,7 @@ public class User   {
   @JsonProperty("officialName")
   private String officialName = null;
 //afhdhawkdjakdhahd
+  //jkhkjhkl
   @JsonProperty("preferedName")
   private String preferedName = null;
 
