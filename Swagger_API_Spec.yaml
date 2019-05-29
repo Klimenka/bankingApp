@@ -32,15 +32,17 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/User'
-
-                anyOf: 
-                  - $ref: '#/components/schemas/Customer'
-                  - $ref: '#/components/schemas/Employee'
+                  anyOf: 
+                    - $ref: '#/components/schemas/Customer'
+                    - $ref: '#/components/schemas/Employee'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
           $ref: '#/components/responses/NotFound'
+          
+      security:
+      - api_key: []
+      
     post:
       tags:
         - users
@@ -54,7 +56,6 @@ paths:
             schema:
               oneOf:
                 - $ref: '#/components/schemas/Customer'
-              
                 - $ref: '#/components/schemas/Employee'
       responses:
         '201':
@@ -62,7 +63,6 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
                 oneOf:
                   - $ref: '#/components/schemas/Customer'
                   - $ref: '#/components/schemas/Employee'
@@ -70,7 +70,10 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401': 
           $ref: '#/components/responses/Unauthorized'
- 
+      
+      security:
+      - api_key: []
+      
   /users/{userId}:
     get:
       tags:
@@ -86,10 +89,8 @@ paths:
           content: 
             application/json: 
               schema: 
-                $ref: '#/components/schemas/User'
                 oneOf:
                   - $ref: '#/components/schemas/Customer'
-              
                   - $ref: '#/components/schemas/Employee'
     delete:
       tags:
@@ -105,7 +106,10 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '401': 
           $ref: '#/components/responses/Unauthorized'       
-          
+      
+      security:
+      - api_key: []
+      
   /users/login:
     post:
       tags:
@@ -178,17 +182,19 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Account'
-                anyOf:
-                  - $ref: '#/components/schemas/CurrentAccount'
-                  - $ref: '#/components/schemas/SavingAccount'
+                  anyOf:
+                    - $ref: '#/components/schemas/CurrentAccount'
+                    - $ref: '#/components/schemas/SavingAccount'
         '404':
           $ref: '#/components/responses/NotFound'
         '400': 
           $ref: '#/components/responses/BadRequest'
         '401': 
           $ref: '#/components/responses/Unauthorized'
-    
+          
+      security:
+      - api_key: []
+      
     post:
       tags:
       - accounts 
@@ -200,19 +206,26 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Account'
+              oneOf:
+                - $ref: '#/components/schemas/CurrentAccount'
+                - $ref: '#/components/schemas/SavingAccount'
       responses:
         '201':
           description: the account has been created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Account'
+                oneOf:
+                  - $ref: '#/components/schemas/CurrentAccount'
+                  - $ref: '#/components/schemas/SavingAccount'
         '400': 
           $ref: '#/components/responses/BadRequest'
         '401': 
           $ref: '#/components/responses/Unauthorized'
-  
+      
+      security:
+      - api_key: []
+      
   /accounts/{userId}:
     get:
       tags:
@@ -236,10 +249,9 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Account'
-                anyOf:
-                  - $ref: '#/components/schemas/CurrentAccount'
-                  - $ref: '#/components/schemas/SavingAccount'
+                  anyOf:
+                    - $ref: '#/components/schemas/CurrentAccount'
+                    - $ref: '#/components/schemas/SavingAccount'
         '400': 
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -268,7 +280,10 @@ paths:
           $ref: '#/components/responses/NotFound'
         '401': 
           $ref: '#/components/responses/Unauthorized'
-  
+      
+      security:
+      - api_key: []
+      
   /transactions:
     get:
       tags:
@@ -410,6 +425,8 @@ components:
           type: string
         userId:
           type: integer
+        currency:
+          type: string
         accountType: 
           type: string
           enum: ["current","saving"]
@@ -493,14 +510,6 @@ components:
         - message
         
   parameters:
-    accountNumberParam:
-      name: accountNumber
-      description: the bank account number
-      in: path
-      required: true
-      schema:
-        type: string
-        
     userId:
       in: path
       name: userId
@@ -530,3 +539,9 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+  
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: x-authtoken
+      in: header
