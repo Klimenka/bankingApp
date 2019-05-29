@@ -1,4 +1,4 @@
-package nl.inholland.config;
+package nl.inholland.configuration;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
