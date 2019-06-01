@@ -10,9 +10,6 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
-/**
- * Transaction
- */
 @Validated
 @javax.annotation.Generated(value = "io.inholland.codegen.v3.generators.java.SpringCodegen", date = "2019-05-23T16:34:19.518Z[GMT]")
 public class Transaction   {
@@ -34,15 +31,8 @@ public class Transaction   {
   @JsonProperty("timestamp")
   private OffsetDateTime timestamp = null;
 
-  /**
-   * Gets or Sets transactionStatus
-   */
   public enum TransactionStatusEnum {
-    PENDING("pending"),
-    
-    SUCCESSFUL("successful"),
-    
-    FAILED("failed");
+    PENDING("pending"), SUCCESSFUL("successful"), FAILED("failed");
 
     private String value;
 
@@ -69,15 +59,8 @@ public class Transaction   {
   @JsonProperty("transactionStatus")
   private TransactionStatusEnum transactionStatus = TransactionStatusEnum.PENDING;
 
-  /**
-   * Gets or Sets transactionType
-   */
   public enum TransactionTypeEnum {
-    TRANSACTION("transaction"),
-    
-    WITHDRAW("withdraw"),
-    
-    DEPOSIT("deposit");
+    TRANSACTION("transaction"), WITHDRAW("withdraw"), DEPOSIT("deposit");
 
     private String value;
 
@@ -109,10 +92,6 @@ public class Transaction   {
     return this;
   }
 
-  /**
-   * Get transactionId
-   * @return transactionId
-  **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -129,10 +108,6 @@ public class Transaction   {
     return this;
   }
 
-  /**
-   * Get accountFrom
-   * @return accountFrom
-  **/
   @ApiModelProperty(value = "")
 
   public String getAccountFrom() {
@@ -148,10 +123,6 @@ public class Transaction   {
     return this;
   }
 
-  /**
-   * Get accountTo
-   * @return accountTo
-  **/
   @ApiModelProperty(value = "")
 
   public String getAccountTo() {
@@ -167,12 +138,6 @@ public class Transaction   {
     return this;
   }
 
-  /**
-   * Get amount
-   * minimum: 1
-   * maximum: 10000
-   * @return amount
-  **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -189,10 +154,6 @@ public class Transaction   {
     return this;
   }
 
-  /**
-   * Get userPerforming
-   * @return userPerforming
-  **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -209,10 +170,6 @@ public class Transaction   {
     return this;
   }
 
-  /**
-   * Get timestamp
-   * @return timestamp
-  **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -230,10 +187,6 @@ public class Transaction   {
     return this;
   }
 
-  /**
-   * Get transactionStatus
-   * @return transactionStatus
-  **/
   @ApiModelProperty(value = "")
 
   public TransactionStatusEnum getTransactionStatus() {
@@ -249,10 +202,6 @@ public class Transaction   {
     return this;
   }
 
-  /**
-   * Get transactionType
-   * @return transactionType
-  **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -306,10 +255,6 @@ public class Transaction   {
     return sb.toString();
   }
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
   private String toIndentedString(java.lang.Object o) {
     if (o == null) {
       return "null";
