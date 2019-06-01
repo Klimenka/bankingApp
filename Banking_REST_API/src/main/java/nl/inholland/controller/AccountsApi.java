@@ -7,8 +7,8 @@ package nl.inholland.controller;
 
 import nl.inholland.model.Account;
 import nl.inholland.model.Error;
-import org.threeten.bp.LocalDate;
 import io.swagger.annotations.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.inholland.codegen.v3.generators.java.SpringCodegen", date = "2019-05-23T16:34:19.518Z[GMT]")
@@ -56,7 +58,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/{userId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Account>> getBankAccount(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId,@ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType);
+    ResponseEntity<List<Account>> getBankAccount(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") long userId,@ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType);
 
 
     @ApiOperation(value = "get all bank accounts", nickname = "getBankAccounts", notes = "Calling this will allow Employees to check data of all accounts or filter them by the date of opening Asc or Desc or based on the type of bank account [saving or current]", response = Account.class, responseContainer = "List", tags={ "accounts", })
@@ -68,6 +70,6 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Account>> getBankAccounts(@ApiParam(value = "") @Valid @RequestParam(value = "dateOfOpening", required = false) LocalDate dateOfOpening,@ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType);
+    ResponseEntity<List<Account>> getBankAccounts(@ApiParam(value = "") @Valid @RequestParam(value = "dateOfOpening", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateOfOpening, @ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType);
 
 }

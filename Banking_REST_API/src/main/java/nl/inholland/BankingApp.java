@@ -8,6 +8,9 @@ import org.springframework.context.annotation.ComponentScan;
 
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @SpringBootApplication
 @EnableSwagger2
 @ComponentScan(basePackages = { "nl.inholland", "nl.inholland.controller", "nl.inholland.configuration"})
@@ -22,6 +25,10 @@ public class BankingApp implements CommandLineRunner {
 
     public static void main(String[] args) throws Exception {
         new SpringApplication(BankingApp.class).run(args);
+      /*  int i=0;
+        String filename="result.csv";
+        Path pathToFile = Paths.get(filename);
+        System.out.println(pathToFile.getAbsolutePath());*/
     }
 
     class ExitException extends RuntimeException implements ExitCodeGenerator {

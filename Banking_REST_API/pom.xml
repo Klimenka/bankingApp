@@ -71,19 +71,19 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        <dependency>
+       <!-- <dependency>
             <groupId>org.iban4j</groupId>
             <artifactId>iban4j</artifactId>
             <version>3.2.1</version>
-        </dependency>
+        </dependency>-->
     <!-- Bean Validation API support -->
         <dependency>
             <groupId>javax.validation</groupId>

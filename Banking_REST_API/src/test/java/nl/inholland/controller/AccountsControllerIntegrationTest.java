@@ -1,8 +1,9 @@
 package nl.inholland.controller;
 
 import nl.inholland.model.Account;
-import org.threeten.bp.LocalDate;
+import nl.inholland.model.CurrentAccount;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import org.junit.Test;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AccountsApiControllerIntegrationTest {
+public class AccountsControllerIntegrationTest {
 
     @Autowired
     private AccountsApi api;
@@ -31,7 +32,7 @@ public class AccountsApiControllerIntegrationTest {
 
     @Test
     public void createBankAccountTest() throws Exception {
-        Account body = new Account();
+        Account body = new CurrentAccount();
         ResponseEntity<Account> responseEntity = api.createBankAccount(body);
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
     }
