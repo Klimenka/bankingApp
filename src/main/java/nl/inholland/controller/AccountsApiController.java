@@ -1,6 +1,8 @@
 package nl.inholland.controller;
 
-import org.threeten.bp.LocalDate;
+import nl.inholland.model.Account;
+import nl.inholland.service.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
@@ -26,31 +29,53 @@ public class AccountsApiController implements AccountsApi {
     private final ObjectMapper objectMapper;
 
     private final HttpServletRequest request;
+    private AccountService accountService;
 
-    @org.springframework.beans.factory.annotation.Autowired
-    public AccountsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    @Autowired
+    public AccountsApiController(ObjectMapper objectMapper, HttpServletRequest request,
+                              AccountService accountService) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.accountService = accountService;
     }
 
-    public ResponseEntity<Void> closeBankAccount(@ApiParam(value = "the account number",required=true) @PathVariable("accountNumber") String accountNumber) {
+
+    public ResponseEntity<Void> closeBankAccount(@ApiParam(value = "the account number",
+            required = true) @PathVariable("accountNumber") long accountNumber) {
+
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        accountService.closeBankAccount(accountNumber);
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
-    public ResponseEntity<Object> createBankAccount(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Object body) {
+    public ResponseEntity<Account> createBankAccount(@ApiParam(value = "", required = true)
+                                                     @Valid @RequestBody Account body) {
+
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+        //accountService.createBankAccount(body);
+        return new ResponseEntity<Account>(accountService.createBankAccount(body), HttpStatus.CREATED);
     }
 
-    public ResponseEntity<List<Object>> getBankAccount(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId,@ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType) {
+    public ResponseEntity<List<Account>> getBankAccount
+            (@Min(1L) @ApiParam(value = "The id of the user to return", required = true, allowableValues = "")
+             @PathVariable("userId") long userId,
+             @ApiParam(value = "", allowableValues = "current, saving")
+             @Valid @RequestParam(value = "accountType", required = false) String accountType) {
+
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<List<Object>>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<List<Account>>
+                ((List<Account>) accountService.getBankAccount(userId, accountType), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<Object>> getBankAccounts(@ApiParam(value = "") @Valid @RequestParam(value = "dateOfOpening", required = false) LocalDate dateOfOpening,@ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType) {
+    public ResponseEntity<List<Account>> getBankAccounts
+            (@ApiParam(value = "")
+             @RequestParam(value = "dateOfOpening", required = false) LocalDate dateOfOpening,
+             @ApiParam(value = "", allowableValues = "current, saving")
+             @Valid @RequestParam(value = "accountType", required = false) String accountType) {
+
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<List<Object>>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<List<Account>>
+                ((List<Account>) accountService.getBankAccounts(dateOfOpening, accountType), HttpStatus.OK);
     }
 
 }

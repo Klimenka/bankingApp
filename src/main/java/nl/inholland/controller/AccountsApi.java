@@ -5,8 +5,8 @@
  */
 package nl.inholland.controller;
 
+import nl.inholland.model.Account;
 import nl.inholland.model.Error;
-import org.threeten.bp.LocalDate;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
@@ -33,43 +34,43 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/{accountNumber}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<Void> closeBankAccount(@ApiParam(value = "the account number",required=true) @PathVariable("accountNumber") String accountNumber);
+    ResponseEntity<Void> closeBankAccount(@ApiParam(value = "the account number",required=true) @PathVariable("accountNumber") long accountNumber);
 
 
-    @ApiOperation(value = "create a bank account", nickname = "createBankAccount", notes = "Calling this will allow epmployees to open an account for a specific customer", response = Object.class, authorizations = {
+    @ApiOperation(value = "create a bank account", nickname = "createBankAccount", notes = "Calling this will allow epmployees to open an account for a specific customer", response = Account.class, authorizations = {
         @Authorization(value = "api_key")    }, tags={ "accounts", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "the account has been created", response = Object.class),
+        @ApiResponse(code = 201, message = "the account has been created", response = Account.class),
         @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = Error.class) })
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Object> createBankAccount(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Object body);
+    ResponseEntity<Account> createBankAccount(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Account body);
 
 
-    @ApiOperation(value = "get bank accounts of a specific user", nickname = "getBankAccount", notes = "Calling this will allow both customer and employee to check data of a specific account userId and filter them by bank account type", response = Object.class, responseContainer = "List", tags={ "accounts", })
+    @ApiOperation(value = "get bank accounts of a specific user", nickname = "getBankAccount", notes = "Calling this will allow both customer and employee to check data of a specific account userId and filter them by bank account type", response = Account.class, responseContainer = "List", tags={ "accounts", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "the account data", response = Object.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "the account data", response = Account.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
         @ApiResponse(code = 404, message = "The specified resource was not found", response = Error.class) })
     @RequestMapping(value = "/accounts/{userId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Object>> getBankAccount(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId,@ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType);
+    ResponseEntity<List<Account>> getBankAccount(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") long userId,@ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType);
 
 
-    @ApiOperation(value = "get all bank accounts", nickname = "getBankAccounts", notes = "Calling this will allow Employees to check data of all accounts or filter them by the date of opening Asc or Desc or based on the type of bank account [saving or current]", response = Object.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "get all bank accounts", nickname = "getBankAccounts", notes = "Calling this will allow Employees to check data of all accounts or filter them by the date of opening Asc or Desc or based on the type of bank account [saving or current]", response = Account.class, responseContainer = "List", authorizations = {
         @Authorization(value = "api_key")    }, tags={ "accounts", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "the accounts data", response = Object.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "the accounts data", response = Account.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
         @ApiResponse(code = 404, message = "The specified resource was not found", response = Error.class) })
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Object>> getBankAccounts(@ApiParam(value = "") @Valid @RequestParam(value = "dateOfOpening", required = false) LocalDate dateOfOpening,@ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType);
+    ResponseEntity<List<Account>> getBankAccounts(@ApiParam(value = "") @RequestParam(value = "dateOfOpening", required = false) LocalDate dateOfOpening, @ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType);
 
 }

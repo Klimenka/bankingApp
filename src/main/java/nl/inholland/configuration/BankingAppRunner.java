@@ -40,7 +40,7 @@ public class BankingAppRunner implements ApplicationRunner {
     }
 
     private void getBankAccountsFromFile() throws IOException {
-        Path path = Paths.get("Banking_REST_API/src/main/resources/bankAccounts.csv");
+        Path path = Paths.get("src/main/resources/bankAccounts.csv");
         Files.lines(path)
                 .forEach(line -> saveBankAccounts(line));
 

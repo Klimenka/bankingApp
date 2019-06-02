@@ -1,9 +1,9 @@
 package nl.inholland.controller;
 
-import org.threeten.bp.LocalDate;
-
+import java.time.LocalDate;
 import java.util.*;
 
+import nl.inholland.model.Account;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,31 +23,31 @@ public class AccountsApiControllerIntegrationTest {
 
     @Test
     public void closeBankAccountTest() throws Exception {
-        String accountNumber = "accountNumber_example";
+        long accountNumber = 1;
         ResponseEntity<Void> responseEntity = api.closeBankAccount(accountNumber);
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
     }
 
     @Test
     public void createBankAccountTest() throws Exception {
-        Object body = null;
-        ResponseEntity<Object> responseEntity = api.createBankAccount(body);
+        Account body = null;
+        ResponseEntity<Account> responseEntity = api.createBankAccount(body);
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
     }
 
     @Test
     public void getBankAccountTest() throws Exception {
-        Long userId = 789L;
+        long userId = 789L;
         String accountType = "accountType_example";
-        ResponseEntity<List<Object>> responseEntity = api.getBankAccount(userId, accountType);
+        ResponseEntity<List<Account>> responseEntity = api.getBankAccount(userId, accountType);
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
     }
 
     @Test
     public void getBankAccountsTest() throws Exception {
-        LocalDate dateOfOpening = LocalDate.now();
+        LocalDate dateOfOpening = java.time.LocalDate.now();
         String accountType = "accountType_example";
-        ResponseEntity<List<Object>> responseEntity = api.getBankAccounts(dateOfOpening, accountType);
+        ResponseEntity<List<Account>> responseEntity = api.getBankAccounts(dateOfOpening, accountType);
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
     }
 
