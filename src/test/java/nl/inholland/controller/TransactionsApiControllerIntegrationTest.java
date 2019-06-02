@@ -1,4 +1,4 @@
-package nl.inholland.api;
+package nl.inholland.controller;
 
 import nl.inholland.model.Transaction;
 import org.threeten.bp.LocalDate;
