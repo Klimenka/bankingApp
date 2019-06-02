@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModelProperty;
 import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -14,25 +16,44 @@ import javax.validation.constraints.*;
  * Transaction
  */
 @Validated
+@Entity
+@Table(name="Transaction")
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
 public class Transaction   {
   @JsonProperty("transaction_id")
-  private Integer transactionId = null;
+  @Id
+  @GeneratedValue(generator = "transaction_sequence", strategy = GenerationType.SEQUENCE)
+  @SequenceGenerator(name = "transaction_sequence", initialValue = 1)
+  private long transactionId;
 
   @JsonProperty("accountFrom")
-  private String accountFrom = null;
+  private String accountFrom;
 
   @JsonProperty("accountTo")
-  private String accountTo = null;
+  private String accountTo;
 
   @JsonProperty("amount")
-  private Float amount = null;
+  private Float amount;
 
   @JsonProperty("userPerforming")
-  private String userPerforming = null;
+  private String userPerforming;
 
   @JsonProperty("timestamp")
-  private OffsetDateTime timestamp = null;
+  private OffsetDateTime timestamp;
+
+  public Transaction()
+  {
+
+  }
+
+  public Transaction(long transactionId, String accountFrom, String accountTo, String userPerforming, OffsetDateTime timestamp)
+  {
+    this.transactionId = transactionId;
+    this.accountFrom = accountFrom;
+    this.accountTo = accountTo;
+    this.userPerforming = userPerforming;
+    this.timestamp = timestamp;
+  }
 
   /**
    * Gets or Sets transactionStatus
@@ -104,7 +125,7 @@ public class Transaction   {
   @JsonProperty("transactionType")
   private TransactionTypeEnum transactionType = null;
 
-  public Transaction transactionId(Integer transactionId) {
+  public Transaction transactionId(long transactionId) {
     this.transactionId = transactionId;
     return this;
   }
@@ -116,11 +137,11 @@ public class Transaction   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  public Integer getTransactionId() {
+  public long getTransactionId() {
     return transactionId;
   }
 
-  public void setTransactionId(Integer transactionId) {
+  public void setTransactionId(long transactionId) {
     this.transactionId = transactionId;
   }
 
