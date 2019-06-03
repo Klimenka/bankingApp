@@ -5,6 +5,7 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
@@ -18,6 +19,7 @@ import javax.validation.constraints.*;
 
 @Entity
 @Validated
+@JsonDeserialize(as = Customer.class)
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
 public abstract class User {
 
@@ -39,7 +41,7 @@ public abstract class User {
   @JsonProperty("dateOfBirth")
   private String dateOfBirth;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.REMOVE)
   @JsonProperty("primaryAddress")
   private Address primaryAddress;
 
@@ -209,8 +211,7 @@ public abstract class User {
    * @return id
    **/
   @ApiModelProperty(required = true, value = "")
-  @NotNull
-
+ // @NotNull
   public Long getId() {
     return id;
   }
@@ -223,7 +224,6 @@ public abstract class User {
    **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
-
   public String getOfficialName() {
     return officialName;
   }
@@ -238,7 +238,6 @@ public abstract class User {
    * @return preferedName
    **/
   @ApiModelProperty(value = "")
-
   public String getPreferedName() {
     return preferedName;
   }
@@ -253,7 +252,6 @@ public abstract class User {
    * @return sex
    **/
   @ApiModelProperty(value = "")
-
   public SexEnum getSex() {
     return sex;
   }
@@ -269,7 +267,6 @@ public abstract class User {
    **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
-
   public String getDateOfBirth() {
     return dateOfBirth;
   }
@@ -286,7 +283,6 @@ public abstract class User {
   @ApiModelProperty(required = true, value = "")
   @NotNull
   @Valid
-
   public Address getPrimaryAddress() {
     return primaryAddress;
   }
@@ -320,7 +316,6 @@ public abstract class User {
    **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
-
   public String getMobileNumber() {
     return mobileNumber;
   }
@@ -337,7 +332,6 @@ public abstract class User {
    **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
-
   public String getEmailAddress() {
     return emailAddress;
   }
