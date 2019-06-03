@@ -38,7 +38,9 @@ public class UsersApiController implements UsersApi {
         return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> createUserToken(@ApiParam(value = "Logs a user in and return an auth token, if the specified username and password are correct." ,required=true )  @Valid @RequestBody Login body) {
+    public ResponseEntity<Void> createUserToken
+            (@ApiParam(value = "Logs a user in and return an auth token, if the specified username and password are correct." ,required=true )
+             @Valid @RequestBody Login body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
@@ -58,7 +60,12 @@ public class UsersApiController implements UsersApi {
         return new ResponseEntity<List<Object>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> updateUserLogin(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Login body,@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId) {
+    public ResponseEntity<Void> updateUserLogin
+            (@ApiParam(value = "" ,required=true )
+             @Valid @RequestBody Login body,
+             @Min(1L)
+             @ApiParam(value = "The id of the user to return",required=true, allowableValues = "")
+             @PathVariable("userId") Long userId) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
