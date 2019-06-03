@@ -1,40 +1,52 @@
 package nl.inholland.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.*;
+
 /**
  * Address
  */
+@Entity
+@IdClass(AddressPK.class)
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"postCode", "houseNumber"})})
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
-public class Address   {
+public class Address implements Serializable {
   @JsonProperty("street")
-  private String street = null;
-
+  private String street;
+  @Id
   @JsonProperty("houseNumber")
-  private Integer houseNumber = null;
-
+  private Integer houseNumber;
+  @Id
   @JsonProperty("postCode")
-  private String postCode = null;
+  private String postCode;
 
   @JsonProperty("city")
-  private String city = null;
+  private String city;
 
   @JsonProperty("country")
-  private String country = null;
+  private String country;
 
-  public Address street(String street) {
+  public Address(String street, Integer houseNumber, String postCode, String city, String country) {
     this.street = street;
-    return this;
+    this.houseNumber = houseNumber;
+    this.postCode = postCode;
+    this.city = city;
+    this.country = country;
+  }
+
+  public Address() {
   }
 
   /**
    * Get street
    * @return street
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public String getStreet() {
@@ -45,15 +57,12 @@ public class Address   {
     this.street = street;
   }
 
-  public Address houseNumber(Integer houseNumber) {
-    this.houseNumber = houseNumber;
-    return this;
-  }
+
 
   /**
    * Get houseNumber
    * @return houseNumber
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public Integer getHouseNumber() {
@@ -64,15 +73,11 @@ public class Address   {
     this.houseNumber = houseNumber;
   }
 
-  public Address postCode(String postCode) {
-    this.postCode = postCode;
-    return this;
-  }
 
   /**
    * Get postCode
    * @return postCode
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public String getPostCode() {
@@ -83,15 +88,11 @@ public class Address   {
     this.postCode = postCode;
   }
 
-  public Address city(String city) {
-    this.city = city;
-    return this;
-  }
 
   /**
    * Get city
    * @return city
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public String getCity() {
@@ -102,15 +103,10 @@ public class Address   {
     this.city = city;
   }
 
-  public Address country(String country) {
-    this.country = country;
-    return this;
-  }
-
   /**
    * Get country
    * @return country
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public String getCountry() {
@@ -132,22 +128,17 @@ public class Address   {
     }
     Address address = (Address) o;
     return Objects.equals(this.street, address.street) &&
-        Objects.equals(this.houseNumber, address.houseNumber) &&
-        Objects.equals(this.postCode, address.postCode) &&
-        Objects.equals(this.city, address.city) &&
-        Objects.equals(this.country, address.country);
+            Objects.equals(this.houseNumber, address.houseNumber) &&
+            Objects.equals(this.postCode, address.postCode) &&
+            Objects.equals(this.city, address.city) &&
+            Objects.equals(this.country, address.country);
   }
 
   @Override
-  public int hashCode() {
-    return Objects.hash(street, houseNumber, postCode, city, country);
-  }
-
-  @Override
-  public String toString() {
+   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Address {\n");
-    
+
     sb.append("    street: ").append(toIndentedString(street)).append("\n");
     sb.append("    houseNumber: ").append(toIndentedString(houseNumber)).append("\n");
     sb.append("    postCode: ").append(toIndentedString(postCode)).append("\n");
@@ -157,11 +148,7 @@ public class Address   {
     return sb.toString();
   }
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
