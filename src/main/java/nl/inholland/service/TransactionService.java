@@ -2,18 +2,21 @@ package nl.inholland.service;
 
 import nl.inholland.model.Transaction;
 import nl.inholland.repository.TransactionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.threeten.bp.OffsetDateTime;
 
-import java.time.OffsetDateTime;
-
+@Service
 public class TransactionService
 {
+    @Autowired
     private TransactionRepository transactionRepository;
 
     //adds a transaction to the database
     //perhaps add an exception
-    public void addTransaction(Transaction transaction)
+    public Transaction addTransaction(Transaction transaction)
     {
-        transactionRepository.save(transaction);
+        return transactionRepository.save(transaction);
     }
 
     //checks if the user filters the transaction with dates
@@ -21,17 +24,17 @@ public class TransactionService
     {
         if(dateFrom == null && dateTo == null)
         {
-            return transactionRepository.getAllByAccount(userAccount);
+            return transactionRepository.findAllByAccountFrom(userAccount);
         }
         else
         {
-            return transactionRepository.getAll(userAccount, dateFrom, dateTo);
+            return transactionRepository.findAll();
         }
     }
 
     //retrieves one transaction from the user
-    public Transaction getTransaction(long transactionId, String userAccount)
+    public Iterable<Transaction> getTransaction(long transactionId)
     {
-        return this.transactionRepository.findByIdAndAccount(transactionId, userAccount);
+        return this.transactionRepository.findAllByTransactionId(transactionId);
     }
 }

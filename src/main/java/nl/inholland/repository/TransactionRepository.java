@@ -9,10 +9,7 @@ import org.threeten.bp.OffsetDateTime;
 @Repository
 public interface TransactionRepository extends CrudRepository<Transaction, Long>
 {
-    Iterable<Transaction> findById(long transactionId);
-    Iterable<Transaction> findByStatus(TransactionStatus transactionStatus);
-    Iterable<Transaction> findByType(Transaction.TransactionTypeEnum transactionTypeEnum);
-    Iterable<Transaction> getAllByAccount(String account);
-    Iterable<Transaction> getAll(String userAccount, java.time.OffsetDateTime dateFrom, java.time.OffsetDateTime dateTo);
-    Transaction findByIdAndAccount(long transactionId, String userAccount);
+    Iterable<Transaction> findAllByAccountFrom(String account);
+    Iterable<Transaction> findAll();
+    Iterable<Transaction> findAllByTransactionId(long Id);
 }
