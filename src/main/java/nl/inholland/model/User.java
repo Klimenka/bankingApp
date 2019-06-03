@@ -1,35 +1,97 @@
 package nl.inholland.model;
 
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
+
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * User
+ * User model
  */
+
+@Entity
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
-public abstract class User   {
+public abstract class User {
+
+  @Id
+  @SequenceGenerator(name = "userSeq", initialValue = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSeq")
   @JsonProperty("id")
-  private Integer id = null;
+  private Long id;
 
   @JsonProperty("officialName")
-  private String officialName = null;
+  private String officialName;
 
   @JsonProperty("preferedName")
-  private String preferedName = null;
+  private String preferedName;
+
+  @JsonProperty("sex")
+  private SexEnum sex;
+
+  @JsonProperty("dateOfBirth")
+  private String dateOfBirth;
+
+  @ManyToOne
+  @JsonProperty("primaryAddress")
+  private Address primaryAddress;
+
+  @ManyToOne
+  @JsonProperty("postAddress")
+  private Address postAddress;
+
+  @JsonProperty("mobileNumber")
+  private String mobileNumber;
+
+  @JsonProperty("emailAddress")
+  private String emailAddress;
+
+  @JsonProperty("commrcialMessages")
+  private CommrcialMessagesEnum commrcialMessages;
+
+  @JsonProperty("preferedLanguage")
+  private PreferedLanguageEnum preferedLanguage;
+
+  @JsonProperty("userType")
+  private UserTypeEnum userType;
 
   /**
-   * Gets or Sets sex
+   * Constructor with parameters
+   **/
+  public User(String officialName, String preferedName, SexEnum sex, String dateOfBirth, Address primaryAddress, Address postAddress, String mobileNumber, String emailAddress, CommrcialMessagesEnum commrcialMessages, PreferedLanguageEnum preferedLanguage, UserTypeEnum userType) {
+
+    this.officialName = officialName;
+    this.preferedName = preferedName;
+    this.sex = sex;
+    this.dateOfBirth = dateOfBirth;
+    this.primaryAddress = primaryAddress;
+    this.postAddress = postAddress;
+    this.mobileNumber = mobileNumber;
+    this.emailAddress = emailAddress;
+    this.commrcialMessages = commrcialMessages;
+    this.preferedLanguage = preferedLanguage;
+    this.userType = userType;
+  }
+
+  /**
+   * Empty default constructor
+   **/
+  public User() {
+  }
+
+  /**
+   * Enums
    */
   public enum SexEnum {
     MALE("male"),
-    
+
     FEMALE("female");
 
     private String value;
@@ -54,34 +116,14 @@ public abstract class User   {
       return null;
     }
   }
-  @JsonProperty("sex")
-  private SexEnum sex = null;
 
-  @JsonProperty("dateOfBirth")
-  private String dateOfBirth = null;
-
-  @JsonProperty("primaryAddress")
-  private Address primaryAddress = null;
-
-  @JsonProperty("postAddress")
-  private Address postAddress = null;
-
-  @JsonProperty("mobileNumber")
-  private String mobileNumber = null;
-
-  @JsonProperty("emailAddress")
-  private String emailAddress = null;
-
-  /**
-   * Gets or Sets commrcialMessages
-   */
   public enum CommrcialMessagesEnum {
     POST("by post"),
-    
+
     BANKMAIL("by bankmail"),
-    
+
     TELEPHONE("by telephone"),
-    
+
     EMAIL("by email");
 
     private String value;
@@ -106,15 +148,10 @@ public abstract class User   {
       return null;
     }
   }
-  @JsonProperty("commrcialMessages")
-  private CommrcialMessagesEnum commrcialMessages = null;
 
-  /**
-   * Gets or Sets preferedLanguage
-   */
   public enum PreferedLanguageEnum {
     DUTCH("Dutch"),
-    
+
     ENGLISH("English");
 
     private String value;
@@ -139,38 +176,51 @@ public abstract class User   {
       return null;
     }
   }
-  @JsonProperty("preferedLanguage")
-  private PreferedLanguageEnum preferedLanguage = null;
 
-  public User id(Integer id) {
-    this.id = id;
-    return this;
+  public enum UserTypeEnum {
+    CUSTOMER("Customer"),
+    EMPLOYEE("Employee");
+    private String value;
+
+    UserTypeEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static UserTypeEnum fromValue(String text) {
+      for (UserTypeEnum b : UserTypeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
   }
 
   /**
    * Get id
+   *
    * @return id
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  public Integer getId() {
+  public Long getId() {
     return id;
   }
 
-  public void setId(Integer id) {
-    this.id = id;
-  }
-
-  public User officialName(String officialName) {
-    this.officialName = officialName;
-    return this;
-  }
 
   /**
    * Get officialName
+   *
    * @return officialName
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -182,15 +232,11 @@ public abstract class User   {
     this.officialName = officialName;
   }
 
-  public User preferedName(String preferedName) {
-    this.preferedName = preferedName;
-    return this;
-  }
-
   /**
    * Get preferedName
+   *
    * @return preferedName
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public String getPreferedName() {
@@ -201,15 +247,11 @@ public abstract class User   {
     this.preferedName = preferedName;
   }
 
-  public User sex(SexEnum sex) {
-    this.sex = sex;
-    return this;
-  }
-
   /**
    * Get sex
+   *
    * @return sex
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public SexEnum getSex() {
@@ -220,15 +262,11 @@ public abstract class User   {
     this.sex = sex;
   }
 
-  public User dateOfBirth(String dateOfBirth) {
-    this.dateOfBirth = dateOfBirth;
-    return this;
-  }
-
   /**
    * Get dateOfBirth
+   *
    * @return dateOfBirth
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -240,19 +278,15 @@ public abstract class User   {
     this.dateOfBirth = dateOfBirth;
   }
 
-  public User primaryAddress(Address primaryAddress) {
-    this.primaryAddress = primaryAddress;
-    return this;
-  }
-
   /**
    * Get primaryAddress
+   *
    * @return primaryAddress
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
-
   @Valid
+
   public Address getPrimaryAddress() {
     return primaryAddress;
   }
@@ -261,15 +295,12 @@ public abstract class User   {
     this.primaryAddress = primaryAddress;
   }
 
-  public User postAddress(Address postAddress) {
-    this.postAddress = postAddress;
-    return this;
-  }
 
   /**
    * Get postAddress
+   *
    * @return postAddress
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   @Valid
@@ -281,15 +312,12 @@ public abstract class User   {
     this.postAddress = postAddress;
   }
 
-  public User mobileNumber(String mobileNumber) {
-    this.mobileNumber = mobileNumber;
-    return this;
-  }
 
   /**
    * Get mobileNumber
+   *
    * @return mobileNumber
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -301,15 +329,12 @@ public abstract class User   {
     this.mobileNumber = mobileNumber;
   }
 
-  public User emailAddress(String emailAddress) {
-    this.emailAddress = emailAddress;
-    return this;
-  }
 
   /**
    * Get emailAddress
+   *
    * @return emailAddress
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -321,15 +346,12 @@ public abstract class User   {
     this.emailAddress = emailAddress;
   }
 
-  public User commrcialMessages(CommrcialMessagesEnum commrcialMessages) {
-    this.commrcialMessages = commrcialMessages;
-    return this;
-  }
 
   /**
    * Get commrcialMessages
+   *
    * @return commrcialMessages
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public CommrcialMessagesEnum getCommrcialMessages() {
@@ -340,15 +362,12 @@ public abstract class User   {
     this.commrcialMessages = commrcialMessages;
   }
 
-  public User preferedLanguage(PreferedLanguageEnum preferedLanguage) {
-    this.preferedLanguage = preferedLanguage;
-    return this;
-  }
 
   /**
    * Get preferedLanguage
+   *
    * @return preferedLanguage
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public PreferedLanguageEnum getPreferedLanguage() {
@@ -359,39 +378,20 @@ public abstract class User   {
     this.preferedLanguage = preferedLanguage;
   }
 
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    User user = (User) o;
-    return Objects.equals(this.id, user.id) &&
-        Objects.equals(this.officialName, user.officialName) &&
-        Objects.equals(this.preferedName, user.preferedName) &&
-        Objects.equals(this.sex, user.sex) &&
-        Objects.equals(this.dateOfBirth, user.dateOfBirth) &&
-        Objects.equals(this.primaryAddress, user.primaryAddress) &&
-        Objects.equals(this.postAddress, user.postAddress) &&
-        Objects.equals(this.mobileNumber, user.mobileNumber) &&
-        Objects.equals(this.emailAddress, user.emailAddress) &&
-        Objects.equals(this.commrcialMessages, user.commrcialMessages) &&
-        Objects.equals(this.preferedLanguage, user.preferedLanguage);
+  public UserTypeEnum getUserType() {
+    return userType;
   }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, officialName, preferedName, sex, dateOfBirth, primaryAddress, postAddress, mobileNumber, emailAddress, commrcialMessages, preferedLanguage);
+  public void setUserType(UserTypeEnum userType) {
+    this.userType = userType;
   }
+
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class User {\n");
-    
+
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    officialName: ").append(toIndentedString(officialName)).append("\n");
     sb.append("    preferedName: ").append(toIndentedString(preferedName)).append("\n");
@@ -403,15 +403,12 @@ public abstract class User   {
     sb.append("    emailAddress: ").append(toIndentedString(emailAddress)).append("\n");
     sb.append("    commrcialMessages: ").append(toIndentedString(commrcialMessages)).append("\n");
     sb.append("    preferedLanguage: ").append(toIndentedString(preferedLanguage)).append("\n");
+    sb.append("    userType: ").append(toIndentedString(userType)).append("\n");
     sb.append("}");
     return sb.toString();
   }
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

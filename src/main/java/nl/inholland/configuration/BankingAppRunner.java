@@ -1,9 +1,9 @@
 package nl.inholland.configuration;
 
-import nl.inholland.model.Account;
-import nl.inholland.model.CurrentAccount;
-import nl.inholland.model.SavingAccount;
+import nl.inholland.model.*;
 import nl.inholland.repository.AccountRepository;
+import nl.inholland.repository.AddressRepository;
+import nl.inholland.repository.UserRepository;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -19,17 +19,23 @@ public class BankingAppRunner implements ApplicationRunner {
 
     private AccountRepository accountRepository;
     private BankAccountConfig bankAccountConfig;
+    private UserRepository userRepository;
+    private AddressRepository addressRepository;
 
-    public BankingAppRunner(AccountRepository accountRepository, BankAccountConfig bankAccountConfig) {
+    public BankingAppRunner(AccountRepository accountRepository, BankAccountConfig bankAccountConfig,
+                            UserRepository userRepository, AddressRepository addressRepository) {
         this.accountRepository = accountRepository;
         this.bankAccountConfig = bankAccountConfig;
+        this.userRepository = userRepository;
+        this.addressRepository = addressRepository;
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         getBankOwnAccount();
         getBankAccountsFromFile();
-
+        getAddressesFromFileAndSaveToInMemoryDB();
+        getUsersFromFile();
     }
 
     private void getBankOwnAccount() {
@@ -66,4 +72,63 @@ public class BankingAppRunner implements ApplicationRunner {
         accountRepository.save(accountRepository.findById(account.getAccountNumber())
                 .map(account1 -> account).orElseThrow(IllegalArgumentException::new));
     }
+
+    private void getAddressesFromFileAndSaveToInMemoryDB() throws IOException {
+        Files.lines(Paths.get("src/main/resources/addresses.csv"))
+                .forEach(line -> addressRepository.save(
+                        new Address(line.split(",")[0],
+                                Integer.parseInt(line.split(",")[1]),
+                                line.split(",")[2],
+                                line.split(",")[3],
+                                line.split(",")[4]
+                        )));
+
+    }
+
+    private void getUsersFromFile() throws IOException {
+        Path path = Paths.get("src/main/resources/users.csv");
+        Files.lines(path)
+
+                .forEach(
+                        line -> saveUserToInMemoryDB(line)
+                );
+        userRepository.findAll().forEach(System.out::println);
+    }
+
+    private void saveUserToInMemoryDB(String userStringFromFile) {
+        if (userStringFromFile.split(",")[10].equals("Employee")) {
+            userRepository.save(new Employee(
+                    userStringFromFile.split(",")[0],
+                    userStringFromFile.split(",")[1],
+                    User.SexEnum.fromValue(userStringFromFile.split(",")[2]),
+                    userStringFromFile.split(",")[3],
+                    addressRepository.getAddressByPostCodeAndHouseNumber(userStringFromFile.split(",")[4].split(" ")[0],
+                            Integer.parseInt(userStringFromFile.split(",")[4].split(" ")[1])),
+                    addressRepository.getAddressByPostCodeAndHouseNumber(userStringFromFile.split(",")[5].split(" ")[0],
+                            Integer.parseInt(userStringFromFile.split(",")[5].split(" ")[1])),
+                    userStringFromFile.split(",")[6],
+                    userStringFromFile.split(",")[7],
+                    User.CommrcialMessagesEnum.fromValue(userStringFromFile.split(",")[8]),
+                    User.PreferedLanguageEnum.fromValue(userStringFromFile.split(",")[9]),
+                    User.UserTypeEnum.fromValue(userStringFromFile.split(",")[10]),
+                    userStringFromFile.split(",")[11]));
+        } else {
+            userRepository.save(new Customer(
+                    userStringFromFile.split(",")[0],
+                    userStringFromFile.split(",")[1],
+                    User.SexEnum.fromValue(userStringFromFile.split(",")[2]),
+                    userStringFromFile.split(",")[3],
+                    addressRepository.getAddressByPostCodeAndHouseNumber(userStringFromFile.split(",")[4].split(" ")[0],
+                            Integer.parseInt(userStringFromFile.split(",")[4].split(" ")[1])),
+                    addressRepository.getAddressByPostCodeAndHouseNumber(userStringFromFile.split(",")[5].split(" ")[0],
+                            Integer.parseInt(userStringFromFile.split(",")[5].split(" ")[1])),
+                    userStringFromFile.split(",")[6],
+                    userStringFromFile.split(",")[7],
+                    User.CommrcialMessagesEnum.fromValue(userStringFromFile.split(",")[8]),
+                    User.PreferedLanguageEnum.fromValue(userStringFromFile.split(",")[9]),
+                    User.UserTypeEnum.fromValue(userStringFromFile.split(",")[10])));
+        }
+
+    }
+
 }
