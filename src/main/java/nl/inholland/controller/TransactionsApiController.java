@@ -38,21 +38,30 @@ public class TransactionsApiController implements TransactionsApi
     @RequestMapping(value = "createTransaction", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createTransaction(@ApiParam(value = ""  )  @Valid @RequestBody Transaction body)
     {
+        //(note) check if a an account exists first in the addresses.csv
+        // check if amount is correct!
         transactionService.addTransaction(body);
 
         accept = request.getHeader("Created");
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    @RequestMapping("getTransactionHistory")
+    @RequestMapping("getTransaction")
     public ResponseEntity<List<Transaction>> getTransactionHistory(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "accountNumber", required = true) String accountNumber,@ApiParam(value = "") @Valid @RequestParam(value = "dateFrom", required = false) LocalDate dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "dateTo", required = false) LocalDate dateTo)
     {
-        OffsetDateTime offsetDateFrom = OffsetDateTime.from(dateFrom);
-        OffsetDateTime offsetDateTo = OffsetDateTime.from(dateTo);
+        if(dateFrom != null && dateTo != null)
+        {
+            OffsetDateTime offsetDateFrom = OffsetDateTime.from(dateFrom);
+            OffsetDateTime offsetDateTo = OffsetDateTime.from(dateTo);
 
-        transactionService.getAllTransactions(accountNumber, offsetDateFrom, offsetDateTo);
+            transactionService.getAllTransactions(accountNumber, offsetDateFrom, offsetDateTo);
+        }
+        else
+        {
+            transactionService.getAllTransactions(accountNumber, null, null);
+        }
 
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<List<Transaction>>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<List<Transaction>>(HttpStatus.OK);
     }
 }

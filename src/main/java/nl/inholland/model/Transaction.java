@@ -20,8 +20,8 @@ import javax.validation.constraints.*;
 public class Transaction   {
   @JsonProperty("transaction_id")
   @Id
-  @GeneratedValue(generator = "transaction_sequence", strategy = GenerationType.SEQUENCE)
-  @SequenceGenerator(name = "transaction_sequence", initialValue = 1)
+  @SequenceGenerator(name = "transactionSequence", initialValue = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transactionSequence")
   private long transactionId;
 
   @JsonProperty("accountFrom")
@@ -44,13 +44,14 @@ public class Transaction   {
 
   }
 
-  public Transaction(long transactionId, String accountFrom, String accountTo, String userPerforming, OffsetDateTime timestamp)
+  public Transaction(String accountFrom, String accountTo, Float amount, String userPerforming, OffsetDateTime timestamp, TransactionTypeEnum transactionType)
   {
-    this.transactionId = transactionId;
     this.accountFrom = accountFrom;
     this.accountTo = accountTo;
+    this.amount = amount;
     this.userPerforming = userPerforming;
     this.timestamp = timestamp;
+    this.transactionType = transactionType;
   }
 
   /**

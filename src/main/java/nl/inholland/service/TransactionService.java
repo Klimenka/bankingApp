@@ -24,11 +24,12 @@ public class TransactionService
     {
         if(dateFrom == null && dateTo == null)
         {
-            return transactionRepository.findAllByAccountFrom(userAccount);
+            //return transactionRepository.findAllByAccountFrom(userAccount);
+            return transactionRepository.findAll();
         }
         else
         {
-            return transactionRepository.findAll();
+            return transactionRepository.findAllByAccountFromAndTimestampAndTimestamp(userAccount, dateFrom, dateTo);
         }
     }
 
