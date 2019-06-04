@@ -30,12 +30,10 @@ public class Login   {
   @JsonProperty("password")
   private String password;
 
-  @Transient
-  private String passwordConfirm;
-
-  public Login userId(long userId) {
+  public Login (long userId, String userName, String password) {
     this.userId = userId;
-    return this;
+    this.userName = userName;
+    this.password = password;
   }
 
   /**
@@ -44,7 +42,6 @@ public class Login   {
   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
-
   public long getUserId() {
     return userId;
   }
@@ -53,10 +50,6 @@ public class Login   {
     this.userId = userId;
   }
 
-  public Login userName(String userName) {
-    this.userName = userName;
-    return this;
-  }
 
   /**
    * Get userName
@@ -64,7 +57,6 @@ public class Login   {
   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
-
   public String getUserName() {
     return userName;
   }
@@ -73,10 +65,6 @@ public class Login   {
     this.userName = userName;
   }
 
-  public Login password(String password) {
-    this.password = password;
-    return this;
-  }
 
   /**
    * Get password
@@ -84,7 +72,6 @@ public class Login   {
   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
-
   public String getPassword() {
     return password;
   }
@@ -93,18 +80,6 @@ public class Login   {
     this.password = password;
   }
 
-  /**
-   * Get passwordConfirm
-   * @return password
-   **/
-
-  public String getPasswordConfirm() {
-    return passwordConfirm;
-  }
-
-  public void setPasswordConfirm(String passwordConfirm) {
-    this.passwordConfirm = passwordConfirm;
-  }
 
   @Override
   public boolean equals(java.lang.Object o) {
