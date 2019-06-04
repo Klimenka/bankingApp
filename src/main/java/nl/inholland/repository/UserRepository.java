@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends CrudRepository <User, Long> {
     Iterable<User> getUserByUserTypeEquals(User.UserTypeEnum usertype);
     User findTopByOrderByIdDesc();
+    User getUserByIdEquals(Long userId);
+
 }

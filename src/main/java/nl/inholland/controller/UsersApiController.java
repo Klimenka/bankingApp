@@ -49,14 +49,15 @@ public class UsersApiController implements UsersApi {
 
     public ResponseEntity<Void> deleteUserById(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        userService.deleteUser(userId);
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
-    public ResponseEntity<Object> getUserById(@Min(1L)
+    public ResponseEntity<User> getUserById(@Min(1L)
                                               @ApiParam(value = "The id of the user to return",required=true, allowableValues = "")
                                               @PathVariable("userId") Long userId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Object>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<User>(userService.getUser(userId),HttpStatus.NOT_IMPLEMENTED);
     }
 
     public ResponseEntity<List<User>> getUsers(

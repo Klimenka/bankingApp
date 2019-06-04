@@ -67,7 +67,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{userId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Object> getUserById(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId);
+    ResponseEntity<User> getUserById(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId);
 
 
     @ApiOperation(value = "get all users", nickname = "getUsers", notes = "getting all users (employees and customers) by Employee", response = Object.class, responseContainer = "List", authorizations = {

@@ -46,7 +46,7 @@ public class UsersApiControllerIntegrationTest {
     @Test
     public void getUserByIdTest() throws Exception {
         Long userId = 789L;
-        ResponseEntity<Object> responseEntity = api.getUserById(userId);
+        ResponseEntity<User> responseEntity = api.getUserById(userId);
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
     }
 

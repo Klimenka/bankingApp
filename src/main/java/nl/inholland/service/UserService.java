@@ -34,5 +34,15 @@ public class UserService {
         userRepository.save(user);
         return userRepository.findTopByOrderByIdDesc();
     }
+    public User getUser(Long userId){
 
+        return userRepository.getUserByIdEquals(userId);
+    }
+
+    public void deleteUser(Long userId){
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(IllegalArgumentException::new);
+        userRepository.delete(user);
+    }
 }

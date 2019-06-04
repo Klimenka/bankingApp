@@ -41,7 +41,7 @@ public abstract class User {
   @JsonProperty("dateOfBirth")
   private String dateOfBirth;
 
-  @ManyToOne(cascade = CascadeType.REMOVE)
+  @ManyToOne
   @JsonProperty("primaryAddress")
   private Address primaryAddress;
 
