@@ -6,11 +6,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.TransactionStatus;
 import org.threeten.bp.OffsetDateTime;
 
+import java.util.List;
+
 @Repository
 public interface TransactionRepository extends CrudRepository<Transaction, Long>
 {
-    Iterable<Transaction> findAll();
-    Iterable<Transaction> findAllByAccountFrom(String account);
-    Iterable<Transaction> findAllByAccountFromAndTimestampAndTimestamp(String userAccount, OffsetDateTime dateFrom, OffsetDateTime dateTo);
-    Iterable<Transaction> findAllByTransactionId(long Id);
+    List<Transaction> findAll();
+    List<Transaction> findAllByAccountFromEquals(String accountFrom);
+    List<Transaction> findAllByAccountFromEqualsAndTimestampGreaterThanEqualAndTimestampLessThanEqual(String userAccount, OffsetDateTime dateFrom, OffsetDateTime dateTo);
 }

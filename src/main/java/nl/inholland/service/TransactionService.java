@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.threeten.bp.OffsetDateTime;
 
+import java.util.List;
+
 @Service
 public class TransactionService
 {
@@ -13,29 +15,23 @@ public class TransactionService
     private TransactionRepository transactionRepository;
 
     //adds a transaction to the database
-    //perhaps add an exception
     public Transaction addTransaction(Transaction transaction)
     {
+        //build logic to make transactions affect the balance in a bank account
         return transactionRepository.save(transaction);
     }
 
     //checks if the user filters the transaction with dates
-    public Iterable<Transaction> getAllTransactions(String userAccount, OffsetDateTime dateFrom, OffsetDateTime dateTo)
+    public List<Transaction> getAllTransactions(String userAccount, OffsetDateTime dateFrom, OffsetDateTime dateTo)
     {
-        if(dateFrom == null && dateTo == null)
-        {
-            //return transactionRepository.findAllByAccountFrom(userAccount);
-            return transactionRepository.findAll();
-        }
-        else
-        {
-            return transactionRepository.findAllByAccountFromAndTimestampAndTimestamp(userAccount, dateFrom, dateTo);
-        }
+        return transactionRepository.findAllByAccountFromEqualsAndTimestampGreaterThanEqualAndTimestampLessThanEqual(userAccount, dateFrom, dateTo);
     }
 
     //retrieves one transaction from the user
-    public Iterable<Transaction> getTransaction(long transactionId)
+    public Transaction getTransaction(long transactionId)
     {
-        return this.transactionRepository.findAllByTransactionId(transactionId);
+        return this.transactionRepository
+                .findById(transactionId)
+                .orElseThrow(IllegalArgumentException::new);
     }
 }
