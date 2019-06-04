@@ -61,19 +61,19 @@ public interface UsersApi {
     ResponseEntity<Void> deleteUserById(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId);
 
 
-    @ApiOperation(value = "Gets a user by user ID", nickname = "getUserById", notes = "Gets a user by user ID", response = Object.class, tags={ "users", })
+    @ApiOperation(value = "Gets a user by user ID", nickname = "getUserById", notes = "Gets a user by user ID", response = User.class, tags={ "users", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "a user object", response = Object.class) })
+        @ApiResponse(code = 200, message = "a user object", response = User.class) })
     @RequestMapping(value = "/users/{userId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<User> getUserById(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId);
 
 
-    @ApiOperation(value = "get all users", nickname = "getUsers", notes = "getting all users (employees and customers) by Employee", response = Object.class, responseContainer = "List", authorizations = {
+    @ApiOperation(value = "get all users", nickname = "getUsers", notes = "getting all users (employees and customers) by Employee", response = User.class, responseContainer = "List", authorizations = {
         @Authorization(value = "api_key")    }, tags={ "users", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Object.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "OK", response = User.class, responseContainer = "List"),
         @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
         @ApiResponse(code = 404, message = "The specified resource was not found", response = Error.class) })
     @RequestMapping(value = "/users",

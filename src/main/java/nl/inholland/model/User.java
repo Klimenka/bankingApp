@@ -1,6 +1,9 @@
 package nl.inholland.model;
 
-import java.util.Objects;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -32,8 +35,8 @@ public abstract class User {
   @JsonProperty("officialName")
   private String officialName;
 
-  @JsonProperty("preferedName")
-  private String preferedName;
+  @JsonProperty("preferredName")
+  private String preferredName;
 
   @JsonProperty("sex")
   private SexEnum sex;
@@ -67,12 +70,13 @@ public abstract class User {
   /**
    * Constructor with parameters
    **/
-  public User(String officialName, String preferedName, SexEnum sex, String dateOfBirth, Address primaryAddress, Address postAddress, String mobileNumber, String emailAddress, CommrcialMessagesEnum commrcialMessages, PreferedLanguageEnum preferedLanguage, UserTypeEnum userType) {
+  public User(String officialName, String preferredName, SexEnum sex, String dateOfBirth, Address primaryAddress, Address postAddress, String mobileNumber, String emailAddress, CommrcialMessagesEnum commrcialMessages, PreferedLanguageEnum preferedLanguage, UserTypeEnum userType) {
 
     this.officialName = officialName;
-    this.preferedName = preferedName;
+    this.preferredName = preferredName;
     this.sex = sex;
     this.dateOfBirth = dateOfBirth;
+    setDateOfBirth(dateOfBirth);
     this.primaryAddress = primaryAddress;
     this.postAddress = postAddress;
     this.mobileNumber = mobileNumber;
@@ -233,17 +237,17 @@ public abstract class User {
   }
 
   /**
-   * Get preferedName
+   * Get preferredName
    *
-   * @return preferedName
+   * @return preferredName
    **/
   @ApiModelProperty(value = "")
-  public String getPreferedName() {
-    return preferedName;
+  public String getPreferredName() {
+    return preferredName;
   }
 
-  public void setPreferedName(String preferedName) {
-    this.preferedName = preferedName;
+  public void setPreferredName(String preferredName) {
+    this.preferredName = preferredName;
   }
 
   /**
@@ -272,6 +276,20 @@ public abstract class User {
   }
 
   public void setDateOfBirth(String dateOfBirth) {
+
+    DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.ENGLISH);
+    LocalDate date = null;
+
+    try{
+    date = LocalDate.parse(dateOfBirth, format);
+
+    }
+    catch (DateTimeParseException e) {
+      e.printStackTrace();
+    }
+    if (date.compareTo(LocalDate.now())> 0) {
+      throw new IllegalArgumentException("DateOfBirth should be in the past");
+    }
     this.dateOfBirth = dateOfBirth;
   }
 
@@ -388,7 +406,7 @@ public abstract class User {
 
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    officialName: ").append(toIndentedString(officialName)).append("\n");
-    sb.append("    preferedName: ").append(toIndentedString(preferedName)).append("\n");
+    sb.append("    preferredName: ").append(toIndentedString(preferredName)).append("\n");
     sb.append("    sex: ").append(toIndentedString(sex)).append("\n");
     sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
     sb.append("    primaryAddress: ").append(toIndentedString(primaryAddress)).append("\n");

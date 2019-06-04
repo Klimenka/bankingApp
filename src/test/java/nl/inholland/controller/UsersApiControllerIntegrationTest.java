@@ -1,10 +1,10 @@
 package nl.inholland.controller;
 
-import nl.inholland.model.Login;
+import nl.inholland.model.*;
 
 import java.util.*;
 
-import nl.inholland.model.User;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +21,23 @@ public class UsersApiControllerIntegrationTest {
 
     @Autowired
     private UsersApi api;
-
+    private User user;
+    @Before
+    public void setup() {
+        user = new Customer("KL Poll", "Kile Poll",
+                User.SexEnum.fromValue("male"), "21.12.1972", new Address("Example",
+                111, "1111OP", "Nen", "The Netherlands"),
+                new Address("Example",111, "1111OP", "Nen",
+                        "The Netherlands"), "+3111132156", "example@gmail.com",
+                User.CommrcialMessagesEnum.fromValue("by bankmail"), User.PreferedLanguageEnum.fromValue("Dutch"),
+                User.UserTypeEnum.fromValue("Customer"));
+    }
     @Test
     public void addUserTest() throws Exception {
-        User user = null;
+
         ResponseEntity<User> responseEntity = api.addUser(user);
-        assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        System.out.println(responseEntity.getBody().getId());
     }
 
     @Test
@@ -37,24 +48,17 @@ public class UsersApiControllerIntegrationTest {
     }
 
     @Test
-    public void deleteUserByIdTest() throws Exception {
-        Long userId = 789L;
-        ResponseEntity<Void> responseEntity = api.deleteUserById(userId);
-        assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
-    }
-
-    @Test
     public void getUserByIdTest() throws Exception {
-        Long userId = 789L;
+        Long userId = 1L;
         ResponseEntity<User> responseEntity = api.getUserById(userId);
-        assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
     @Test
     public void getUsersTest() throws Exception {
-        String userType = "userType_example";
+        String userType = "";
         ResponseEntity<List<User>> responseEntity = api.getUsers(userType);
-        assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
     @Test
@@ -63,6 +67,13 @@ public class UsersApiControllerIntegrationTest {
         Long userId = 789L;
         ResponseEntity<Void> responseEntity = api.updateUserLogin(body, userId);
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
+    }
+
+    @Test
+    public void deleteUserByIdTest() throws Exception {
+        Long userId = 1L;
+        ResponseEntity<Void> responseEntity = api.deleteUserById(userId);
+        assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
     }
 
 }

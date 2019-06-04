@@ -57,7 +57,7 @@ public class UsersApiController implements UsersApi {
                                               @ApiParam(value = "The id of the user to return",required=true, allowableValues = "")
                                               @PathVariable("userId") Long userId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<User>(userService.getUser(userId),HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<User>(userService.getUser(userId),HttpStatus.OK);
     }
 
     public ResponseEntity<List<User>> getUsers(
