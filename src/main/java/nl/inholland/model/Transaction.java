@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModelProperty;
 import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -14,34 +15,52 @@ import javax.validation.constraints.*;
  * Transaction
  */
 @Validated
+@Entity
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
 public class Transaction   {
   @JsonProperty("transaction_id")
-  private Integer transactionId = null;
+  @Id
+  @GeneratedValue(generator = "transaction_sequence", strategy = GenerationType.SEQUENCE)
+  @SequenceGenerator(name = "transaction_sequence", initialValue = 1)
+  private long transactionId;
 
   @JsonProperty("accountFrom")
-  private String accountFrom = null;
+  private String accountFrom;
 
   @JsonProperty("accountTo")
-  private String accountTo = null;
+  private String accountTo;
 
   @JsonProperty("amount")
-  private Float amount = null;
+  private Float amount;
 
   @JsonProperty("userPerforming")
-  private String userPerforming = null;
+  private String userPerforming;
 
   @JsonProperty("timestamp")
-  private OffsetDateTime timestamp = null;
+  private OffsetDateTime timestamp;
+
+  public Transaction()
+  {
+
+  }
+
+  public Transaction(long transactionId, String accountFrom, String accountTo, String userPerforming, OffsetDateTime timestamp)
+  {
+    this.transactionId = transactionId;
+    this.accountFrom = accountFrom;
+    this.accountTo = accountTo;
+    this.userPerforming = userPerforming;
+    this.timestamp = timestamp;
+  }
 
   /**
    * Gets or Sets transactionStatus
    */
   public enum TransactionStatusEnum {
     PENDING("pending"),
-    
+
     SUCCESSFUL("successful"),
-    
+
     FAILED("failed");
 
     private String value;
@@ -74,9 +93,9 @@ public class Transaction   {
    */
   public enum TransactionTypeEnum {
     TRANSACTION("transaction"),
-    
+
     WITHDRAW("withdraw"),
-    
+
     DEPOSIT("deposit");
 
     private String value;
@@ -104,7 +123,7 @@ public class Transaction   {
   @JsonProperty("transactionType")
   private TransactionTypeEnum transactionType = null;
 
-  public Transaction transactionId(Integer transactionId) {
+  public Transaction transactionId(long transactionId) {
     this.transactionId = transactionId;
     return this;
   }
@@ -112,15 +131,15 @@ public class Transaction   {
   /**
    * Get transactionId
    * @return transactionId
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  public Integer getTransactionId() {
+  public long getTransactionId() {
     return transactionId;
   }
 
-  public void setTransactionId(Integer transactionId) {
+  public void setTransactionId(long transactionId) {
     this.transactionId = transactionId;
   }
 
@@ -132,7 +151,7 @@ public class Transaction   {
   /**
    * Get accountFrom
    * @return accountFrom
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public String getAccountFrom() {
@@ -151,7 +170,7 @@ public class Transaction   {
   /**
    * Get accountTo
    * @return accountTo
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public String getAccountTo() {
@@ -172,11 +191,11 @@ public class Transaction   {
    * minimum: 1
    * maximum: 10000
    * @return amount
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-@DecimalMin("1") @DecimalMax("10000")   public Float getAmount() {
+  @DecimalMin("1") @DecimalMax("10000")   public Float getAmount() {
     return amount;
   }
 
@@ -192,7 +211,7 @@ public class Transaction   {
   /**
    * Get userPerforming
    * @return userPerforming
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -212,7 +231,7 @@ public class Transaction   {
   /**
    * Get timestamp
    * @return timestamp
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -233,7 +252,7 @@ public class Transaction   {
   /**
    * Get transactionStatus
    * @return transactionStatus
-  **/
+   **/
   @ApiModelProperty(value = "")
 
   public TransactionStatusEnum getTransactionStatus() {
@@ -252,7 +271,7 @@ public class Transaction   {
   /**
    * Get transactionType
    * @return transactionType
-  **/
+   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
@@ -275,13 +294,13 @@ public class Transaction   {
     }
     Transaction transaction = (Transaction) o;
     return Objects.equals(this.transactionId, transaction.transactionId) &&
-        Objects.equals(this.accountFrom, transaction.accountFrom) &&
-        Objects.equals(this.accountTo, transaction.accountTo) &&
-        Objects.equals(this.amount, transaction.amount) &&
-        Objects.equals(this.userPerforming, transaction.userPerforming) &&
-        Objects.equals(this.timestamp, transaction.timestamp) &&
-        Objects.equals(this.transactionStatus, transaction.transactionStatus) &&
-        Objects.equals(this.transactionType, transaction.transactionType);
+            Objects.equals(this.accountFrom, transaction.accountFrom) &&
+            Objects.equals(this.accountTo, transaction.accountTo) &&
+            Objects.equals(this.amount, transaction.amount) &&
+            Objects.equals(this.userPerforming, transaction.userPerforming) &&
+            Objects.equals(this.timestamp, transaction.timestamp) &&
+            Objects.equals(this.transactionStatus, transaction.transactionStatus) &&
+            Objects.equals(this.transactionType, transaction.transactionType);
   }
 
   @Override
@@ -293,7 +312,7 @@ public class Transaction   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Transaction {\n");
-    
+
     sb.append("    transactionId: ").append(toIndentedString(transactionId)).append("\n");
     sb.append("    accountFrom: ").append(toIndentedString(accountFrom)).append("\n");
     sb.append("    accountTo: ").append(toIndentedString(accountTo)).append("\n");
