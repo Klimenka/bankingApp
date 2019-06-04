@@ -41,11 +41,11 @@ public abstract class Account {
     @JsonProperty("dateOfOpening")
     private LocalDate dateOfOpening = LocalDate.now();
 
-    @JsonProperty("userId")
-    private long userId;
+    //@JsonProperty("userId")
+    //private long usid;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private User user;
@@ -61,11 +61,10 @@ public abstract class Account {
 
     //  String accountNumber
     //  this.accountNumber = accountNumber;
-    public Account(float balance, LocalDate dateOfOpening, long userId,
-                   String currency) {
+    public Account(float balance, LocalDate dateOfOpening, String currency, User user) {
         this.balance = balance;
         this.dateOfOpening = dateOfOpening;
-        this.userId = userId;
+        this.user = user;
         this.currency = currency;
     }
 
@@ -130,15 +129,7 @@ public abstract class Account {
         }
     }
 
-    public void buildIBAN() {
-        DecimalFormat df = new DecimalFormat("0000000000");
-        String accountNumberFormatted = df.format(this.accountNumber);
-        this.IBAN = new Iban.Builder()
-                .countryCode(CountryCode.NL)
-                .bankCode("INHO")
-                .accountNumber(accountNumberFormatted)
-                .build().toString();
-    }
+    public abstract void buildIBAN(long accountNumber);
 
     @ApiModelProperty(value = "")
     public long getAccountNumber() {
@@ -164,6 +155,9 @@ public abstract class Account {
     }
 
     public void setBalance(float balance) {
+        if (balance < 0) {
+            throw new IllegalArgumentException("Balance " + balance + " is below zero.");
+        }
         this.balance = balance;
     }
 
@@ -179,13 +173,21 @@ public abstract class Account {
 
     @ApiModelProperty(required = true, value = "")
     @NotNull
-    public long getUserId() {
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+   /* public long getUserId() {
         return userId;
     }
 
     public void setUserId(long userId) {
         this.userId = userId;
-    }
+    }*/
 
     @ApiModelProperty(value = "")
     public String getCurrency() {
@@ -224,7 +226,7 @@ public abstract class Account {
         sb.append("    IBAN: ").append(toIndentedString(IBAN)).append("\n");
         sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
         sb.append("    dateOfOpening: ").append(toIndentedString(dateOfOpening)).append("\n");
-        sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
+        sb.append("    userId: ").append(toIndentedString(user.getId())).append("\n");
         sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
         sb.append("    accountStatus: ").append(toIndentedString(accountStatus)).append("\n");
         sb.append("}");

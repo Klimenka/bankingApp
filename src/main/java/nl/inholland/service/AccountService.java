@@ -45,7 +45,7 @@ public class AccountService {
         Account bankAccount = accountRepository
                 .save(account);
 
-        bankAccount.buildIBAN();
+        bankAccount.buildIBAN(bankAccount.getAccountNumber());
 
         accountRepository.save(accountRepository
                 .findById(bankAccount.getAccountNumber())

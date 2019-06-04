@@ -25,7 +25,7 @@ public abstract class User {
   @SequenceGenerator(name = "userSeq", initialValue = 1)
   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSeq")
   @JsonProperty("id")
-  private Long id;
+  private long id;
 
   @JsonProperty("officialName")
   private String officialName;
@@ -211,7 +211,7 @@ public abstract class User {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  public Long getId() {
+  public long getId() {
     return id;
   }
 

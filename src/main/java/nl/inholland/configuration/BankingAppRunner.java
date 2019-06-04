@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class BankingAppRunner implements ApplicationRunner {
@@ -21,6 +22,7 @@ public class BankingAppRunner implements ApplicationRunner {
     private BankAccountConfig bankAccountConfig;
     private UserRepository userRepository;
     private AddressRepository addressRepository;
+    private int index = 0;
 
     public BankingAppRunner(AccountRepository accountRepository, BankAccountConfig bankAccountConfig,
                             UserRepository userRepository, AddressRepository addressRepository) {
@@ -32,15 +34,17 @@ public class BankingAppRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        getBankOwnAccount();
-        getBankAccountsFromFile();
         getAddressesFromFileAndSaveToInMemoryDB();
         getUsersFromFile();
+        getBankOwnAccount();
+        getBankAccountsFromFile();
     }
 
     private void getBankOwnAccount() {
         Account bankAccount = new CurrentAccount(0,
-                LocalDate.now(), 0, "euro");
+                LocalDate.now(), "euro", userRepository
+                .findById(Long.valueOf(1))
+                .orElseThrow(IllegalArgumentException::new));
         bankAccount.setIBAN(bankAccountConfig.getIBAN());
         accountRepository.save(bankAccount);
     }
@@ -55,20 +59,23 @@ public class BankingAppRunner implements ApplicationRunner {
 
     private void saveBankAccounts(String line) {
         Account account;
-        if (line.split(",")[6].equals("current")) {
+        List<User> users = (List<User>) userRepository.findAll();
+
+        if (line.split(",")[4].equals("current")) {
             account = accountRepository.save(new CurrentAccount(
-                    Float.parseFloat(line.split(",")[1]),
-                    LocalDate.parse(line.split(",")[2]),
-                    Long.parseLong(line.split(",")[3]),
-                    line.split(",")[4]));
+                    Float.parseFloat(line.split(",")[0]),
+                    LocalDate.parse(line.split(",")[1]),
+                    line.split(",")[2],
+                    users.get(index)));
         } else {
             account = accountRepository.save(new SavingAccount(
-                    Float.parseFloat(line.split(",")[1]),
-                    LocalDate.parse(line.split(",")[2]),
-                    Long.parseLong(line.split(",")[3]),
-                    line.split(",")[4]));
+                    Float.parseFloat(line.split(",")[0]),
+                    LocalDate.parse(line.split(",")[1]),
+                    line.split(",")[2],
+                    users.get(index)));
         }
-        account.buildIBAN();
+        index++;
+        account.buildIBAN(account.getAccountNumber());
         accountRepository.save(accountRepository.findById(account.getAccountNumber())
                 .map(account1 -> account).orElseThrow(IllegalArgumentException::new));
     }
