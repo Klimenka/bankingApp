@@ -5,12 +5,10 @@ import nl.inholland.repository.AccountRepository;
 import nl.inholland.repository.AddressRepository;
 import nl.inholland.repository.TransactionRepository;
 import nl.inholland.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import org.threeten.bp.OffsetDateTime;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,7 +20,6 @@ import java.util.List;
 public class BankingAppRunner implements ApplicationRunner {
 
 
-
     private AccountRepository accountRepository;
     private BankAccountConfig bankAccountConfig;
     private UserRepository userRepository;
@@ -30,11 +27,9 @@ public class BankingAppRunner implements ApplicationRunner {
     private TransactionRepository transactionRepository;
     private int index = 0;
 
-   /* public BankingAppRunner() {
-    }*/
-
     public BankingAppRunner(AccountRepository accountRepository, BankAccountConfig bankAccountConfig,
-                            UserRepository userRepository, AddressRepository addressRepository, TransactionRepository transactionRepository) {
+                            UserRepository userRepository, AddressRepository addressRepository,
+                            TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
         this.bankAccountConfig = bankAccountConfig;
         this.userRepository = userRepository;
@@ -51,41 +46,23 @@ public class BankingAppRunner implements ApplicationRunner {
         getTransactionsFromFile();
     }
 
-    private void getTransactionsFromFile() throws IOException
-    {
+    private void getTransactionsFromFile() throws IOException {
         Path path = Paths.get("src/main/resources/transaction.csv");
         Files.lines(path)
-                .forEach(line -> saveTransactionInFile(line));
+                .forEach(this::saveTransactionInFile);
 
         transactionRepository.findAll().forEach(System.out::println);
     }
 
-    private void saveTransactionInFile(String line)
-    {
-        if(line.split(",")[3].equals("Customer"))
-        {
-            transactionRepository.save(new Transaction(
-                            line.split(",")[0],
-                            line.split(",")[1],
-                            Float.parseFloat(line.split(",")[2]),
-                            line.split(",")[3],
-                            OffsetDateTime.parse(line.split(",")[4]),
-                    Transaction.TransactionTypeEnum.fromValue(line.split(",")[5])
-                    )
-            );
-        }
-        else if(line.split(",")[3].equals("Employee"))
-        {
-            transactionRepository.save(new Transaction(
-                            line.split(",")[0],
-                            line.split(",")[1],
-                            Float.parseFloat(line.split(",")[2]),
-                            line.split(",")[3],
-                            OffsetDateTime.parse(line.split(",")[4]),
-                    Transaction.TransactionTypeEnum.fromValue(line.split(",")[5])
-                    )
-            );
-        }
+    private void saveTransactionInFile(String line) {
+        transactionRepository.save(new Transaction(
+                line.split(",")[0],
+                line.split(",")[1],
+                Float.parseFloat(line.split(",")[2]),
+                userRepository.getUserByIdEquals(Long.parseLong(line.split(",")[3])),
+                OffsetDateTime.parse(line.split(",")[4]),
+                Transaction.TransactionTypeEnum.fromValue(line.split(",")[5]))
+        );
     }
 
     private void getBankOwnAccount() {

@@ -1,8 +1,11 @@
 package nl.inholland.controller;
 
 import nl.inholland.model.Transaction;
+import nl.inholland.repository.AccountRepository;
+import nl.inholland.repository.UserRepository;
 import nl.inholland.service.TransactionService;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.threeten.bp.LocalDate;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.threeten.bp.OffsetDateTime;
+import org.threeten.bp.*;
+
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +28,8 @@ public class TransactionsApiController implements TransactionsApi
     private static final Logger log = LoggerFactory.getLogger(TransactionsApiController.class);
     private final ObjectMapper objectMapper;
     private final HttpServletRequest request;
-    private TransactionService transactionService;
+    private AccountRepository accountRepository;
+    private TransactionService transactionService = new TransactionService();
     private String accept = "";
 
     @org.springframework.beans.factory.annotation.Autowired
@@ -35,33 +40,22 @@ public class TransactionsApiController implements TransactionsApi
         this.request = request;
     }
 
-    @RequestMapping(value = "createTransaction", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    //creates a transaction
     public ResponseEntity<Void> createTransaction(@ApiParam(value = ""  )  @Valid @RequestBody Transaction body)
     {
-        //(note) check if a an account exists first in the addresses.csv
-        // check if amount is correct!
+        accept = request.getHeader("Accept");
         transactionService.addTransaction(body);
-
-        accept = request.getHeader("Created");
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
-    @RequestMapping("getTransaction")
-    public ResponseEntity<List<Transaction>> getTransactionHistory(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "accountNumber", required = true) String accountNumber,@ApiParam(value = "") @Valid @RequestParam(value = "dateFrom", required = false) LocalDate dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "dateTo", required = false) LocalDate dateTo)
+    //retrieves transactions
+    public ResponseEntity<List<Transaction>> getTransactionHistory(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(name="accountNumber", required = true) String accountNumber,@ApiParam(value = "") @Valid @RequestParam(value = "dateFrom", required = false) OffsetDateTime dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "dateTo", required = false) OffsetDateTime dateTo)
     {
-        if(dateFrom != null && dateTo != null)
-        {
-            OffsetDateTime offsetDateFrom = OffsetDateTime.from(dateFrom);
-            OffsetDateTime offsetDateTo = OffsetDateTime.from(dateTo);
+        accept = request.getHeader("Accept");
 
-            transactionService.getAllTransactions(accountNumber, offsetDateFrom, offsetDateTo);
-        }
-        else
-        {
-            transactionService.getAllTransactions(accountNumber, null, null);
-        }
+        dateTo = OffsetDateTime.now();
+        dateFrom = dateTo.minusMonths(1);
 
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<List<Transaction>>(HttpStatus.OK);
+        return new ResponseEntity<List<Transaction>>(transactionService.getAllTransactions(accountNumber, dateFrom, dateTo), HttpStatus.OK);
     }
 }

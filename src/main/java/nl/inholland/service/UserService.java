@@ -2,6 +2,7 @@ package nl.inholland.service;
 
 import nl.inholland.model.User;
 import nl.inholland.repository.AddressRepository;
+import nl.inholland.repository.LoginRepository;
 import nl.inholland.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ public class UserService {
 
     private UserRepository userRepository;
     private AddressRepository addressRepository;
+
 
     public UserService(UserRepository userRepository, AddressRepository addressRepository) {
         this.userRepository = userRepository;
@@ -32,6 +34,7 @@ public class UserService {
     public User createUser(User user){
         addressRepository.save(user.getPrimaryAddress());
         userRepository.save(user);
+
         return userRepository.findTopByOrderByIdDesc();
     }
     public User getUser(Long userId){
