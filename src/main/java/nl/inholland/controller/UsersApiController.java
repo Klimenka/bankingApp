@@ -4,16 +4,14 @@ import nl.inholland.model.Login;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import nl.inholland.model.User;
+import nl.inholland.service.LoginService;
 import nl.inholland.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
@@ -27,19 +25,27 @@ public class UsersApiController implements UsersApi {
 
     private final ObjectMapper objectMapper;
     private UserService userService;
-
+    private  LoginService loginService;
     private final HttpServletRequest request;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public UsersApiController(ObjectMapper objectMapper, HttpServletRequest request, UserService userService) {
+    public UsersApiController(ObjectMapper objectMapper, HttpServletRequest request, UserService userService, LoginService loginService) {
         this.objectMapper = objectMapper;
         this.request = request;
         this.userService = userService;
+        this.loginService = loginService;
     }
 
-    public ResponseEntity<User> addUser(@ApiParam(value = "" ,required=true )  @Valid @RequestBody User user) {
+        public ResponseEntity<User> addUser(@ApiParam(value = "" ,required=true )  @Valid @RequestBody User user) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<User>(userService.createUser(user), HttpStatus.CREATED);
+    }
+
+
+    public ResponseEntity<Void> getLoginTest(@RequestParam("username") String username)
+    {
+        loginService.getLogin(username);
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     public ResponseEntity<Void> createUserToken
