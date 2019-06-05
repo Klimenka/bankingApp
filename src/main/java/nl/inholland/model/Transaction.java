@@ -33,8 +33,15 @@ public class Transaction   {
   @JsonProperty("amount")
   private Float amount;
 
+  @JsonProperty("dayLimit")
+  private Integer dayLimit;
+
+  @JsonProperty("transactionLimit")
+  private Integer transactionLimit;
+
+  @ManyToOne
   @JsonProperty("userPerforming")
-  private String userPerforming;
+  private User userPerforming;
 
   @JsonProperty("timestamp")
   private OffsetDateTime timestamp;
@@ -44,7 +51,7 @@ public class Transaction   {
 
   }
 
-  public Transaction(String accountFrom, String accountTo, Float amount, String userPerforming, OffsetDateTime timestamp, TransactionTypeEnum transactionType)
+  public Transaction(String accountFrom, String accountTo, Float amount, User userPerforming, OffsetDateTime timestamp, TransactionTypeEnum transactionType)
   {
     this.accountFrom = accountFrom;
     this.accountTo = accountTo;
@@ -196,7 +203,9 @@ public class Transaction   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  @DecimalMin("1") @DecimalMax("10000")   public Float getAmount() {
+  @DecimalMin(value = "1", message = "The balance must be above 1") @DecimalMax(value = "10000", message = "Balance must be below 10000")
+  public Float getAmount()
+  {
     return amount;
   }
 
@@ -204,7 +213,7 @@ public class Transaction   {
     this.amount = amount;
   }
 
-  public Transaction userPerforming(String userPerforming) {
+  public Transaction userPerforming(User userPerforming) {
     this.userPerforming = userPerforming;
     return this;
   }
@@ -216,11 +225,11 @@ public class Transaction   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  public String getUserPerforming() {
+  public User getUserPerforming() {
     return userPerforming;
   }
 
-  public void setUserPerforming(String userPerforming) {
+  public void setUserPerforming(User userPerforming) {
     this.userPerforming = userPerforming;
   }
 

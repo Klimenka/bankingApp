@@ -14,14 +14,14 @@ public class TransactionService
     @Autowired
     private TransactionRepository transactionRepository;
 
-    //adds a transaction to the database
-    public Transaction addTransaction(Transaction transaction)
+    //adds a transaction to the repository
+    public Transaction addTransaction(Transaction body)
     {
         //build logic to make transactions affect the balance in a bank account
-        return transactionRepository.save(transaction);
+        return transactionRepository.save(body);
     }
 
-    //checks if the user filters the transaction with dates
+    //retrieves all the user's transactions between the dates
     public List<Transaction> getAllTransactions(String userAccount, OffsetDateTime dateFrom, OffsetDateTime dateTo)
     {
         return transactionRepository.findAllByAccountFromEqualsAndTimestampGreaterThanEqualAndTimestampLessThanEqual(userAccount, dateFrom, dateTo);

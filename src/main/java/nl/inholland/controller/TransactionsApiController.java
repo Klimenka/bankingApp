@@ -1,6 +1,8 @@
 package nl.inholland.controller;
 
 import nl.inholland.model.Transaction;
+import nl.inholland.repository.AccountRepository;
+import nl.inholland.repository.UserRepository;
 import nl.inholland.service.TransactionService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,7 @@ public class TransactionsApiController implements TransactionsApi
     private final ObjectMapper objectMapper;
     private final HttpServletRequest request;
     private TransactionService transactionService = new TransactionService();
+    private AccountRepository accountRepository;
     private String accept = "";
 
     @org.springframework.beans.factory.annotation.Autowired
@@ -37,21 +40,22 @@ public class TransactionsApiController implements TransactionsApi
         this.request = request;
     }
 
+    //creates a transaction
     public ResponseEntity<Void> createTransaction(@ApiParam(value = ""  )  @Valid @RequestBody Transaction body)
     {
-        //(note) check if a an account exists first in the addresses.csv
+        accept = request.getHeader("Accept");
         transactionService.addTransaction(body);
-
-        accept = request.getHeader("Created");
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }
 
+    //retrieves transactions
     public ResponseEntity<List<Transaction>> getTransactionHistory(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(name="accountNumber", required = true) String accountNumber,@ApiParam(value = "") @Valid @RequestParam(value = "dateFrom", required = false) OffsetDateTime dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "dateTo", required = false) OffsetDateTime dateTo)
     {
+        accept = request.getHeader("Accept");
+
         dateTo = OffsetDateTime.now();
         dateFrom = dateTo.minusMonths(1);
 
-        accept = request.getHeader("Accept");
         return new ResponseEntity<List<Transaction>>(transactionService.getAllTransactions(accountNumber, dateFrom, dateTo), HttpStatus.OK);
     }
 }
