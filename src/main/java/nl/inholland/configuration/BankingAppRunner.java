@@ -47,37 +47,21 @@ public class BankingAppRunner implements ApplicationRunner {
     {
         Path path = Paths.get("src/main/resources/transaction.csv");
         Files.lines(path)
-                .forEach(line -> saveTransactionInFile(line));
+                .forEach(this::saveTransactionInFile);
 
         transactionRepository.findAll().forEach(System.out::println);
     }
 
     private void saveTransactionInFile(String line)
     {
-        if(line.split(",")[3].equals("Customer"))
-        {
-            transactionRepository.save(new Transaction(
-                            line.split(",")[0],
-                            line.split(",")[1],
-                            Float.parseFloat(line.split(",")[2]),
-                            line.split(",")[3],
-                            OffsetDateTime.parse(line.split(",")[4]),
-                    Transaction.TransactionTypeEnum.fromValue(line.split(",")[5])
-                    )
+        transactionRepository.save(new Transaction(
+                line.split(",")[0],
+                line.split(",")[1],
+                Float.parseFloat(line.split(",")[2]),
+                userRepository.getUserByIdEquals(Long.parseLong(line.split(",")[3])),
+                OffsetDateTime.parse(line.split(",")[4]),
+                Transaction.TransactionTypeEnum.fromValue(line.split(",")[5]))
             );
-        }
-        else if(line.split(",")[3].equals("Employee"))
-        {
-            transactionRepository.save(new Transaction(
-                            line.split(",")[0],
-                            line.split(",")[1],
-                            Float.parseFloat(line.split(",")[2]),
-                            line.split(",")[3],
-                            OffsetDateTime.parse(line.split(",")[4]),
-                    Transaction.TransactionTypeEnum.fromValue(line.split(",")[5])
-                    )
-            );
-        }
     }
 
     private void getBankOwnAccount() {
