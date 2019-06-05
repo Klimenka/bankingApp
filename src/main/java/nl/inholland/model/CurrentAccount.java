@@ -1,6 +1,7 @@
 package nl.inholland.model;
 
 
+import lombok.NoArgsConstructor;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.springframework.validation.annotation.Validated;

@@ -3,6 +3,7 @@ package nl.inholland.controller;
 import nl.inholland.model.Account;
 import nl.inholland.model.Error;
 import io.swagger.annotations.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,6 +66,6 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Account>> getBankAccounts(@ApiParam(value = "") @RequestParam(value = "dateOfOpening", required = false) LocalDate dateOfOpening, @ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType);
+    ResponseEntity<List<Account>> getBankAccounts(@ApiParam(value = "") @RequestParam(value = "dateOfOpening", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateOfOpening, @ApiParam(value = "", allowableValues = "current, saving") @Valid @RequestParam(value = "accountType", required = false) String accountType);
 
 }

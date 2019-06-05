@@ -8,6 +8,7 @@ package nl.inholland.controller;
 import nl.inholland.model.Error;
 import nl.inholland.model.Login;
 import io.swagger.annotations.*;
+import nl.inholland.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,17 +24,17 @@ import java.util.List;
 @Api(value = "users", description = "the users API")
 public interface UsersApi {
 
-    @ApiOperation(value = "Adds a new user", nickname = "addUser", notes = "Adds a new user and returns it", response = Object.class, authorizations = {
+    @ApiOperation(value = "Adds a new user", nickname = "addUser", notes = "Adds a new user and returns it", response = User.class, authorizations = {
         @Authorization(value = "api_key")    }, tags={ "users", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "the user has been created.", response = Object.class),
+        @ApiResponse(code = 201, message = "the user has been created.", response = User.class),
         @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
         @ApiResponse(code = 401, message = "Unauthorized", response = Error.class) })
     @RequestMapping(value = "/users",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Object> addUser(@ApiParam(value = "" ,required=true )  @Valid @RequestBody Object body);
+    ResponseEntity<User> addUser(@ApiParam(value = "" ,required=true )  @Valid @RequestBody User body);
 
 
     @ApiOperation(value = "Returns an auth token", nickname = "createUserToken", notes = "", tags={ "users", })
@@ -66,7 +67,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users/{userId}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Object> getUserById(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId);
+    ResponseEntity<User> getUserById(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId);
 
 
     @ApiOperation(value = "get all users", nickname = "getUsers", notes = "getting all users (employees and customers) by Employee", response = Object.class, responseContainer = "List", authorizations = {
@@ -78,7 +79,7 @@ public interface UsersApi {
     @RequestMapping(value = "/users",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Object>> getUsers(@ApiParam(value = "", allowableValues = "Customer, Employee") @Valid @RequestParam(value = "userType", required = false) String userType);
+    ResponseEntity<List<User>> getUsers(@ApiParam(value = "", allowableValues = "Customer, Employee") @Valid @RequestParam(value = "userType", required = false) String userType);
 
 
     @ApiOperation(value = "update the user's login info", nickname = "updateUserLogin", notes = "calling this will allow the user to change his/her credentials", tags={ "users", })

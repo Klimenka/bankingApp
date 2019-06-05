@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.iban4j.CountryCode;
@@ -52,6 +53,17 @@ public abstract class Account {
 
     @JsonProperty("currency")
     private String currency = "euro";
+
+    public float getLimitBalanace() {
+        return limitBalanace;
+    }
+
+    public void setLimitBalanace(float limitBalanace) {
+        this.limitBalanace = limitBalanace;
+    }
+
+    @JsonIgnore
+    private float limitBalanace;
 
     @JsonProperty("accountStatus")
     private AccountStatusEnum accountStatus = AccountStatusEnum.OPENED;
@@ -155,7 +167,7 @@ public abstract class Account {
     }
 
     public void setBalance(float balance) {
-        if (balance < 0) {
+        if (balance < limitBalanace) {
             throw new IllegalArgumentException("Balance " + balance + " is below zero.");
         }
         this.balance = balance;

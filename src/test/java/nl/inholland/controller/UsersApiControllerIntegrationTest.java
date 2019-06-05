@@ -4,6 +4,7 @@ import nl.inholland.model.Login;
 
 import java.util.*;
 
+import nl.inholland.model.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class UsersApiControllerIntegrationTest {
 
     @Test
     public void addUserTest() throws Exception {
-        Object body = null;
-        ResponseEntity<Object> responseEntity = api.addUser(body);
+        User user = null;
+        ResponseEntity<User> responseEntity = api.addUser(user);
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
     }
 
@@ -45,14 +46,14 @@ public class UsersApiControllerIntegrationTest {
     @Test
     public void getUserByIdTest() throws Exception {
         Long userId = 789L;
-        ResponseEntity<Object> responseEntity = api.getUserById(userId);
+        ResponseEntity<User> responseEntity = api.getUserById(userId);
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
     }
 
     @Test
     public void getUsersTest() throws Exception {
         String userType = "userType_example";
-        ResponseEntity<List<Object>> responseEntity = api.getUsers(userType);
+        ResponseEntity<List<User>> responseEntity = api.getUsers(userType);
         assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());
     }
 
