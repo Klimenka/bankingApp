@@ -60,6 +60,7 @@ public class Login {
     public Login(Login login) {
         this.password = login.getPassword();
         this.user = login.getUser();
+        this.userName = login.user.getEmailAddress();
     }
 
 

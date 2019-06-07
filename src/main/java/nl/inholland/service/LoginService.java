@@ -2,7 +2,9 @@ package nl.inholland.service;
 
 import nl.inholland.model.CustomUserDetails;
 import nl.inholland.model.Login;
+import nl.inholland.model.User;
 import nl.inholland.repository.LoginRepository;
+import nl.inholland.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class LoginService implements UserDetailsService {
 
     private LoginRepository loginRepository;
+    private UserRepository userRepository;
 
     public LoginService(LoginRepository loginRepository) {
 
@@ -34,5 +37,16 @@ public class LoginService implements UserDetailsService {
 
         return optionalUsers
                 .map(CustomUserDetails::new).get();
+    }
+
+    public Login createLogin(Login login) {
+        User user = userRepository
+                .findById(login.getUserId())
+                .orElseThrow(IllegalArgumentException::new);
+
+        login.setUser(user);
+        Login newLogin = loginRepository.save(login);
+
+        return login;
     }
 }

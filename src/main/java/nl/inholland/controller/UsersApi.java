@@ -36,6 +36,18 @@ public interface UsersApi {
             method = RequestMethod.POST)
     ResponseEntity<User> addUser(@ApiParam(value = "", required = true) @Valid @RequestBody User body);
 
+    @ApiOperation(value = "Adds a new login", nickname = "addLogin", notes = "Adds a new login and returns it", response = Login.class, authorizations = {
+            @Authorization(value = "api_key")}, tags = {"users",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "the login has been created.", response = Login.class),
+            @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class)})
+    @RequestMapping(value = "/users/register",
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<Login> addLogin(@ApiParam(value = "", required = true) @Valid @RequestBody Login login);
+
 
     @ApiOperation(value = "Returns an auth token", nickname = "createUserToken", notes = "", tags = {"users",})
     @ApiResponses(value = {

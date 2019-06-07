@@ -42,6 +42,11 @@ public class UsersApiController implements UsersApi {
         return new ResponseEntity<User>(userService.createUser(user), HttpStatus.CREATED);
     }
 
+    public ResponseEntity<Login> addLogin(@ApiParam(value = "", required = true) @Valid @RequestBody Login login) {
+        String accept = request.getHeader("Accept");
+        return new ResponseEntity<Login>(loginService.createLogin(login), HttpStatus.CREATED);
+    }
+
 
     public ResponseEntity<Void> getLoginTest(@RequestParam("username") String username) {
         //loginService.getLogin(username);
