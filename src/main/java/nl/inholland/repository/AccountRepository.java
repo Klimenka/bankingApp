@@ -26,4 +26,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> getAccountByDateOfOpeningEqualsAndAccountTypeEquals
             (LocalDate dateOfOpening, Account.AccountTypeEnum accountType);
 
+    Account getAccountByIban(String IBAN);
+
 }

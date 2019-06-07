@@ -6,18 +6,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.springframework.validation.annotation.Validated;
-
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.text.DecimalFormat;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 
@@ -35,7 +31,7 @@ public abstract class Account {
     private long accountNumber;
 
     //@JsonProperty("IBAN")
-    private String IBAN;
+    private String iban;
 
     @JsonProperty("balance")
     private float balance;
@@ -172,11 +168,11 @@ public abstract class Account {
 
     @ApiModelProperty(value = "")
     public String getIBAN() {
-        return IBAN;
+        return iban;
     }
 
     public void setIBAN(String IBAN) {
-        this.IBAN = IBAN;
+        this.iban = IBAN;
     }
 
     @ApiModelProperty(value = "")
@@ -253,7 +249,7 @@ public abstract class Account {
         sb.append("class Account {\n");
 
         sb.append("    accountNumber: ").append(toIndentedString(accountNumber)).append("\n");
-        sb.append("    IBAN: ").append(toIndentedString(IBAN)).append("\n");
+        sb.append("    IBAN: ").append(toIndentedString(iban)).append("\n");
         sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
         sb.append("    dateOfOpening: ").append(toIndentedString(dateOfOpening)).append("\n");
         sb.append("    userId: ").append(toIndentedString(user.getId())).append("\n");

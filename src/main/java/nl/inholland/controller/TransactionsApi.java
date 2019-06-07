@@ -7,7 +7,6 @@ package nl.inholland.controller;
 
 import nl.inholland.model.Error;
 import nl.inholland.model.Transaction;
-import org.threeten.bp.LocalDate;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,7 +32,7 @@ public interface TransactionsApi {
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<Void> createTransaction(@ApiParam(value = "") @Valid @RequestBody Transaction body);
+    ResponseEntity<Object> createTransaction(@ApiParam(value = "") @Valid @RequestBody Transaction body);
 
 
     @ApiOperation(value = "retrieves all transactions which has been made from a user's account.", nickname = "getTransactionHistory", notes = "This function will retrieve the transaction acitivities of one account. The user will have the option to filter the transaction activities by using dates.", response = Transaction.class, responseContainer = "List", tags = {"transactions",})

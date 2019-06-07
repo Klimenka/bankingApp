@@ -1,13 +1,11 @@
 package nl.inholland.controller;
 
 import nl.inholland.model.Transaction;
+import nl.inholland.model.Error;
 import nl.inholland.repository.AccountRepository;
-import nl.inholland.repository.UserRepository;
 import nl.inholland.service.TransactionService;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.threeten.bp.LocalDate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -15,21 +13,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.threeten.bp.*;
-
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
-@RestController
+@Controller
 public class TransactionsApiController implements TransactionsApi {
     private static final Logger log = LoggerFactory.getLogger(TransactionsApiController.class);
     private final ObjectMapper objectMapper;
     private final HttpServletRequest request;
-    private AccountRepository accountRepository;
     private TransactionService transactionService = new TransactionService();
+    private AccountRepository accountRepository;
     private String accept = "";
+    private Error error = new Error();
 
     @org.springframework.beans.factory.annotation.Autowired
     public TransactionsApiController(ObjectMapper objectMapper, HttpServletRequest request, TransactionService transactionService) {
@@ -39,19 +37,36 @@ public class TransactionsApiController implements TransactionsApi {
     }
 
     //creates a transaction
-    public ResponseEntity<Void> createTransaction(@ApiParam(value = "") @Valid @RequestBody Transaction body) {
+    public ResponseEntity<Object> createTransaction(@ApiParam(value = "") @Valid @RequestBody Transaction body) {
         accept = request.getHeader("Accept");
-        transactionService.addTransaction(body);
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+
+        if (transactionService.checkTransactionLimit(body.getAmount()))
+            if (transactionService.checkDayLimit(body.getAccountFrom()))
+                if (transactionService.checkTransactionPossibility(body)) {
+                    transactionService.addTransaction(body);
+                    return new ResponseEntity<>("operation was a success", HttpStatus.CREATED);
+                } else {
+                    error.setMessage("Unable to perform a transaction due to low balance");
+                    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+                }
+            else {
+                error.setMessage("You have exceeded your daily limit");
+                return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+            }
+        else {
+            error.setMessage("Please choose a number between 1 and 10000");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
     }
 
     //retrieves transactions
     public ResponseEntity<List<Transaction>> getTransactionHistory(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(name = "accountNumber", required = true) String accountNumber, @ApiParam(value = "") @Valid @RequestParam(value = "dateFrom", required = false) OffsetDateTime dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "dateTo", required = false) OffsetDateTime dateTo) {
+        if (dateTo == null && dateFrom == null) {
+            dateTo = OffsetDateTime.now();
+            dateFrom = dateTo.minusMonths(1);
+        }
+
         accept = request.getHeader("Accept");
-
-        dateTo = OffsetDateTime.now();
-        dateFrom = dateTo.minusMonths(1);
-
         return new ResponseEntity<List<Transaction>>(transactionService.getAllTransactions(accountNumber, dateFrom, dateTo), HttpStatus.OK);
     }
 }
