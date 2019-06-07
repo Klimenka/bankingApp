@@ -2,9 +2,13 @@ package nl.inholland.model;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -15,29 +19,50 @@ import javax.validation.constraints.*;
  */
 @Entity
 @Validated
+@ToString
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
 public class Login {
 
 
     @Id
     @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    //@Column(name = "application_id")
+    @Size(max = 32)
     @JsonProperty("userName")
     private String userName;
 
     @JsonProperty("password")
     private String password;
 
-    @JsonProperty("userId")
-    private long userId;
-
-    public Login(String password, long userId) {
-        this.password = password;
-        this.userId = userId;
+    public User getUser() {
+        return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-    @ApiModelProperty(required = true, value = "")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "userId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private User user;
+
+    /*public Login(String password, long userId) {
+        this.password = password;
+        this.userId = userId;
+    }*/
+
+    public Login(Login login) {
+        this.password = login.getPassword();
+        this.user = login.getUser();
+    }
+
+    public Login() {
+    }
+
+    /*@ApiModelProperty(required = true, value = "")
     @NotNull
     public long getUserId() {
         return userId;
@@ -45,8 +70,7 @@ public class Login {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
-    }
-
+    }*/
 
 
     @ApiModelProperty(required = true, value = "")
@@ -54,7 +78,6 @@ public class Login {
     public String getUserName() {
         return userName;
     }
-
 
 
     /**
@@ -73,7 +96,7 @@ public class Login {
     }
 
 
-    @Override
+  /*  @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
             return true;
@@ -90,19 +113,19 @@ public class Login {
     @Override
     public int hashCode() {
         return Objects.hash(userId, userName, password);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class Login {\n");
 
-        sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
+        //sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
         sb.append("    userName: ").append(toIndentedString(userName)).append("\n");
         sb.append("    password: ").append(toIndentedString(password)).append("\n");
         sb.append("}");
         return sb.toString();
-    }
+    }*/
 
     /**
      * Convert the given object to string with each line indented by 4 spaces

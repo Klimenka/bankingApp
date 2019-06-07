@@ -24,20 +24,6 @@ public class CurrentAccount extends Account {
     }
 
     @Override
-    public void buildIBAN(long accountNumber) {
-        DecimalFormat df = new DecimalFormat("0000000000");
-        if (accountNumber < 0) {
-            throw new IllegalArgumentException("Account number cannot be negative");
-        }
-        String accountNumberFormatted = df.format(accountNumber);
-        this.setIBAN(new Iban.Builder()
-                .countryCode(CountryCode.NL)
-                .bankCode("INHO")
-                .accountNumber(accountNumberFormatted)
-                .build().toString());
-    }
-
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class CurrentAccount {\n");

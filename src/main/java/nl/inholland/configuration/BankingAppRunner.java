@@ -1,14 +1,14 @@
 package nl.inholland.configuration;
 
 import nl.inholland.model.*;
-import nl.inholland.repository.AccountRepository;
-import nl.inholland.repository.AddressRepository;
-import nl.inholland.repository.TransactionRepository;
-import nl.inholland.repository.UserRepository;
+import nl.inholland.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.threeten.bp.OffsetDateTime;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +19,8 @@ import java.util.List;
 @Component
 public class BankingAppRunner implements ApplicationRunner {
 
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     private AccountRepository accountRepository;
     private BankAccountConfig bankAccountConfig;
     private UserRepository userRepository;
@@ -27,14 +28,17 @@ public class BankingAppRunner implements ApplicationRunner {
     private TransactionRepository transactionRepository;
     private int index = 0;
 
+    private LoginRepository loginRepository;
+
     public BankingAppRunner(AccountRepository accountRepository, BankAccountConfig bankAccountConfig,
                             UserRepository userRepository, AddressRepository addressRepository,
-                            TransactionRepository transactionRepository) {
+                            TransactionRepository transactionRepository, LoginRepository loginRepository) {
         this.accountRepository = accountRepository;
         this.bankAccountConfig = bankAccountConfig;
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
         this.transactionRepository = transactionRepository;
+        this.loginRepository = loginRepository;
     }
 
     @Override
@@ -44,7 +48,28 @@ public class BankingAppRunner implements ApplicationRunner {
         getBankOwnAccount();
         getBankAccountsFromFile();
         getTransactionsFromFile();
+        getLoginFromFile();
     }
+
+    private void getLoginFromFile() throws IOException {
+        Path path = Paths.get("src/main/resources/login.csv");
+        index = 0;
+        Files.lines(path)
+                .forEach(line -> saveLoginDetails(line));
+
+        loginRepository.findAll().forEach(System.out::println);
+    }
+
+    private void saveLoginDetails(String line) {
+        List<User> users = (List<User>) userRepository.findAll();
+        Login login = new Login();
+        login.setUser(users.get(index));
+        login.setPassword(passwordEncoder.encode(line));
+        loginRepository.save(login);
+
+        index++;
+    }
+
 
     private void getTransactionsFromFile() throws IOException {
         Path path = Paths.get("src/main/resources/transaction.csv");

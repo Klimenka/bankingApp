@@ -1,43 +1,47 @@
 package nl.inholland.service;
 
 import nl.inholland.model.Account;
+import nl.inholland.model.User;
 import nl.inholland.repository.AccountRepository;
 import nl.inholland.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Service
 public class AccountService {
 
     private AccountRepository accountRepository;
+    private UserRepository userRepository;
 
-
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, UserRepository userRepository) {
         this.accountRepository = accountRepository;
+        this.userRepository = userRepository;
     }
 
-    public Iterable<Account> getBankAccount(long userId, String accountType) {
+    public List<Account> getBankAccount(long userId, String accountType) {
 
         if (accountType != null) {
-            return accountRepository.getAccountByUserIdEqualsAndAccountTypeEquals
-                    (userId, Account.AccountTypeEnum.fromValue(accountType));
+            return accountRepository.getAccountByUserIdEqualsAndAccountTypeEqualsAndAccountStatusEquals
+                    (userId, Account.AccountTypeEnum.fromValue(accountType), Account.AccountStatusEnum.OPENED);
         } else {
-            return accountRepository.getAccountByUserIdEquals(userId);
+            return accountRepository.getAccountByUserIdEqualsAndAccountStatusEquals
+                    (userId, Account.AccountStatusEnum.OPENED);
         }
     }
 
-    public Iterable<Account> getBankAccounts(LocalDate dateOfOpening, String accountType) {
+    public List<Account> getBankAccounts(LocalDate dateOfOpening, String accountType) {
 
         if (dateOfOpening != null && accountType == null) {
-            return accountRepository.getAccountByDateOfOpeningGreaterThanEqualOrderByDateOfOpeningDesc
-                    (dateOfOpening);
+            return accountRepository.getAccountByDateOfOpeningEquals(dateOfOpening);
         } else if (dateOfOpening == null && accountType != null) {
             return accountRepository.getAccountByAccountTypeEquals(Account.AccountTypeEnum.fromValue
                     (accountType));
         } else if (dateOfOpening != null && accountType != null) {
-            return accountRepository.getAccountByDateOfOpeningGreaterThanEqualAndAccountTypeEquals
+            return accountRepository.getAccountByDateOfOpeningEqualsAndAccountTypeEquals
                     (dateOfOpening, Account.AccountTypeEnum.fromValue(accountType));
         } else {
             return accountRepository.findAll();
@@ -45,15 +49,17 @@ public class AccountService {
     }
 
     public Account createBankAccount(Account account) {
+        User user = userRepository
+                .findById(account.getOne())
+                .orElseThrow(IllegalArgumentException::new);
+
+        account.setUser(user);
         Account bankAccount = accountRepository
                 .save(account);
 
         bankAccount.buildIBAN(bankAccount.getAccountNumber());
+        accountRepository.save(bankAccount);
 
-        accountRepository.save(accountRepository
-                .findById(bankAccount.getAccountNumber())
-                .map(account1 -> bankAccount)
-                .orElseThrow(IllegalArgumentException::new));
         return bankAccount;
     }
 
@@ -63,10 +69,7 @@ public class AccountService {
                 .orElseThrow(IllegalArgumentException::new);
         account.setAccountStatus(Account.AccountStatusEnum.CLOSED);
 
-        accountRepository.save(accountRepository
-                .findById(accountNumber)
-                .map(account1 -> account)
-                .orElseThrow(IllegalArgumentException::new));
+        accountRepository.save(account);
     }
 
 }

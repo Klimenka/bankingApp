@@ -44,7 +44,7 @@ public class UsersApiController implements UsersApi {
 
     public ResponseEntity<Void> getLoginTest(@RequestParam("username") String username)
     {
-        loginService.getLogin(username);
+        //loginService.getLogin(username);
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 

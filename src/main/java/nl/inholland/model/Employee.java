@@ -1,5 +1,6 @@
 package nl.inholland.model;
 
+import java.util.HashSet;
 import java.util.Objects;
 
 import org.springframework.validation.annotation.Validated;
@@ -14,15 +15,15 @@ import javax.persistence.Entity;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
 public class Employee extends User {
 
-  private String jobPosition;
+    private String jobPosition;
 
-  public Employee(String officialName, String preferedName, SexEnum sex, String dateOfBirth, Address primaryAddress, Address postAddress, String mobileNumber, String emailAddress, CommrcialMessagesEnum commrcialMessages, PreferedLanguageEnum preferedLanguage, UserTypeEnum userType, String jobPosition) {
-    super(officialName, preferedName, sex, dateOfBirth, primaryAddress, postAddress, mobileNumber, emailAddress, commrcialMessages, preferedLanguage, userType);
-    this.jobPosition = jobPosition;
-  }
+    public Employee(String officialName, String preferedName, SexEnum sex, String dateOfBirth, Address primaryAddress, Address postAddress, String mobileNumber, String emailAddress, CommrcialMessagesEnum commrcialMessages, PreferedLanguageEnum preferedLanguage, UserTypeEnum userType, String jobPosition) {
+        super(officialName, preferedName, sex, dateOfBirth, primaryAddress, postAddress, mobileNumber, emailAddress, commrcialMessages, preferedLanguage, userType);
+        this.jobPosition = jobPosition;
+    }
 
-  public Employee() {
-  }
+    public Employee() {
+    }
 
     @Override
     public String toString() {

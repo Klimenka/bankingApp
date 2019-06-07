@@ -29,16 +29,6 @@ public class SavingAccount extends Account {
     public SavingAccount() {
     }
 
-    @Override
-    public void buildIBAN(long accountNumber) {
-        DecimalFormat df = new DecimalFormat("0000000000");
-        if (accountNumber < 0) {
-            throw new IllegalArgumentException("Account number cannot be negative");
-        }
-        String accountNumberFormatted = "S-" + df.format(accountNumber);
-        this.setIBAN(accountNumberFormatted);
-    }
-
     @ApiModelProperty(value = "")
     public float getInterestRate() {
         return interestRate;

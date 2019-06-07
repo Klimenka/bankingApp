@@ -1,6 +1,7 @@
 package nl.inholland.controller;
 
 import nl.inholland.model.Account;
+import nl.inholland.model.Login;
 import nl.inholland.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,10 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import sun.plugin.liveconnect.SecurityContextHelper;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
@@ -64,7 +67,7 @@ public class AccountsApiController implements AccountsApi {
 
         String accept = request.getHeader("Accept");
         return new ResponseEntity<List<Account>>
-                ((List<Account>) accountService.getBankAccount(userId, accountType), HttpStatus.OK);
+                (accountService.getBankAccount(userId, accountType), HttpStatus.OK);
     }
 
     public ResponseEntity<List<Account>> getBankAccounts
@@ -74,8 +77,14 @@ public class AccountsApiController implements AccountsApi {
              @Valid @RequestParam(value = "accountType", required = false) String accountType) {
 
         String accept = request.getHeader("Accept");
+
+        //retrieving data from the session
+        Object princi = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Login login = (Login) princi;
+        System.out.println(login.getUser().getId());
+
         return new ResponseEntity<List<Account>>
-                ((List<Account>) accountService.getBankAccounts(dateOfOpening, accountType), HttpStatus.OK);
+                (accountService.getBankAccounts(dateOfOpening, accountType), HttpStatus.OK);
     }
 
 }

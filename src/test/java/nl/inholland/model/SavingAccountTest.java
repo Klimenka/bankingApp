@@ -27,7 +27,7 @@ public class SavingAccountTest {
     @Test
     public void passAccountNumberShouldReturnTheCorrectIBAN() {
         savingAccount.buildIBAN(5);
-        assertEquals("S-0000000005", savingAccount.getIBAN());
+        assertEquals("NL92INHO0000000005", savingAccount.getIBAN());
     }
 
     @Test(expected = IllegalArgumentException.class)

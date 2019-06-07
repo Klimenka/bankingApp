@@ -1,24 +1,28 @@
 package nl.inholland.repository;
 
 import nl.inholland.model.Account;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Repository
-public interface AccountRepository extends CrudRepository<Account, Long> {
+public interface AccountRepository extends JpaRepository<Account, Long> {
 
-    Iterable<Account> getAccountByUserIdEquals(long userId);
+    List<Account> getAccountByUserIdEqualsAndAccountStatusEquals
+            (long userId, Account.AccountStatusEnum status);
 
-    Iterable<Account> getAccountByUserIdEqualsAndAccountTypeEquals
-            (long userId, Account.AccountTypeEnum accountType);
+    List<Account> getAccountByUserIdEqualsAndAccountTypeEqualsAndAccountStatusEquals
+            (long userId, Account.AccountTypeEnum accountType, Account.AccountStatusEnum status);
 
-    Iterable<Account> getAccountByDateOfOpeningGreaterThanEqualOrderByDateOfOpeningDesc
+    List<Account> getAccountByDateOfOpeningEquals
             (LocalDate dateOfOpening);
 
-    Iterable<Account> getAccountByAccountTypeEquals(Account.AccountTypeEnum accountType);
+    List<Account> getAccountByAccountTypeEquals(Account.AccountTypeEnum accountType);
 
-    Iterable<Account> getAccountByDateOfOpeningGreaterThanEqualAndAccountTypeEquals
+    List<Account> getAccountByDateOfOpeningEqualsAndAccountTypeEquals
             (LocalDate dateOfOpening, Account.AccountTypeEnum accountType);
+
 }

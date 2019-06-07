@@ -5,9 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface LoginRepository extends JpaRepository<Login, String> {
 
-    Login findByUserName(String username);
+    Optional<Login> findByUserName(String username);
 }

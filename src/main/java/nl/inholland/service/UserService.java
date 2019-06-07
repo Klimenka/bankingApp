@@ -5,7 +5,6 @@ import nl.inholland.repository.AddressRepository;
 import nl.inholland.repository.LoginRepository;
 import nl.inholland.repository.UserRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

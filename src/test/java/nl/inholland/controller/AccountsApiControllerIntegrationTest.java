@@ -3,58 +3,76 @@ package nl.inholland.controller;
 import java.time.LocalDate;
 import java.util.*;
 
+import nl.inholland.BankingApp;
 import nl.inholland.configuration.BankingAppRunner;
 import nl.inholland.model.Account;
 import nl.inholland.model.CurrentAccount;
 import nl.inholland.model.User;
 import nl.inholland.repository.AccountRepository;
 import nl.inholland.service.AccountService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.junit.Assert;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.validation.constraints.AssertTrue;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(AccountsApiController.class)
-//@EnableJpaRepositories
+@SpringBootTest(classes = BankingApp.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AccountsApiControllerIntegrationTest {
 
-    @Autowired
-    private MockMvc mvc;
-    @MockBean
-    private AccountService service;
-    private Account account;
+    @LocalServerPort
+    private int port;
+    private TestRestTemplate template = new TestRestTemplate();
+    private HttpHeaders headers = new HttpHeaders();
 
-    @Before
-    public void setUp() {
-        account = Mockito.mock(Account.class);
-        //account= new CurrentAccount();
+    private String createFullUrl(String uri) {
+        return "http://localhost:" + port + uri;
     }
 
     @Test
-    public void closeBankAccountTest() throws Exception {
-        /*long accountNumber = 1;
-        ResponseEntity<Void> responseEntity = api.closeBankAccount(accountNumber);
-        assertEquals(HttpStatus.NOT_IMPLEMENTED, responseEntity.getStatusCode());*/
+    public void testGetAllAccountsShouldRetrieveAnArrayOfAccounts() throws JSONException {
+
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = template.exchange(
+                createFullUrl("/accounts"),
+                HttpMethod.GET, entity, String.class);
+
+        JSONArray array = new JSONArray(response.getBody());
+        Assert.assertTrue(array.length() >= 1);
+    }
+
+    @Test
+    public void testGetAccountByUserShouldRetrieveAnArrayOfAccounts() throws Exception {
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = template.exchange(
+                createFullUrl("/accounts/1"),
+                HttpMethod.GET, entity, String.class);
+
+        JSONArray array = new JSONArray(response.getBody());
+        Assert.assertTrue(array.length() >= 1);
     }
 
     @Test
@@ -66,13 +84,6 @@ public class AccountsApiControllerIntegrationTest {
 
     @Test
     public void getBankAccountTest() throws Exception {
-        Iterable<Account> accounts = Arrays.asList(account);
-        given(service.getBankAccount(2, "current")).willReturn(accounts);
-
-        mvc.perform(get("/accounts").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-                /*.andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].brand").value(guitar.getBrand()));*/
 
 
        /* long userId = 789L;
@@ -83,8 +94,6 @@ public class AccountsApiControllerIntegrationTest {
 
     @Test
     public void getBankAccountsTest() throws Exception {
-        Iterable<Account> allGuitars = Arrays.asList(account);
-        given(service.getBankAccounts(LocalDate.now(), "current")).willReturn(allGuitars);
 
       /*  LocalDate dateOfOpening = java.time.LocalDate.now();
         String accountType = "accountType_example";

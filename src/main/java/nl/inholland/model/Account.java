@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
@@ -42,10 +43,16 @@ public abstract class Account {
     @JsonProperty("dateOfOpening")
     private LocalDate dateOfOpening = LocalDate.now();
 
-    //@JsonProperty("userId")
-    //private long usid;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    public long getOne() {
+        return one;
+    }
+
+    @JsonProperty("one")
+    private long one;
+
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "userId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
@@ -141,7 +148,19 @@ public abstract class Account {
         }
     }
 
-    public abstract void buildIBAN(long accountNumber);
+    public void buildIBAN(long accountNumber) {
+
+        DecimalFormat df = new DecimalFormat("0000000000");
+        if (accountNumber < 0) {
+            throw new IllegalArgumentException("Account number cannot be negative");
+        }
+        String accountNumberFormatted = df.format(accountNumber);
+        this.setIBAN(new Iban.Builder()
+                .countryCode(CountryCode.NL)
+                .bankCode("INHO")
+                .accountNumber(accountNumberFormatted)
+                .build().toString());
+    }
 
     @ApiModelProperty(value = "")
     public long getAccountNumber() {
@@ -183,8 +202,8 @@ public abstract class Account {
         this.dateOfOpening = dateOfOpening;
     }
 
-    @ApiModelProperty(required = true, value = "")
-    @NotNull
+    /* @ApiModelProperty(required = true, value = "")
+     @NotNull*/
     public User getUser() {
         return user;
     }
