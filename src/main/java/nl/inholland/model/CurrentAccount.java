@@ -17,10 +17,11 @@ public class CurrentAccount extends Account {
 
     public CurrentAccount(float balance, LocalDate dateOfOpening, String currency, User user) {
         super(balance, dateOfOpening, currency, user);
-        setAccountType(AccountTypeEnum.CURRENT);
+        this.setAccountType(AccountTypeEnum.CURRENT);
     }
 
     public CurrentAccount() {
+        this.setAccountType(AccountTypeEnum.CURRENT);
     }
 
     @Override

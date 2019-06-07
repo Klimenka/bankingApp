@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModelProperty;
 import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
-
 import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -19,7 +18,7 @@ import javax.validation.constraints.*;
 @Validated
 @Entity
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
-public class Transaction {
+public class Transaction   {
     @JsonProperty("transaction_id")
     @Id
     @SequenceGenerator(name = "transactionSequence", initialValue = 1)
@@ -33,13 +32,7 @@ public class Transaction {
     private String accountTo;
 
     @JsonProperty("amount")
-    private Float amount;
-
-    @JsonProperty("dayLimit")
-    private Integer dayLimit;
-
-    @JsonProperty("transactionLimit")
-    private Integer transactionLimit;
+    private float amount;
 
     @ManyToOne
     @JsonProperty("userPerforming")
@@ -47,6 +40,12 @@ public class Transaction {
 
     @JsonProperty("timestamp")
     private OffsetDateTime timestamp;
+
+    private int dayLimit = 20;
+
+    private float transactionLimit = 10000;
+
+    private float absoluteLimit = 10;
 
     public Transaction() {
 
@@ -285,6 +284,39 @@ public class Transaction {
     public Transaction transactionType(TransactionTypeEnum transactionType) {
         this.transactionType = transactionType;
         return this;
+    }
+
+    @Valid
+    public int getDayLimit()
+    {
+        return dayLimit;
+    }
+
+    public void setDayLimit(int dayLimit)
+    {
+        this.dayLimit = dayLimit;
+    }
+
+    @Valid
+    public float getTransactionLimit()
+    {
+        return transactionLimit;
+    }
+
+    public void setTransactionLimit(float transactionLimit)
+    {
+        this.transactionLimit = transactionLimit;
+    }
+
+    @Valid
+    public float getAbsoluteLimit()
+    {
+        return absoluteLimit;
+    }
+
+    public void setAbsoluteLimit(float absoluteLimit)
+    {
+        this.absoluteLimit = absoluteLimit;
     }
 
     /**

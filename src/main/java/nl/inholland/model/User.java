@@ -66,6 +66,7 @@ public abstract class User {
     @JsonProperty("preferredLanguage")
     private PreferredLanguageEnum preferredLanguage;
 
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "roleId")
     protected Set<Role> roles;

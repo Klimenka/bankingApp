@@ -5,6 +5,7 @@ import nl.inholland.model.Login;
 import nl.inholland.model.User;
 import nl.inholland.repository.AccountRepository;
 import nl.inholland.repository.UserRepository;
+import org.hibernate.dialect.SybaseAnywhereDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -55,7 +56,6 @@ public class AccountService {
         //Object princi = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         //Login login = (Login) princi;
         //System.out.println(login.getUser().getId());
-        //System.out.println(account.getOne());
 
         User user = userRepository
                 .findById(account.getUserIdentification())

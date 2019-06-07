@@ -2,9 +2,11 @@ package nl.inholland.configuration;
 
 import nl.inholland.model.*;
 import nl.inholland.repository.*;
+import nl.inholland.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.threeten.bp.OffsetDateTime;
@@ -19,26 +21,28 @@ import java.util.List;
 @Component
 public class BankingAppRunner implements ApplicationRunner {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
     private AccountRepository accountRepository;
     private BankAccountConfig bankAccountConfig;
     private UserRepository userRepository;
     private AddressRepository addressRepository;
     private TransactionRepository transactionRepository;
     private int index = 0;
+    private LoginService loginService;
 
     private LoginRepository loginRepository;
 
     public BankingAppRunner(AccountRepository accountRepository, BankAccountConfig bankAccountConfig,
                             UserRepository userRepository, AddressRepository addressRepository,
-                            TransactionRepository transactionRepository, LoginRepository loginRepository) {
+                            TransactionRepository transactionRepository, LoginRepository loginRepository,
+                            LoginService loginService) {
         this.accountRepository = accountRepository;
         this.bankAccountConfig = bankAccountConfig;
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
         this.transactionRepository = transactionRepository;
         this.loginRepository = loginRepository;
+        this.loginService = loginService;
     }
 
     @Override
@@ -188,14 +192,13 @@ public class BankingAppRunner implements ApplicationRunner {
                     userStringFromFile.split(",")[10]));
 
         }
-        genrateLoginAccountsForUsers(user);
+        generateLoginAccountsForUsers(user);
     }
 
-    private void genrateLoginAccountsForUsers(User user) {
+    private void generateLoginAccountsForUsers(User user) {
         Login login = loginRepository.save(new Login(user.getEmailAddress(), user));
         System.out.println(login.getPassword());
-        login.setPassword(passwordEncoder.encode(login.getPassword()));
-        loginRepository.save(login);
+        loginService.encodePassword(login);
     }
 
 

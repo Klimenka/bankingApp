@@ -2,10 +2,15 @@ package nl.inholland.service;
 
 import nl.inholland.model.CustomUserDetails;
 import nl.inholland.model.Login;
+import nl.inholland.model.User;
 import nl.inholland.repository.LoginRepository;
+import nl.inholland.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sun.rmi.runtime.Log;
 
@@ -15,10 +20,13 @@ import java.util.Optional;
 @Service
 public class LoginService implements UserDetailsService {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     private LoginRepository loginRepository;
+    private UserRepository userRepository;
 
-    public LoginService(LoginRepository loginRepository) {
-
+    public LoginService(LoginRepository loginRepository, UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.loginRepository = loginRepository;
     }
 
@@ -48,4 +56,17 @@ public class LoginService implements UserDetailsService {
 
 
     }
+
+    public Login createLogin(User user) {
+        Login userCredentials = new Login(user.getEmailAddress(), user);
+        Login userCredentialsForEncoding = loginRepository.save(userCredentials);
+        encodePassword(userCredentialsForEncoding);
+        return userCredentials;
+    }
+
+    public Login encodePassword(Login userCredentials) {
+        userCredentials.setPassword(passwordEncoder.encode(userCredentials.getPassword()));
+        return loginRepository.save(userCredentials);
+    }
+
 }

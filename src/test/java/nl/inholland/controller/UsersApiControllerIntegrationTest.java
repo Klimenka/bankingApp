@@ -32,14 +32,14 @@ public class UsersApiControllerIntegrationTest {
                 User.CommercialMessagesEnum.fromValue("by bankmail"), User.PreferredLanguageEnum.fromValue("Dutch"),
                 "Customer");
     }
-    @Test
-    public void addUserTest() throws Exception {
+    //  @Test
+ /*   public void addUserTest() throws Exception {
 
         ResponseEntity<User> responseEntity = api.addUser(user);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         System.out.println(responseEntity.getBody().getId());
     }
-
+*/
     //   @Test
 //    public void createUserTokenTest() throws Exception {
 //        Login body = new Login();
