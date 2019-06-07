@@ -46,8 +46,9 @@ public class LoginService implements UserDetailsService {
 
     public Login createLogin(User user) {
         Login login = new Login(user.getEmailAddress(), user);
-        loginRepository.save(login);
-        return encodePassword(login);
+        Login loginForEncode = loginRepository.save(login);
+        encodePassword(loginForEncode);
+        return login;
     }
 
     public Login encodePassword(Login login) {
