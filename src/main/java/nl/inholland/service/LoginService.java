@@ -6,6 +6,7 @@ import nl.inholland.model.User;
 import nl.inholland.repository.LoginRepository;
 import nl.inholland.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -19,7 +20,7 @@ import java.util.Optional;
 @Service
 public class LoginService implements UserDetailsService {
 
-
+    @Autowired
     private PasswordEncoder passwordEncoder;
     private LoginRepository loginRepository;
     private UserRepository userRepository;
@@ -45,9 +46,14 @@ public class LoginService implements UserDetailsService {
 
     public Login createLogin(User user) {
         Login login = new Login(user.getEmailAddress(), user);
-        Login loginForEncoding = loginRepository.save(login);
-        loginForEncoding.setPassword(passwordEncoder.encode(login.getPassword()));
-        loginRepository.save(loginForEncoding);
-        return login;
+        loginRepository.save(login);
+        return encodePassword(login);
     }
+
+    public Login encodePassword(Login login) {
+        login.setPassword(passwordEncoder.encode(login.getPassword()));
+        return loginRepository.save(login);
+
+    }
+
 }
