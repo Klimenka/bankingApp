@@ -1,8 +1,6 @@
 package nl.inholland.service;
 
-import nl.inholland.model.Address;
-import nl.inholland.model.Login;
-import nl.inholland.model.User;
+import nl.inholland.model.*;
 import nl.inholland.repository.AddressRepository;
 import nl.inholland.repository.LoginRepository;
 import nl.inholland.repository.UserRepository;
@@ -17,12 +15,14 @@ public class UserService {
     private UserRepository userRepository;
     private AddressRepository addressRepository;
     private LoginService loginService;
+    private AccountService accountService;
 
-
-    public UserService(UserRepository userRepository, AddressRepository addressRepository, LoginService loginService) {
+    public UserService(UserRepository userRepository, AddressRepository addressRepository,
+                       LoginService loginService, AccountService accountService) {
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
         this.loginService = loginService;
+        this.accountService = accountService;
     }
 
     public Iterable<User> getUsers(String userType) {
@@ -37,6 +37,10 @@ public class UserService {
     public Login createUser(User user) {
         addressRepository.save(user.getPrimaryAddress());
         User userCreated = userRepository.save(user);
+
+        Account bankAccount = new CurrentAccount();
+        bankAccount.setUserIdentification(userCreated.getId());
+        accountService.createBankAccount(bankAccount);
 
         return loginService.createLogin(userCreated);
     }

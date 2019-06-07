@@ -44,7 +44,12 @@ public abstract class Account {
         return userIdentification;
     }
 
-    @JsonProperty("one")
+    public void setUserIdentification(long userIdentification) {
+        this.userIdentification = userIdentification;
+    }
+
+    @Transient
+    @JsonProperty("userIdentification")
     private long userIdentification;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

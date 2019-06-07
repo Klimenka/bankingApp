@@ -23,10 +23,11 @@ public class SavingAccount extends Account {
 
     public SavingAccount(float balance, LocalDate dateOfOpening, String currency, User user) {
         super(balance, dateOfOpening, currency, user);
-        setAccountType(AccountTypeEnum.SAVING);
+        this.setAccountType(AccountTypeEnum.SAVING);
     }
 
     public SavingAccount() {
+        this.setAccountType(AccountTypeEnum.CURRENT);
     }
 
     @ApiModelProperty(value = "")
