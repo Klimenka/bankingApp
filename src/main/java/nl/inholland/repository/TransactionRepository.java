@@ -12,6 +12,8 @@ import java.util.List;
 public interface TransactionRepository extends CrudRepository<Transaction, Long>
 {
     List<Transaction> findAll();
+
     List<Transaction> findAllByAccountFromEquals(String accountFrom);
+
     List<Transaction> findAllByAccountFromEqualsAndTimestampGreaterThanEqualAndTimestampLessThanEqual(String userAccount, OffsetDateTime dateFrom, OffsetDateTime dateTo);
 }

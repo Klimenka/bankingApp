@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +26,7 @@ public class UsersApiController implements UsersApi {
 
     private final ObjectMapper objectMapper;
     private UserService userService;
-    private  LoginService loginService;
+    private LoginService loginService;
     private final HttpServletRequest request;
 
     @org.springframework.beans.factory.annotation.Autowired
@@ -36,36 +37,35 @@ public class UsersApiController implements UsersApi {
         this.loginService = loginService;
     }
 
-        public ResponseEntity<User> addUser(@ApiParam(value = "" ,required=true )  @Valid @RequestBody User user) {
+    public ResponseEntity<User> addUser(@ApiParam(value = "", required = true) @Valid @RequestBody User user) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<User>(userService.createUser(user), HttpStatus.CREATED);
     }
 
 
-    public ResponseEntity<Void> getLoginTest(@RequestParam("username") String username)
-    {
+    public ResponseEntity<Void> getLoginTest(@RequestParam("username") String username) {
         //loginService.getLogin(username);
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     public ResponseEntity<Void> createUserToken
-            (@ApiParam(value = "Logs a user in and return an auth token, if the specified username and password are correct." ,required=true )
+            (@ApiParam(value = "Logs a user in and return an auth token, if the specified username and password are correct.", required = true)
              @Valid @RequestBody Login body) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<Void> deleteUserById(@Min(1L)@ApiParam(value = "The id of the user to return",required=true, allowableValues = "") @PathVariable("userId") Long userId) {
+    public ResponseEntity<Void> deleteUserById(@Min(1L) @ApiParam(value = "The id of the user to return", required = true, allowableValues = "") @PathVariable("userId") Long userId) {
         String accept = request.getHeader("Accept");
         userService.deleteUser(userId);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
 
     public ResponseEntity<User> getUserById(@Min(1L)
-                                              @ApiParam(value = "The id of the user to return",required=true, allowableValues = "")
-                                              @PathVariable("userId") Long userId) {
+                                            @ApiParam(value = "The id of the user to return", required = true, allowableValues = "")
+                                            @PathVariable("userId") Long userId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<User>(userService.getUser(userId),HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<User>(userService.getUser(userId), HttpStatus.OK);
     }
 
     public ResponseEntity<List<User>> getUsers(
@@ -77,10 +77,10 @@ public class UsersApiController implements UsersApi {
     }
 
     public ResponseEntity<Void> updateUserLogin
-            (@ApiParam(value = "" ,required=true )
+            (@ApiParam(value = "", required = true)
              @Valid @RequestBody Login body,
              @Min(1L)
-             @ApiParam(value = "The id of the user to return",required=true, allowableValues = "")
+             @ApiParam(value = "The id of the user to return", required = true, allowableValues = "")
              @PathVariable("userId") Long userId) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);

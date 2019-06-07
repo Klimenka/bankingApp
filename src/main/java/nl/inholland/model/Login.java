@@ -72,7 +72,6 @@ public class Login {
         this.userId = userId;
     }*/
 
-
     @ApiModelProperty(required = true, value = "")
     @NotNull
     public String getUserName() {

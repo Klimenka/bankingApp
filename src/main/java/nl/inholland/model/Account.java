@@ -51,7 +51,6 @@ public abstract class Account {
     @JsonProperty("one")
     private long one;
 
-
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "userId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

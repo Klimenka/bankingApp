@@ -24,7 +24,6 @@ public class LoginService implements UserDetailsService {
 
     /*public Login getLogin(String userName) {
         return loginRepository.findByUserName(userName);
-
     }*/
 
     @Override

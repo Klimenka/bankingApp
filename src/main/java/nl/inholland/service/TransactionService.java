@@ -9,27 +9,23 @@ import org.threeten.bp.OffsetDateTime;
 import java.util.List;
 
 @Service
-public class TransactionService
-{
+public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
     //adds a transaction to the repository
-    public Transaction addTransaction(Transaction body)
-    {
+    public Transaction addTransaction(Transaction body) {
         //build logic to make transactions affect the balance in a bank account
         return transactionRepository.save(body);
     }
 
     //retrieves all the user's transactions between the dates
-    public List<Transaction> getAllTransactions(String userAccount, OffsetDateTime dateFrom, OffsetDateTime dateTo)
-    {
+    public List<Transaction> getAllTransactions(String userAccount, OffsetDateTime dateFrom, OffsetDateTime dateTo) {
         return transactionRepository.findAllByAccountFromEqualsAndTimestampGreaterThanEqualAndTimestampLessThanEqual(userAccount, dateFrom, dateTo);
     }
 
     //retrieves one transaction from the user
-    public Transaction getTransaction(long transactionId)
-    {
+    public Transaction getTransaction(long transactionId) {
         return this.transactionRepository
                 .findById(transactionId)
                 .orElseThrow(IllegalArgumentException::new);

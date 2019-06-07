@@ -2,6 +2,7 @@ package nl.inholland.filter;
 
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
 import javax.servlet.*;
 import java.io.IOException;
 import java.util.logging.Logger;

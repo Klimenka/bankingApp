@@ -24,25 +24,25 @@ import java.util.List;
 @Api(value = "transactions", description = "the transactions API")
 public interface TransactionsApi {
 
-    @ApiOperation(value = "transfer/withdraw/deposit money", nickname = "createTransaction", notes = "Calling this will allow a user/employee to transfer/withdar/depoit money", tags={ "transactions", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 201, message = "Transaction has successfully been send."),
-        @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
-        @ApiResponse(code = 403, message = "Insufficient balance.") })
+    @ApiOperation(value = "transfer/withdraw/deposit money", nickname = "createTransaction", notes = "Calling this will allow a user/employee to transfer/withdar/depoit money", tags = {"transactions",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Transaction has successfully been send."),
+            @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
+            @ApiResponse(code = 403, message = "Insufficient balance.")})
     @RequestMapping(value = "/transactions",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<Void> createTransaction(@ApiParam(value = ""  )  @Valid @RequestBody Transaction body);
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<Void> createTransaction(@ApiParam(value = "") @Valid @RequestBody Transaction body);
 
 
-    @ApiOperation(value = "retrieves all transactions which has been made from a user's account.", nickname = "getTransactionHistory", notes = "This function will retrieve the transaction acitivities of one account. The user will have the option to filter the transaction activities by using dates.", response = Transaction.class, responseContainer = "List", tags={ "transactions", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Transaction history has succesfully been retrieved.", response = Transaction.class, responseContainer = "List"),
-        @ApiResponse(code = 400, message = "Bad request.", response = Error.class) })
+    @ApiOperation(value = "retrieves all transactions which has been made from a user's account.", nickname = "getTransactionHistory", notes = "This function will retrieve the transaction acitivities of one account. The user will have the option to filter the transaction activities by using dates.", response = Transaction.class, responseContainer = "List", tags = {"transactions",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Transaction history has succesfully been retrieved.", response = Transaction.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Bad request.", response = Error.class)})
     @RequestMapping(value = "/transactions",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
+            produces = {"application/json"},
+            method = RequestMethod.GET)
     ResponseEntity<List<Transaction>> getTransactionHistory(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "accountNumber", required = true) String accountNumber, @ApiParam(value = "") @Valid @RequestParam(value = "dateFrom", required = false) OffsetDateTime dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "dateTo", required = false) OffsetDateTime dateTo);
 
 }

@@ -5,6 +5,7 @@ import nl.inholland.repository.AddressRepository;
 import nl.inholland.repository.LoginRepository;
 import nl.inholland.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,27 +22,27 @@ public class UserService {
     }
 
     public Iterable<User> getUsers(String userType) {
-        if(userType.equals("none")){
+        if (userType.equals("none")) {
             return userRepository.findAll();
-        }
-        else{
+        } else {
             return userRepository.getUserByUserTypeEquals(User.UserTypeEnum.fromValue(userType));
         }
 
     }
 
-    public User createUser(User user){
+    public User createUser(User user) {
         addressRepository.save(user.getPrimaryAddress());
         userRepository.save(user);
 
         return userRepository.findTopByOrderByIdDesc();
     }
-    public User getUser(Long userId){
+
+    public User getUser(Long userId) {
 
         return userRepository.getUserByIdEquals(userId);
     }
 
-    public void deleteUser(Long userId){
+    public void deleteUser(Long userId) {
         User user = userRepository
                 .findById(userId)
                 .orElseThrow(IllegalArgumentException::new);

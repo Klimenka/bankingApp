@@ -1,5 +1,9 @@
 package nl.inholland.model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -7,6 +11,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
@@ -22,6 +27,7 @@ import javax.validation.constraints.*;
 
 @Entity
 @Validated
+@JsonDeserialize(as = Customer.class)
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
 public abstract class User {
 
@@ -34,8 +40,8 @@ public abstract class User {
     @JsonProperty("officialName")
     private String officialName;
 
-    @JsonProperty("preferedName")
-    private String preferedName;
+    @JsonProperty("preferredName")
+    private String preferredName;
 
     @JsonProperty("sex")
     private SexEnum sex;
@@ -66,7 +72,6 @@ public abstract class User {
     @JsonProperty("userType")
     private UserTypeEnum userType;
 
-
     //extra
     public Set<Role> getRoles() {
         return roles;
@@ -87,9 +92,10 @@ public abstract class User {
     public User(String officialName, String preferedName, SexEnum sex, String dateOfBirth, Address primaryAddress, Address postAddress, String mobileNumber, String emailAddress, CommrcialMessagesEnum commrcialMessages, PreferedLanguageEnum preferedLanguage, UserTypeEnum userType) {
 
         this.officialName = officialName;
-        this.preferedName = preferedName;
+        this.preferredName = preferredName;
         this.sex = sex;
         this.dateOfBirth = dateOfBirth;
+        setDateOfBirth(dateOfBirth);
         this.primaryAddress = primaryAddress;
         this.postAddress = postAddress;
         this.mobileNumber = mobileNumber;
@@ -102,7 +108,6 @@ public abstract class User {
         Role role = new Role();
         role.setRole(userType.toString());
         this.roles.add(role);
-
     }
 
     /**
@@ -248,7 +253,6 @@ public abstract class User {
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
     public String getOfficialName() {
         return officialName;
     }
@@ -258,18 +262,17 @@ public abstract class User {
     }
 
     /**
-     * Get preferedName
+     * Get preferredName
      *
-     * @return preferedName
+     * @return preferredName
      **/
     @ApiModelProperty(value = "")
-
-    public String getPreferedName() {
-        return preferedName;
+    public String getPreferredName() {
+        return preferredName;
     }
 
-    public void setPreferedName(String preferedName) {
-        this.preferedName = preferedName;
+    public void setPreferredName(String preferredName) {
+        this.preferredName = preferredName;
     }
 
     /**
@@ -278,7 +281,6 @@ public abstract class User {
      * @return sex
      **/
     @ApiModelProperty(value = "")
-
     public SexEnum getSex() {
         return sex;
     }
@@ -294,12 +296,24 @@ public abstract class User {
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
     public String getDateOfBirth() {
         return dateOfBirth;
     }
 
     public void setDateOfBirth(String dateOfBirth) {
+
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.ENGLISH);
+        LocalDate date = null;
+
+        try {
+            date = LocalDate.parse(dateOfBirth, format);
+
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+        }
+        if (date.compareTo(LocalDate.now()) > 0) {
+            throw new IllegalArgumentException("DateOfBirth should be in the past");
+        }
         this.dateOfBirth = dateOfBirth;
     }
 
@@ -311,7 +325,6 @@ public abstract class User {
     @ApiModelProperty(required = true, value = "")
     @NotNull
     @Valid
-
     public Address getPrimaryAddress() {
         return primaryAddress;
     }
@@ -345,7 +358,6 @@ public abstract class User {
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
     public String getMobileNumber() {
         return mobileNumber;
     }
@@ -362,7 +374,6 @@ public abstract class User {
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -419,7 +430,7 @@ public abstract class User {
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    officialName: ").append(toIndentedString(officialName)).append("\n");
-        sb.append("    preferedName: ").append(toIndentedString(preferedName)).append("\n");
+        sb.append("    preferredName: ").append(toIndentedString(preferredName)).append("\n");
         sb.append("    sex: ").append(toIndentedString(sex)).append("\n");
         sb.append("    dateOfBirth: ").append(toIndentedString(dateOfBirth)).append("\n");
         sb.append("    primaryAddress: ").append(toIndentedString(primaryAddress)).append("\n");
