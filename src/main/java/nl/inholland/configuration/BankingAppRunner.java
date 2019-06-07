@@ -51,7 +51,7 @@ public class BankingAppRunner implements ApplicationRunner {
         //getLoginFromFile();
     }
 
-    private void getLoginFromFile() throws IOException {
+   /* private void getLoginFromFile() throws IOException {
         Path path = Paths.get("src/main/resources/login.csv");
         index = 0;
         Files.lines(path)
@@ -68,7 +68,7 @@ public class BankingAppRunner implements ApplicationRunner {
         loginRepository.save(login);
 
         index++;
-    }
+    }*/
 
 
     private void getTransactionsFromFile() throws IOException {
@@ -156,7 +156,7 @@ public class BankingAppRunner implements ApplicationRunner {
     private void saveUserToInMemoryDB(String userStringFromFile) {
         User user;
         if (userStringFromFile.split(",")[10].equals("Employee")) {
-            userRepository.save(user = new Employee(
+            user = userRepository.save(new Employee(
                     userStringFromFile.split(",")[0],
                     userStringFromFile.split(",")[1],
                     User.SexEnum.fromValue(userStringFromFile.split(",")[2]),
@@ -172,7 +172,7 @@ public class BankingAppRunner implements ApplicationRunner {
                     userStringFromFile.split(",")[10],
                     userStringFromFile.split(",")[11]));
         } else {
-            userRepository.save(user = new Customer(
+            user = userRepository.save(new Customer(
                     userStringFromFile.split(",")[0],
                     userStringFromFile.split(",")[1],
                     User.SexEnum.fromValue(userStringFromFile.split(",")[2]),
@@ -188,8 +188,15 @@ public class BankingAppRunner implements ApplicationRunner {
                     userStringFromFile.split(",")[10]));
 
         }
-        loginRepository.save(new Login(user.getEmailAddress(), user));
-
+        genrateLoginAccountsForUsers(user);
     }
+
+    private void genrateLoginAccountsForUsers(User user) {
+        Login login = loginRepository.save(new Login(user.getEmailAddress(), user));
+        System.out.println(login.getPassword());
+        login.setPassword(passwordEncoder.encode(login.getPassword()));
+        loginRepository.save(login);
+    }
+
 
 }

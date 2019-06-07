@@ -18,12 +18,8 @@ import org.springframework.validation.annotation.Validated;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
-/**
- * Login
- */
 @Entity
 @Validated
-@ToString
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
 public class Login {
 
@@ -35,14 +31,6 @@ public class Login {
     @JsonProperty("password")
     private String password;
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "userId", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -53,9 +41,6 @@ public class Login {
 
     private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-    @Transient
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     public Login(Login login) {
         this.password = login.getPassword();
@@ -88,15 +73,14 @@ public class Login {
             return false;
         }
     }
-    /*@ApiModelProperty(required = true, value = "")
-    @NotNull
-    public long getUserId() {
-        return userId;
+
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }*/
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     @ApiModelProperty(required = true, value = "")
     @NotNull
@@ -104,12 +88,6 @@ public class Login {
         return userName;
     }
 
-
-    /**
-     * Get password
-     *
-     * @return password
-     **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
     public String getPassword() {
@@ -124,24 +102,6 @@ public class Login {
         return user.getId();
     }
 
-  /*  @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Login login = (Login) o;
-        return Objects.equals(this.userId, login.userId) &&
-                Objects.equals(this.userName, login.userName) &&
-                Objects.equals(this.password, login.password);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, userName, password);
-    }*/
 
     //for test purpose, delete before sending to teachers
     @Override
@@ -157,10 +117,6 @@ public class Login {
         return sb.toString();
     }
 
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {
             return "null";

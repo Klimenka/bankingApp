@@ -25,7 +25,9 @@ public class WebSecurity {
 
         return (retrievedUser != null && retrievedUser.getId() == id)
                 || (retrievedUser != null
-                && retrievedUser.getRoles().contains("Employee"));
+                && retrievedUser.getRoles()
+                .stream()
+                .anyMatch(role -> role.getRole().equals("Employee")));
     }
 
 }
