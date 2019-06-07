@@ -1,10 +1,13 @@
 package nl.inholland.service;
 
 import nl.inholland.model.Account;
+import nl.inholland.model.Login;
 import nl.inholland.model.User;
 import nl.inholland.repository.AccountRepository;
 import nl.inholland.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -49,9 +52,14 @@ public class AccountService {
     }
 
     public Account createBankAccount(Account account) {
+        //Object princi = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //Login login = (Login) princi;
+        //System.out.println(login.getUser().getId());
+        //System.out.println(account.getOne());
+
         User user = userRepository
-                .findById(account.getOne())
-                .orElseThrow(IllegalArgumentException::new);
+                .findById(account.getUserIdentification())
+                .orElseThrow(() -> new IllegalArgumentException("The User Id is wrong"));
 
         account.setUser(user);
         Account bankAccount = accountRepository
