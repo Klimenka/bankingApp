@@ -14,6 +14,10 @@ public class Role {
     public Role() {
     }
 
+    public Role(String role) {
+        this.role = role;
+    }
+
     public void setRoleId(int roleId) {
         this.roleId = roleId;
     }

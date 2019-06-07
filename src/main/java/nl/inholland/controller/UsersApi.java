@@ -24,17 +24,17 @@ import java.util.List;
 @Api(value = "users", description = "the users API")
 public interface UsersApi {
 
-    @ApiOperation(value = "Adds a new user", nickname = "addUser", notes = "Adds a new user and returns it", response = User.class, authorizations = {
+    @ApiOperation(value = "Adds a new user", nickname = "addUser", notes = "Adds a new user and returns it", response = Login.class, authorizations = {
             @Authorization(value = "api_key")}, tags = {"users",})
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "the user has been created.", response = User.class),
+            @ApiResponse(code = 201, message = "the user has been created.", response = Login.class),
             @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
             @ApiResponse(code = 401, message = "Unauthorized", response = Error.class)})
     @RequestMapping(value = "/users",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<User> addUser(@ApiParam(value = "", required = true) @Valid @RequestBody User body);
+    ResponseEntity<Login> addUser(@ApiParam(value = "", required = true) @Valid @RequestBody User body);
 
     @ApiOperation(value = "Returns an auth token", nickname = "createUserToken", notes = "", tags = {"users",})
     @ApiResponses(value = {
