@@ -48,6 +48,6 @@ public class LoginService implements UserDetailsService {
         Login loginForEncoding = loginRepository.save(login);
         loginForEncoding.setPassword(passwordEncoder.encode(login.getPassword()));
         loginRepository.save(loginForEncoding);
-        return loginForEncoding;
+        return login;
     }
 }
