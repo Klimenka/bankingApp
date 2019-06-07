@@ -29,8 +29,8 @@ public class UsersApiControllerIntegrationTest {
                 111, "1111OP", "Nen", "The Netherlands"),
                 new Address("Example",111, "1111OP", "Nen",
                         "The Netherlands"), "+3111132156", "example@gmail.com",
-                User.CommrcialMessagesEnum.fromValue("by bankmail"), User.PreferedLanguageEnum.fromValue("Dutch"),
-                User.UserTypeEnum.fromValue("Customer"));
+                User.CommercialMessagesEnum.fromValue("by bankmail"), User.PreferredLanguageEnum.fromValue("Dutch"),
+                "Customer");
     }
     @Test
     public void addUserTest() throws Exception {

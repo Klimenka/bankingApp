@@ -1,6 +1,8 @@
 package nl.inholland.model;
 
+import java.security.SecureRandom;
 import java.util.Objects;
+import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,6 +11,8 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -25,10 +29,6 @@ public class Login {
 
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
-    //@Column(name = "application_id")
-    @Size(max = 32)
     @JsonProperty("userName")
     private String userName;
 
@@ -49,19 +49,44 @@ public class Login {
     @JsonIgnore
     private User user;
 
-    /*public Login(String password, long userId) {
-        this.password = password;
-        this.userId = userId;
-    }*/
+    private static final Random RANDOM = new SecureRandom();
+
+    private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    @Transient
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public Login(Login login) {
         this.password = login.getPassword();
         this.user = login.getUser();
     }
 
+
+    public Login(String userName, User user) {
+        this.userName = userName;
+        this.user = user;
+        this.password = generatePassword();
+    }
+
     public Login() {
     }
 
+    private String generatePassword() {
+        StringBuilder returnValue = new StringBuilder(10);
+        for (int i = 0; i < 10; i++) {
+            returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
+        }
+        return new String(returnValue);
+    }
+
+    public Boolean checkPassword(String password) {
+        if (password.equals(this.password)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     /*@ApiModelProperty(required = true, value = "")
     @NotNull
     public long getUserId() {
@@ -94,6 +119,9 @@ public class Login {
         this.password = password;
     }
 
+    public Long getUserId() {
+        return user.getId();
+    }
 
   /*  @Override
     public boolean equals(java.lang.Object o) {
@@ -114,7 +142,8 @@ public class Login {
         return Objects.hash(userId, userName, password);
     }*/
 
-    /*@Override
+    //for test purpose, delete before sending to teachers
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class Login {\n");
@@ -122,9 +151,10 @@ public class Login {
         //sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
         sb.append("    userName: ").append(toIndentedString(userName)).append("\n");
         sb.append("    password: ").append(toIndentedString(password)).append("\n");
+        sb.append("    userId: ").append(toIndentedString(user.getId())).append("\n");
         sb.append("}");
         return sb.toString();
-    }*/
+    }
 
     /**
      * Convert the given object to string with each line indented by 4 spaces

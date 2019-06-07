@@ -48,7 +48,7 @@ public class BankingAppRunner implements ApplicationRunner {
         getBankOwnAccount();
         getBankAccountsFromFile();
         getTransactionsFromFile();
-        getLoginFromFile();
+        //getLoginFromFile();
     }
 
     private void getLoginFromFile() throws IOException {
@@ -150,11 +150,13 @@ public class BankingAppRunner implements ApplicationRunner {
                         line -> saveUserToInMemoryDB(line)
                 );
         userRepository.findAll().forEach(System.out::println);
+        loginRepository.findAll().forEach(System.out::println);
     }
 
     private void saveUserToInMemoryDB(String userStringFromFile) {
+        User user;
         if (userStringFromFile.split(",")[10].equals("Employee")) {
-            userRepository.save(new Employee(
+            userRepository.save(user = new Employee(
                     userStringFromFile.split(",")[0],
                     userStringFromFile.split(",")[1],
                     User.SexEnum.fromValue(userStringFromFile.split(",")[2]),
@@ -165,12 +167,12 @@ public class BankingAppRunner implements ApplicationRunner {
                             Integer.parseInt(userStringFromFile.split(",")[5].split(" ")[1])),
                     userStringFromFile.split(",")[6],
                     userStringFromFile.split(",")[7],
-                    User.CommrcialMessagesEnum.fromValue(userStringFromFile.split(",")[8]),
-                    User.PreferedLanguageEnum.fromValue(userStringFromFile.split(",")[9]),
-                    User.UserTypeEnum.fromValue(userStringFromFile.split(",")[10]),
+                    User.CommercialMessagesEnum.fromValue(userStringFromFile.split(",")[8]),
+                    User.PreferredLanguageEnum.fromValue(userStringFromFile.split(",")[9]),
+                    userStringFromFile.split(",")[10],
                     userStringFromFile.split(",")[11]));
         } else {
-            userRepository.save(new Customer(
+            userRepository.save(user = new Customer(
                     userStringFromFile.split(",")[0],
                     userStringFromFile.split(",")[1],
                     User.SexEnum.fromValue(userStringFromFile.split(",")[2]),
@@ -181,10 +183,12 @@ public class BankingAppRunner implements ApplicationRunner {
                             Integer.parseInt(userStringFromFile.split(",")[5].split(" ")[1])),
                     userStringFromFile.split(",")[6],
                     userStringFromFile.split(",")[7],
-                    User.CommrcialMessagesEnum.fromValue(userStringFromFile.split(",")[8]),
-                    User.PreferedLanguageEnum.fromValue(userStringFromFile.split(",")[9]),
-                    User.UserTypeEnum.fromValue(userStringFromFile.split(",")[10])));
+                    User.CommercialMessagesEnum.fromValue(userStringFromFile.split(",")[8]),
+                    User.PreferredLanguageEnum.fromValue(userStringFromFile.split(",")[9]),
+                    userStringFromFile.split(",")[10]));
+
         }
+        loginRepository.save(new Login(user.getEmailAddress(), user));
 
     }
 
