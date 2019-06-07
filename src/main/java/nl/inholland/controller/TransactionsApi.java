@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.threeten.bp.OffsetDateTime;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -23,7 +24,7 @@ import java.util.List;
 @Api(value = "transactions", description = "the transactions API")
 public interface TransactionsApi {
 
-    @ApiOperation(value = "transfer/withdar/depoit money", nickname = "createTransaction", notes = "Calling this will allow a user/employee to transfer/withdar/depoit money", tags={ "transactions", })
+    @ApiOperation(value = "transfer/withdraw/deposit money", nickname = "createTransaction", notes = "Calling this will allow a user/employee to transfer/withdar/depoit money", tags = {"transactions",})
     @ApiResponses(value = { 
         @ApiResponse(code = 201, message = "Transaction has successfully been send."),
         @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
@@ -42,6 +43,6 @@ public interface TransactionsApi {
     @RequestMapping(value = "/transactions",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<Transaction>> getTransactionHistory(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "accountNumber", required = true) String accountNumber,@ApiParam(value = "") @Valid @RequestParam(value = "dateFrom", required = false) LocalDate dateFrom,@ApiParam(value = "") @Valid @RequestParam(value = "dateTo", required = false) LocalDate dateTo);
+    ResponseEntity<List<Transaction>> getTransactionHistory(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "accountNumber", required = true) String accountNumber, @ApiParam(value = "") @Valid @RequestParam(value = "dateFrom", required = false) OffsetDateTime dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "dateTo", required = false) OffsetDateTime dateTo);
 
 }

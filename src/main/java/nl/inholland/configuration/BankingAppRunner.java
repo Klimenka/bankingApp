@@ -9,24 +9,27 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import org.threeten.bp.OffsetDateTime;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class BankingAppRunner implements ApplicationRunner {
+
 
     private AccountRepository accountRepository;
     private BankAccountConfig bankAccountConfig;
     private UserRepository userRepository;
     private AddressRepository addressRepository;
     private TransactionRepository transactionRepository;
+    private int index = 0;
 
     public BankingAppRunner(AccountRepository accountRepository, BankAccountConfig bankAccountConfig,
-                            UserRepository userRepository, AddressRepository addressRepository, TransactionRepository transactionRepository) {
+                            UserRepository userRepository, AddressRepository addressRepository,
+                            TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
         this.bankAccountConfig = bankAccountConfig;
         this.userRepository = userRepository;
@@ -36,53 +39,37 @@ public class BankingAppRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        getBankOwnAccount();
-        getBankAccountsFromFile();
         getAddressesFromFileAndSaveToInMemoryDB();
         getUsersFromFile();
+        getBankOwnAccount();
+        getBankAccountsFromFile();
         getTransactionsFromFile();
     }
 
-    private void getTransactionsFromFile() throws IOException
-    {
+    private void getTransactionsFromFile() throws IOException {
         Path path = Paths.get("src/main/resources/transaction.csv");
         Files.lines(path)
-                .forEach(line -> saveTransactionInFile(line));
+                .forEach(this::saveTransactionInFile);
 
         transactionRepository.findAll().forEach(System.out::println);
     }
 
-    private void saveTransactionInFile(String line)
-    {
-        if(line.split(",")[3].equals("Customer"))
-        {
-            transactionRepository.save(new Transaction(
-                            line.split(",")[0],
-                            line.split(",")[1],
-                            Float.parseFloat(line.split(",")[2]),
-                            line.split(",")[3],
-                            OffsetDateTime.parse(line.split(",")[4]),
-                    Transaction.TransactionTypeEnum.fromValue(line.split(",")[5])
-                    )
-            );
-        }
-        else if(line.split(",")[3].equals("Employee"))
-        {
-            transactionRepository.save(new Transaction(
-                            line.split(",")[0],
-                            line.split(",")[1],
-                            Float.parseFloat(line.split(",")[2]),
-                            line.split(",")[3],
-                            OffsetDateTime.parse(line.split(",")[4]),
-                    Transaction.TransactionTypeEnum.fromValue(line.split(",")[5])
-                    )
-            );
-        }
+    private void saveTransactionInFile(String line) {
+        transactionRepository.save(new Transaction(
+                line.split(",")[0],
+                line.split(",")[1],
+                Float.parseFloat(line.split(",")[2]),
+                userRepository.getUserByIdEquals(Long.parseLong(line.split(",")[3])),
+                OffsetDateTime.parse(line.split(",")[4]),
+                Transaction.TransactionTypeEnum.fromValue(line.split(",")[5]))
+        );
     }
 
     private void getBankOwnAccount() {
         Account bankAccount = new CurrentAccount(0,
-                LocalDate.now(), 0, "euro");
+                LocalDate.now(), "euro", userRepository
+                .findById(Long.valueOf(1))
+                .orElseThrow(IllegalArgumentException::new));
         bankAccount.setIBAN(bankAccountConfig.getIBAN());
         accountRepository.save(bankAccount);
     }
@@ -97,20 +84,23 @@ public class BankingAppRunner implements ApplicationRunner {
 
     private void saveBankAccounts(String line) {
         Account account;
-        if (line.split(",")[6].equals("current")) {
+        List<User> users = (List<User>) userRepository.findAll();
+
+        if (line.split(",")[4].equals("current")) {
             account = accountRepository.save(new CurrentAccount(
-                    Float.parseFloat(line.split(",")[1]),
-                    LocalDate.parse(line.split(",")[2]),
-                    Long.parseLong(line.split(",")[3]),
-                    line.split(",")[4]));
+                    Float.parseFloat(line.split(",")[0]),
+                    LocalDate.parse(line.split(",")[1]),
+                    line.split(",")[2],
+                    users.get(index)));
         } else {
             account = accountRepository.save(new SavingAccount(
-                    Float.parseFloat(line.split(",")[1]),
-                    LocalDate.parse(line.split(",")[2]),
-                    Long.parseLong(line.split(",")[3]),
-                    line.split(",")[4]));
+                    Float.parseFloat(line.split(",")[0]),
+                    LocalDate.parse(line.split(",")[1]),
+                    line.split(",")[2],
+                    users.get(index)));
         }
-        account.buildIBAN();
+        index++;
+        account.buildIBAN(account.getAccountNumber());
         accountRepository.save(accountRepository.findById(account.getAccountNumber())
                 .map(account1 -> account).orElseThrow(IllegalArgumentException::new));
     }

@@ -2,6 +2,8 @@ package nl.inholland.service;
 
 import nl.inholland.model.Account;
 import nl.inholland.repository.AccountRepository;
+import nl.inholland.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
@@ -10,6 +12,7 @@ import java.time.LocalDate;
 public class AccountService {
 
     private AccountRepository accountRepository;
+
 
     public AccountService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
@@ -45,7 +48,7 @@ public class AccountService {
         Account bankAccount = accountRepository
                 .save(account);
 
-        bankAccount.buildIBAN();
+        bankAccount.buildIBAN(bankAccount.getAccountNumber());
 
         accountRepository.save(accountRepository
                 .findById(bankAccount.getAccountNumber())

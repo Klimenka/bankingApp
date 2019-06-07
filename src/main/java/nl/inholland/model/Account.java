@@ -1,11 +1,15 @@
 package nl.inholland.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.springframework.validation.annotation.Validated;
@@ -23,211 +27,230 @@ import java.time.LocalDate;
 @javax.annotation.Generated(value = "io.inholland.codegen.v3.generators.java.SpringCodegen", date = "2019-05-23T16:34:19.518Z[GMT]")
 public abstract class Account {
 
-  @Id
-  @SequenceGenerator(name = "bankAccSeq", initialValue = 1)
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bankAccSeq")
-  @JsonProperty("accountNumber")
-  private long accountNumber;
+    @Id
+    @SequenceGenerator(name = "bankAccSeq", initialValue = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bankAccSeq")
+    @JsonProperty("accountNumber")
+    private long accountNumber;
 
-  //@JsonProperty("IBAN")
-  private String IBAN;
+    //@JsonProperty("IBAN")
+    private String IBAN;
 
-  @JsonProperty("balance")
-  private float balance;
+    @JsonProperty("balance")
+    private float balance;
 
-  @JsonProperty("dateOfOpening")
-  private LocalDate dateOfOpening = LocalDate.now();
+    @JsonProperty("dateOfOpening")
+    private LocalDate dateOfOpening = LocalDate.now();
 
-  @JsonProperty("userId")
-  private long userId;
+    //@JsonProperty("userId")
+    //private long usid;
 
-  @JsonProperty("currency")
-  private String currency = "euro";
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "userId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private User user;
 
-  @JsonProperty("accountStatus")
-  private AccountStatusEnum accountStatus = AccountStatusEnum.OPENED;
+    @JsonProperty("currency")
+    private String currency = "euro";
 
-  @JsonProperty("accountType")
-  private AccountTypeEnum accountType;
-
-  //  String accountNumber
-  //  this.accountNumber = accountNumber;
-  public Account(float balance, LocalDate dateOfOpening, long userId,
-                 String currency) {
-    this.balance = balance;
-    this.dateOfOpening = dateOfOpening;
-    this.userId = userId;
-    this.currency = currency;
-  }
-
-  public Account() {
-  }
-
-  /**
-   * Gets or Sets accountType
-   */
-  public enum AccountTypeEnum {
-    CURRENT("current"),
-    SAVING("saving");
-    private String value;
-
-    AccountTypeEnum(String value) {
-      this.value = value;
+    public float getLimitBalanace() {
+        return limitBalanace;
     }
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
+    public void setLimitBalanace(float limitBalanace) {
+        this.limitBalanace = limitBalanace;
     }
 
-    @JsonCreator
-    public static AccountTypeEnum fromValue(String text) {
-      for (AccountTypeEnum b : AccountTypeEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
+    @JsonIgnore
+    private float limitBalanace;
+
+    @JsonProperty("accountStatus")
+    private AccountStatusEnum accountStatus = AccountStatusEnum.OPENED;
+
+    @JsonProperty("accountType")
+    private AccountTypeEnum accountType;
+
+    //  String accountNumber
+    //  this.accountNumber = accountNumber;
+    public Account(float balance, LocalDate dateOfOpening, String currency, User user) {
+        this.balance = balance;
+        this.dateOfOpening = dateOfOpening;
+        this.user = user;
+        this.currency = currency;
+    }
+
+    public Account() {
+    }
+
+    /**
+     * Gets or Sets accountType
+     */
+    public enum AccountTypeEnum {
+        CURRENT("current"),
+        SAVING("saving");
+        private String value;
+
+        AccountTypeEnum(String value) {
+            this.value = value;
         }
-      }
-      return null;
-    }
-  }
 
-  /**
-   * Gets or Sets accountStatus
-   */
-  public enum AccountStatusEnum {
-    OPENED("opened"),
-    CLOSED("closed");
-    private String value;
-
-    AccountStatusEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
-
-    @JsonCreator
-    public static AccountStatusEnum fromValue(String text) {
-      for (AccountStatusEnum b : AccountStatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
+        @Override
+        @JsonValue
+        public String toString() {
+            return String.valueOf(value);
         }
-      }
-      return null;
+
+        @JsonCreator
+        public static AccountTypeEnum fromValue(String text) {
+            for (AccountTypeEnum b : AccountTypeEnum.values()) {
+                if (String.valueOf(b.value).equals(text)) {
+                    return b;
+                }
+            }
+            return null;
+        }
     }
-  }
 
-  public void buildIBAN() {
-    DecimalFormat df = new DecimalFormat("0000000000");
-    String accountNumberFormatted = df.format(this.accountNumber);
-    this.IBAN = new Iban.Builder()
-            .countryCode(CountryCode.NL)
-            .bankCode("INHO")
-            .accountNumber(accountNumberFormatted)
-            .build().toString();
-  }
+    /**
+     * Gets or Sets accountStatus
+     */
+    public enum AccountStatusEnum {
+        OPENED("opened"),
+        CLOSED("closed");
+        private String value;
 
-  @ApiModelProperty(value = "")
-  public long getAccountNumber() {
-    return accountNumber;
-  }
+        AccountStatusEnum(String value) {
+            this.value = value;
+        }
 
-  public void setAccountNumber(long accountNumber) {
+        @Override
+        @JsonValue
+        public String toString() {
+            return String.valueOf(value);
+        }
+
+        @JsonCreator
+        public static AccountStatusEnum fromValue(String text) {
+            for (AccountStatusEnum b : AccountStatusEnum.values()) {
+                if (String.valueOf(b.value).equals(text)) {
+                    return b;
+                }
+            }
+            return null;
+        }
+    }
+
+    public abstract void buildIBAN(long accountNumber);
+
+    @ApiModelProperty(value = "")
+    public long getAccountNumber() {
+        return accountNumber;
+    }
+
+  /*public void setAccountNumber(long accountNumber) {
     this.accountNumber = accountNumber;
-  }
+  }*/
 
-  @ApiModelProperty(value = "")
-  public String getIBAN() {
-    return IBAN;
-  }
-
-  public void setIBAN(String IBAN) {
-    this.IBAN = IBAN;
-  }
-
-  @ApiModelProperty(value = "")
-  public float getBalance() {
-    return balance;
-  }
-
-  public void setBalance(float balance) {
-    this.balance = balance;
-  }
-
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-  public LocalDate getDateOfOpening() {
-    return dateOfOpening;
-  }
-
-  public void setDateOfOpening(LocalDate dateOfOpening) {
-    this.dateOfOpening = dateOfOpening;
-  }
-
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-  public long getUserId() {
-    return userId;
-  }
-
-  public void setUserId(long userId) {
-    this.userId = userId;
-  }
-
-  @ApiModelProperty(value = "")
-  public String getCurrency() {
-    return currency;
-  }
-
-  public void setCurrency(String currency) {
-    this.currency = currency;
-  }
-
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-  public AccountTypeEnum getAccountType() {
-    return accountType;
-  }
-
-  public void setAccountType(AccountTypeEnum accountType) {
-    this.accountType = accountType;
-  }
-
-  @ApiModelProperty(value = "")
-  public AccountStatusEnum getAccountStatus() {
-    return accountStatus;
-  }
-
-  public void setAccountStatus(AccountStatusEnum accountStatus) {
-    this.accountStatus = accountStatus;
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class Account {\n");
-
-    sb.append("    accountNumber: ").append(toIndentedString(accountNumber)).append("\n");
-    sb.append("    IBAN: ").append(toIndentedString(IBAN)).append("\n");
-    sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
-    sb.append("    dateOfOpening: ").append(toIndentedString(dateOfOpening)).append("\n");
-    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
-    sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
-    sb.append("    accountStatus: ").append(toIndentedString(accountStatus)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
+    @ApiModelProperty(value = "")
+    public String getIBAN() {
+        return IBAN;
     }
-    return o.toString().replace("\n", "\n    ");
-  }
+
+    public void setIBAN(String IBAN) {
+        this.IBAN = IBAN;
+    }
+
+    @ApiModelProperty(value = "")
+    public float getBalance() {
+        return balance;
+    }
+
+    public void setBalance(float balance) {
+        if (balance < limitBalanace) {
+            throw new IllegalArgumentException("Balance " + balance + " is below zero.");
+        }
+        this.balance = balance;
+    }
+
+    @ApiModelProperty(required = true, value = "")
+    @NotNull
+    public LocalDate getDateOfOpening() {
+        return dateOfOpening;
+    }
+
+    public void setDateOfOpening(LocalDate dateOfOpening) {
+        this.dateOfOpening = dateOfOpening;
+    }
+
+    @ApiModelProperty(required = true, value = "")
+    @NotNull
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+   /* public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }*/
+
+    @ApiModelProperty(value = "")
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    @ApiModelProperty(required = true, value = "")
+    @NotNull
+    public AccountTypeEnum getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(AccountTypeEnum accountType) {
+        this.accountType = accountType;
+    }
+
+    @ApiModelProperty(value = "")
+    public AccountStatusEnum getAccountStatus() {
+        return accountStatus;
+    }
+
+    public void setAccountStatus(AccountStatusEnum accountStatus) {
+        this.accountStatus = accountStatus;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class Account {\n");
+
+        sb.append("    accountNumber: ").append(toIndentedString(accountNumber)).append("\n");
+        sb.append("    IBAN: ").append(toIndentedString(IBAN)).append("\n");
+        sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
+        sb.append("    dateOfOpening: ").append(toIndentedString(dateOfOpening)).append("\n");
+        sb.append("    userId: ").append(toIndentedString(user.getId())).append("\n");
+        sb.append("    accountType: ").append(toIndentedString(accountType)).append("\n");
+        sb.append("    accountStatus: ").append(toIndentedString(accountStatus)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 
 
 
