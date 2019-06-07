@@ -193,6 +193,7 @@ public class BankingAppRunner implements ApplicationRunner {
 
     private void genrateLoginAccountsForUsers(User user) {
         Login login = loginRepository.save(new Login(user.getEmailAddress(), user));
+        System.out.println(login.getPassword());
         login.setPassword(passwordEncoder.encode(login.getPassword()));
         loginRepository.save(login);
     }
