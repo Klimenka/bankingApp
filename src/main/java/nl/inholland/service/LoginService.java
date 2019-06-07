@@ -53,7 +53,6 @@ public class LoginService implements UserDetailsService {
     public Login encodePassword(Login login) {
         login.setPassword(passwordEncoder.encode(login.getPassword()));
         return loginRepository.save(login);
-
     }
 
 }
