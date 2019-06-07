@@ -44,12 +44,12 @@ public abstract class Account {
     private LocalDate dateOfOpening = LocalDate.now();
 
 
-    public long getOne() {
-        return one;
+    public long getUserIdentification() {
+        return userIdentification;
     }
 
     @JsonProperty("one")
-    private long one;
+    private long userIdentification;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "userId", nullable = false)
