@@ -25,7 +25,7 @@ public class WebSecurity {
 
         return (retrievedUser != null && retrievedUser.getId() == id)
                 || (retrievedUser != null
-                && retrievedUser.getUserType() == User.UserTypeEnum.EMPLOYEE);
+                && retrievedUser.getRoles().contains("Employee"));
     }
 
 }

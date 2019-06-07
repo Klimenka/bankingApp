@@ -16,16 +16,16 @@ public class UserTest {
                 111, "1111OP", "Nen", "The Netherlands"),
                 new Address("Example",111, "1111OP", "Nen",
                         "The Netherlands"), "+3111132156", "example@gmail.com",
-                User.CommrcialMessagesEnum.fromValue("by bankmail"), User.PreferedLanguageEnum.fromValue("Dutch"),
-                User.UserTypeEnum.fromValue("Employee"), "Accountant"
+                User.CommercialMessagesEnum.fromValue("by bankmail"), User.PreferredLanguageEnum.fromValue("Dutch"),
+                "Employee", "Accountant"
         );
         customer = new Customer("KL Poll", "Kile Poll",
                 User.SexEnum.fromValue("male"), "21.12.1972", new Address("Example",
                 111, "1111OP", "Nen", "The Netherlands"),
                 new Address("Example",111, "1111OP", "Nen",
                         "The Netherlands"), "+3111132156", "example@gmail.com",
-                User.CommrcialMessagesEnum.fromValue("by bankmail"), User.PreferedLanguageEnum.fromValue("Dutch"),
-                User.UserTypeEnum.fromValue("Customer"));
+                User.CommercialMessagesEnum.fromValue("by bankmail"), User.PreferredLanguageEnum.fromValue("Dutch"),
+                "Customer");
     }
     @Test
     public void createEmployeeShouldNotBeNull() {

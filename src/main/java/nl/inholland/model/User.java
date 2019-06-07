@@ -5,15 +5,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
@@ -35,7 +32,7 @@ public abstract class User {
     @SequenceGenerator(name = "userSeq", initialValue = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSeq")
     @JsonProperty("id")
-    private long id;
+    private Long id;
 
     @JsonProperty("officialName")
     private String officialName;
@@ -63,24 +60,11 @@ public abstract class User {
     @JsonProperty("emailAddress")
     private String emailAddress;
 
-    @JsonProperty("commrcialMessages")
-    private CommrcialMessagesEnum commrcialMessages;
+    @JsonProperty("commercialMessages")
+    private CommercialMessagesEnum commercialMessages;
 
-    @JsonProperty("preferedLanguage")
-    private PreferedLanguageEnum preferedLanguage;
-
-    @JsonProperty("userType")
-    private UserTypeEnum userType;
-
-    //extra
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
+    @JsonProperty("preferredLanguage")
+    private PreferredLanguageEnum preferredLanguage;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "roleId")
@@ -89,7 +73,9 @@ public abstract class User {
     /**
      * Constructor with parameters
      **/
-    public User(String officialName, String preferedName, SexEnum sex, String dateOfBirth, Address primaryAddress, Address postAddress, String mobileNumber, String emailAddress, CommrcialMessagesEnum commrcialMessages, PreferedLanguageEnum preferedLanguage, UserTypeEnum userType) {
+    public User(String officialName, String preferedName, SexEnum sex, String dateOfBirth, Address primaryAddress,
+                Address postAddress, String mobileNumber, String emailAddress, CommercialMessagesEnum commercialMessages,
+                PreferredLanguageEnum preferredLanguage, String roleString) {
 
         this.officialName = officialName;
         this.preferredName = preferredName;
@@ -100,13 +86,11 @@ public abstract class User {
         this.postAddress = postAddress;
         this.mobileNumber = mobileNumber;
         this.emailAddress = emailAddress;
-        this.commrcialMessages = commrcialMessages;
-        this.preferedLanguage = preferedLanguage;
-        this.userType = userType;
-
+        this.commercialMessages = commercialMessages;
+        this.preferredLanguage = preferredLanguage;
         this.roles = new HashSet<>();
         Role role = new Role();
-        role.setRole(userType.toString());
+        role.setRole(roleString);
         this.roles.add(role);
     }
 
@@ -147,7 +131,7 @@ public abstract class User {
         }
     }
 
-    public enum CommrcialMessagesEnum {
+    public enum CommercialMessagesEnum {
         POST("by post"),
 
         BANKMAIL("by bankmail"),
@@ -158,7 +142,7 @@ public abstract class User {
 
         private String value;
 
-        CommrcialMessagesEnum(String value) {
+        CommercialMessagesEnum(String value) {
             this.value = value;
         }
 
@@ -169,8 +153,8 @@ public abstract class User {
         }
 
         @JsonCreator
-        public static CommrcialMessagesEnum fromValue(String text) {
-            for (CommrcialMessagesEnum b : CommrcialMessagesEnum.values()) {
+        public static CommercialMessagesEnum fromValue(String text) {
+            for (CommercialMessagesEnum b : CommercialMessagesEnum.values()) {
                 if (String.valueOf(b.value).equals(text)) {
                     return b;
                 }
@@ -179,14 +163,14 @@ public abstract class User {
         }
     }
 
-    public enum PreferedLanguageEnum {
+    public enum PreferredLanguageEnum {
         DUTCH("Dutch"),
 
         ENGLISH("English");
 
         private String value;
 
-        PreferedLanguageEnum(String value) {
+        PreferredLanguageEnum(String value) {
             this.value = value;
         }
 
@@ -197,8 +181,8 @@ public abstract class User {
         }
 
         @JsonCreator
-        public static PreferedLanguageEnum fromValue(String text) {
-            for (PreferedLanguageEnum b : PreferedLanguageEnum.values()) {
+        public static PreferredLanguageEnum fromValue(String text) {
+            for (PreferredLanguageEnum b : PreferredLanguageEnum.values()) {
                 if (String.valueOf(b.value).equals(text)) {
                     return b;
                 }
@@ -207,31 +191,6 @@ public abstract class User {
         }
     }
 
-    public enum UserTypeEnum {
-        CUSTOMER("Customer"),
-        EMPLOYEE("Employee");
-        private String value;
-
-        UserTypeEnum(String value) {
-            this.value = value;
-        }
-
-        @Override
-        @JsonValue
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        @JsonCreator
-        public static UserTypeEnum fromValue(String text) {
-            for (UserTypeEnum b : UserTypeEnum.values()) {
-                if (String.valueOf(b.value).equals(text)) {
-                    return b;
-                }
-            }
-            return null;
-        }
-    }
 
     /**
      * Get id
@@ -239,9 +198,8 @@ public abstract class User {
      * @return id
      **/
     @ApiModelProperty(required = true, value = "")
-    @NotNull
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -384,44 +342,44 @@ public abstract class User {
 
 
     /**
-     * Get commrcialMessages
+     * Get commercialMessages
      *
-     * @return commrcialMessages
+     * @return commercialMessages
      **/
     @ApiModelProperty(value = "")
 
-    public CommrcialMessagesEnum getCommrcialMessages() {
-        return commrcialMessages;
+    public CommercialMessagesEnum getCommercialMessages() {
+        return commercialMessages;
     }
 
-    public void setCommrcialMessages(CommrcialMessagesEnum commrcialMessages) {
-        this.commrcialMessages = commrcialMessages;
+    public void setCommercialMessages(CommercialMessagesEnum commercialMessages) {
+        this.commercialMessages = commercialMessages;
     }
 
 
     /**
-     * Get preferedLanguage
+     * Get preferredLanguage
      *
-     * @return preferedLanguage
+     * @return preferredLanguage
      **/
     @ApiModelProperty(value = "")
 
-    public PreferedLanguageEnum getPreferedLanguage() {
-        return preferedLanguage;
+    public PreferredLanguageEnum getPreferredLanguage() {
+        return preferredLanguage;
     }
 
-    public void setPreferedLanguage(PreferedLanguageEnum preferedLanguage) {
-        this.preferedLanguage = preferedLanguage;
+    public void setPreferredLanguage(PreferredLanguageEnum preferredLanguage) {
+        this.preferredLanguage = preferredLanguage;
     }
 
-    public UserTypeEnum getUserType() {
-        return userType;
+
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setUserType(UserTypeEnum userType) {
-        this.userType = userType;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
-
 
     @Override
     public String toString() {
@@ -437,9 +395,9 @@ public abstract class User {
         sb.append("    postAddress: ").append(toIndentedString(postAddress)).append("\n");
         sb.append("    mobileNumber: ").append(toIndentedString(mobileNumber)).append("\n");
         sb.append("    emailAddress: ").append(toIndentedString(emailAddress)).append("\n");
-        sb.append("    commrcialMessages: ").append(toIndentedString(commrcialMessages)).append("\n");
-        sb.append("    preferedLanguage: ").append(toIndentedString(preferedLanguage)).append("\n");
-        sb.append("    userType: ").append(toIndentedString(userType)).append("\n");
+        sb.append("    commercialMessages: ").append(toIndentedString(commercialMessages)).append("\n");
+        sb.append("    preferredLanguage: ").append(toIndentedString(preferredLanguage)).append("\n");
+        sb.append("    userRoles: ").append(toIndentedString(roles)).append("\n");
         sb.append("}");
         return sb.toString();
     }

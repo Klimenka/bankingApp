@@ -1,6 +1,8 @@
 package nl.inholland.model;
 
+import java.security.SecureRandom;
 import java.util.Objects;
+import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,31 +11,67 @@ import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
-/**
- * Login
- */
 @Entity
 @Validated
-@ToString
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
 public class Login {
 
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid")
-    //@Column(name = "application_id")
-    @Size(max = 32)
     @JsonProperty("userName")
     private String userName;
 
     @JsonProperty("password")
     private String password;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "userId", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private User user;
+
+    private static final Random RANDOM = new SecureRandom();
+
+    private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+
+    public Login(Login login) {
+        this.password = login.getPassword();
+        this.user = login.getUser();
+    }
+
+
+    public Login(String userName, User user) {
+        this.userName = userName;
+        this.user = user;
+        this.password = generatePassword();
+    }
+
+    public Login() {
+    }
+
+    private String generatePassword() {
+        StringBuilder returnValue = new StringBuilder(10);
+        for (int i = 0; i < 10; i++) {
+            returnValue.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
+        }
+        return new String(returnValue);
+    }
+
+    public Boolean checkPassword(String password) {
+        if (password.equals(this.password)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public User getUser() {
         return user;
@@ -43,47 +81,12 @@ public class Login {
         this.user = user;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "userId", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private User user;
-
-    /*public Login(String password, long userId) {
-        this.password = password;
-        this.userId = userId;
-    }*/
-
-    public Login(Login login) {
-        this.password = login.getPassword();
-        this.user = login.getUser();
-    }
-
-    public Login() {
-    }
-
-    /*@ApiModelProperty(required = true, value = "")
-    @NotNull
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }*/
-
     @ApiModelProperty(required = true, value = "")
     @NotNull
     public String getUserName() {
         return userName;
     }
 
-
-    /**
-     * Get password
-     *
-     * @return password
-     **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
     public String getPassword() {
@@ -94,27 +97,13 @@ public class Login {
         this.password = password;
     }
 
-
-  /*  @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Login login = (Login) o;
-        return Objects.equals(this.userId, login.userId) &&
-                Objects.equals(this.userName, login.userName) &&
-                Objects.equals(this.password, login.password);
+    public Long getUserId() {
+        return user.getId();
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, userName, password);
-    }*/
 
-    /*@Override
+    //for test purpose, delete before sending to teachers
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class Login {\n");
@@ -122,14 +111,11 @@ public class Login {
         //sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
         sb.append("    userName: ").append(toIndentedString(userName)).append("\n");
         sb.append("    password: ").append(toIndentedString(password)).append("\n");
+        sb.append("    userId: ").append(toIndentedString(user.getId())).append("\n");
         sb.append("}");
         return sb.toString();
-    }*/
+    }
 
-    /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {
             return "null";
