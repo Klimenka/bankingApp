@@ -51,7 +51,7 @@ public class UsersApiController implements UsersApi {
             (@ApiParam(value = "Logs a user in and return an auth token, if the specified username and password are correct.", required = true)
              @Valid @RequestBody Login body) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     public ResponseEntity<Void> deleteUserById(@Min(1L) @ApiParam(value = "The id of the user to return", required = true, allowableValues = "") @PathVariable("userId") Long userId) {
