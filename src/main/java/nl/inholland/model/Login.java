@@ -1,18 +1,13 @@
 package nl.inholland.model;
 
 import java.security.SecureRandom;
-import java.util.Objects;
 import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.*;
@@ -22,7 +17,6 @@ import javax.validation.constraints.*;
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
 public class Login {
-
 
     @Id
     @JsonProperty("userName")
@@ -37,17 +31,16 @@ public class Login {
     @JsonIgnore
     private User user;
 
+    @Transient
     private static final Random RANDOM = new SecureRandom();
-
+    @Transient
     private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
 
     public Login(Login login) {
         this.password = login.getPassword();
         this.user = login.getUser();
         this.userName = login.user.getEmailAddress();
     }
-
 
     public Login(String userName, User user) {
         this.userName = userName;

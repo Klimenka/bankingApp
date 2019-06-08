@@ -1,10 +1,7 @@
 package nl.inholland.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.OnDelete;
@@ -20,6 +17,7 @@ import java.time.LocalDate;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @JsonDeserialize(as = CurrentAccount.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Validated
 @javax.annotation.Generated(value = "io.inholland.codegen.v3.generators.java.SpringCodegen", date = "2019-05-23T16:34:19.518Z[GMT]")
 public abstract class Account {
@@ -30,7 +28,6 @@ public abstract class Account {
     @JsonProperty("accountNumber")
     private long accountNumber;
 
-    //@JsonProperty("IBAN")
     private String iban;
 
     @JsonProperty("balance")
@@ -38,15 +35,6 @@ public abstract class Account {
 
     @JsonProperty("dateOfOpening")
     private LocalDate dateOfOpening = LocalDate.now();
-
-
-    public long getUserIdentification() {
-        return userIdentification;
-    }
-
-    public void setUserIdentification(long userIdentification) {
-        this.userIdentification = userIdentification;
-    }
 
     @Transient
     @JsonProperty("userIdentification")
@@ -61,14 +49,6 @@ public abstract class Account {
     @JsonProperty("currency")
     private String currency = "euro";
 
-    public float getLimitBalanace() {
-        return limitBalanace;
-    }
-
-    public void setLimitBalanace(float limitBalanace) {
-        this.limitBalanace = limitBalanace;
-    }
-
     @JsonIgnore
     private float limitBalanace;
 
@@ -78,8 +58,6 @@ public abstract class Account {
     @JsonProperty("accountType")
     private AccountTypeEnum accountType;
 
-    //  String accountNumber
-    //  this.accountNumber = accountNumber;
     public Account(float balance, LocalDate dateOfOpening, String currency, User user) {
         this.balance = balance;
         this.dateOfOpening = dateOfOpening;
@@ -167,10 +145,6 @@ public abstract class Account {
         return accountNumber;
     }
 
-  /*public void setAccountNumber(long accountNumber) {
-    this.accountNumber = accountNumber;
-  }*/
-
     @ApiModelProperty(value = "")
     public String getIBAN() {
         return iban;
@@ -202,8 +176,6 @@ public abstract class Account {
         this.dateOfOpening = dateOfOpening;
     }
 
-    /* @ApiModelProperty(required = true, value = "")
-     @NotNull*/
     public User getUser() {
         return user;
     }
@@ -212,13 +184,21 @@ public abstract class Account {
         this.user = user;
     }
 
-   /* public long getUserId() {
-        return userId;
+    public long getUserIdentification() {
+        return userIdentification;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }*/
+    public void setUserIdentification(long userIdentification) {
+        this.userIdentification = userIdentification;
+    }
+
+    public float getLimitBalanace() {
+        return limitBalanace;
+    }
+
+    public void setLimitBalanace(float limitBalanace) {
+        this.limitBalanace = limitBalanace;
+    }
 
     @ApiModelProperty(value = "")
     public String getCurrency() {
@@ -252,7 +232,6 @@ public abstract class Account {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class Account {\n");
-
         sb.append("    accountNumber: ").append(toIndentedString(accountNumber)).append("\n");
         sb.append("    IBAN: ").append(toIndentedString(iban)).append("\n");
         sb.append("    balance: ").append(toIndentedString(balance)).append("\n");
@@ -270,60 +249,4 @@ public abstract class Account {
         }
         return o.toString().replace("\n", "\n    ");
     }
-
-
-
-      /*public Account accountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-        return this;
-    }*/
-
-    /*public Account balance(Float balance) {
-        this.balance = balance;
-        return this;
-    }
-
-    public Account dateOfOpening(String dateOfOpening) {
-        this.dateOfOpening = dateOfOpening;
-        return this;
-    }
-
-    public Account userId(Integer userId) {
-        this.userId = userId;
-        return this;
-    }
-
-    public Account accountType(AccountTypeEnum accountType) {
-        this.accountType = accountType;
-        return this;
-    }
-
-    public Account accountStatus(AccountStatusEnum accountStatus) {
-        this.accountStatus = accountStatus;
-        return this;
-    }
-
-    @Override
-    public boolean equals(java.lang.Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Account account = (Account) o;
-        return Objects.equals(this.accountNumber, account.accountNumber) &&
-                Objects.equals(this.balance, account.balance) &&
-                Objects.equals(this.dateOfOpening, account.dateOfOpening) &&
-                Objects.equals(this.userId, account.userId) &&
-                Objects.equals(this.accountType, account.accountType) &&
-                Objects.equals(this.accountStatus, account.accountStatus);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(accountNumber, balance, dateOfOpening, userId, accountType, accountStatus);
-    }*/
-
-
 }
