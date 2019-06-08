@@ -75,14 +75,15 @@ public class UsersApiController implements UsersApi {
                 ((List<User>) userService.getUsers(userType), HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> updateUserLogin
+    public ResponseEntity<Login> updateUserLogin
             (@ApiParam(value = "", required = true)
              @Valid @RequestBody Login body,
              @Min(1L)
              @ApiParam(value = "The id of the user to return", required = true, allowableValues = "")
              @PathVariable("userId") Long userId) {
         String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+
+        return new ResponseEntity<Login>(loginService.updatePassword(body.getUserName(), body.getPassword()), HttpStatus.OK);
     }
 
 }

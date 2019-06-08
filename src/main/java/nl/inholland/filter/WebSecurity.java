@@ -7,27 +7,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class WebSecurity {
 
     @Autowired
     private UserRepository userRepository;
 
+    private User getCurrentUser(Authentication authentication) {
+
+        Login currentUser;
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof Login) {
+            currentUser = (Login) principal;
+            return userRepository
+                    .findById(currentUser.getUser().getId())
+                    .orElseThrow(IllegalArgumentException::new);
+        } else {
+            return null;
+        }
+    }
+
     public boolean checkUserId(Authentication authentication, long id) {
 
-        Object principal = authentication.getPrincipal();
-        Login currentUser = (Login) principal;
+        User currentUser = getCurrentUser(authentication);
+        if (currentUser == null) return false;
 
-        User retrievedUser =
-                userRepository
-                        .findById(currentUser.getUser().getId())
-                        .orElseThrow(IllegalArgumentException::new);
-
-        return (retrievedUser != null && retrievedUser.getId() == id)
-                || (retrievedUser != null
-                && retrievedUser.getRoles()
+        return (currentUser != null && currentUser.getId() == id)
+                || (currentUser != null && id != 1 && currentUser.getRoles()
                 .stream()
-                .anyMatch(role -> role.getRole().equals("Employee")));
+                .anyMatch(role -> role.getRole().equals("Employee")))
+                || (currentUser != null && currentUser.getRoles()
+                .stream()
+                .anyMatch(role -> role.getRole().equals("Owner")));
     }
 
 }

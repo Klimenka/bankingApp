@@ -12,6 +12,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u JOIN u.roles ur WHERE ur.role like ?1")
     Iterable<User> getAllUsers(String role);
-    
+
     User getUserByIdEquals(Long userId);
 }
