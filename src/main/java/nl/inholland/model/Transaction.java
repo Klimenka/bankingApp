@@ -1,12 +1,12 @@
 package nl.inholland.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModelProperty;
-import org.threeten.bp.OffsetDateTime;
 import org.springframework.validation.annotation.Validated;
 import javax.persistence.*;
 import javax.validation.Valid;
@@ -38,8 +38,8 @@ public class Transaction   {
     @JsonProperty("userPerforming")
     private User userPerforming;
 
-    @JsonProperty("timestamp")
-    private OffsetDateTime timestamp;
+    @JsonProperty("date")
+    private LocalDate date;
 
     private int dayLimit = 20;
 
@@ -51,12 +51,12 @@ public class Transaction   {
 
     }
 
-    public Transaction(String accountFrom, String accountTo, Float amount, User userPerforming, OffsetDateTime timestamp, TransactionTypeEnum transactionType) {
+    public Transaction(String accountFrom, String accountTo, Float amount, User userPerforming, LocalDate date, TransactionTypeEnum transactionType) {
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
         this.amount = amount;
         this.userPerforming = userPerforming;
-        this.timestamp = timestamp;
+        this.date = date;
         this.transactionType = transactionType;
     }
 
@@ -214,7 +214,13 @@ public class Transaction   {
         return amount;
     }
 
-    public void setAmount(Float amount) {
+    public void setAmount(Float amount)
+    {
+        if(amount < 0)
+        {
+            throw new IllegalArgumentException("the amount must not be below zero");
+        }
+
         this.amount = amount;
     }
 
@@ -239,8 +245,8 @@ public class Transaction   {
         this.userPerforming = userPerforming;
     }
 
-    public Transaction timestamp(OffsetDateTime timestamp) {
-        this.timestamp = timestamp;
+    public Transaction date (LocalDate date) {
+        this.date = date;
         return this;
     }
 
@@ -253,12 +259,12 @@ public class Transaction   {
     @NotNull
 
     @Valid
-    public OffsetDateTime getTimestamp() {
-        return timestamp;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setTimestamp(OffsetDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public Transaction transactionStatus(TransactionStatusEnum transactionStatus) {
@@ -350,14 +356,14 @@ public class Transaction   {
                 Objects.equals(this.accountTo, transaction.accountTo) &&
                 Objects.equals(this.amount, transaction.amount) &&
                 Objects.equals(this.userPerforming, transaction.userPerforming) &&
-                Objects.equals(this.timestamp, transaction.timestamp) &&
+                Objects.equals(this.date, transaction.date) &&
                 Objects.equals(this.transactionStatus, transaction.transactionStatus) &&
                 Objects.equals(this.transactionType, transaction.transactionType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(transactionId, accountFrom, accountTo, amount, userPerforming, timestamp, transactionStatus, transactionType);
+        return Objects.hash(transactionId, accountFrom, accountTo, amount, userPerforming, date, transactionStatus, transactionType);
     }
 
     @Override
@@ -370,7 +376,7 @@ public class Transaction   {
         sb.append("    accountTo: ").append(toIndentedString(accountTo)).append("\n");
         sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
         sb.append("    userPerforming: ").append(toIndentedString(userPerforming)).append("\n");
-        sb.append("    timestamp: ").append(toIndentedString(timestamp)).append("\n");
+        sb.append("    date: ").append(toIndentedString(date)).append("\n");
         sb.append("    transactionStatus: ").append(toIndentedString(transactionStatus)).append("\n");
         sb.append("    transactionType: ").append(toIndentedString(transactionType)).append("\n");
         sb.append("}");

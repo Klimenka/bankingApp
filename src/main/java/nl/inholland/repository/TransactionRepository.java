@@ -3,7 +3,7 @@ package nl.inholland.repository;
 import nl.inholland.model.Transaction;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import org.threeten.bp.OffsetDateTime;
+import java.time.LocalDate;
 
 import java.util.List;
 
@@ -11,6 +11,6 @@ import java.util.List;
 public interface TransactionRepository extends CrudRepository<Transaction, Long>
 {
     List<Transaction> findAll();
-    List<Transaction> findAllByAccountFromEqualsAndTimestampEquals(String accountFrom, OffsetDateTime today);
-    List<Transaction> findAllByAccountFromEqualsAndTimestampGreaterThanEqualAndTimestampLessThanEqual(String userAccount, OffsetDateTime dateFrom, OffsetDateTime dateTo);
+    List<Transaction> findAllByAccountFromEqualsAndDateEquals(String accountFrom, LocalDate today);
+    List<Transaction> findAllByAccountFromEqualsAndDateGreaterThanEqualAndDateLessThanEqual(String userAccount, LocalDate dateFrom, LocalDate dateTo);
 }

@@ -6,8 +6,7 @@ import nl.inholland.repository.AccountRepository;
 import nl.inholland.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.threeten.bp.OffsetDateTime;
-
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -21,7 +20,6 @@ public class TransactionService
 
     private Transaction transaction = new Transaction();
     private Account account;
-    private Error error = new Error();
 
     //adds a transaction to the repository
     public Transaction addTransaction(Transaction body)
@@ -30,9 +28,9 @@ public class TransactionService
     }
 
     //retrieves all the user's transactions between the dates
-    public List<Transaction> getAllTransactions(String userAccount, OffsetDateTime dateFrom, OffsetDateTime dateTo)
+    public List<Transaction> getAllTransactions(String userAccount, LocalDate dateFrom, LocalDate dateTo)
     {
-        return transactionRepository.findAllByAccountFromEqualsAndTimestampGreaterThanEqualAndTimestampLessThanEqual(userAccount, dateFrom, dateTo);
+        return transactionRepository.findAllByAccountFromEqualsAndDateGreaterThanEqualAndDateLessThanEqual(userAccount, dateFrom, dateTo);
     }
 
     //retrieves one transaction from the user
@@ -46,7 +44,7 @@ public class TransactionService
     //checks if the amount of transaction is below the dayLimit
     public Boolean checkDayLimit(String account)
     {
-        List<Transaction> transactionList = this.transactionRepository.findAllByAccountFromEqualsAndTimestampEquals(account, OffsetDateTime.now());
+        List<Transaction> transactionList = this.transactionRepository.findAllByAccountFromEqualsAndDateEquals(account, LocalDate.now());
         return transactionList.size() < transaction.getDayLimit();
     }
 
@@ -59,7 +57,7 @@ public class TransactionService
     //checks if the transaction will not reach the absolute limit of balance in the user's account
     private Boolean checkAbsoluteLimit(Transaction body)
     {
-        Account account = accountRepository.getAccountByIban(body.getAccountFrom());
+        account = accountRepository.getAccountByIban(body.getAccountFrom());
         return (account.getBalance() - body.getAmount()) > transaction.getAbsoluteLimit();
     }
 
@@ -85,27 +83,34 @@ public class TransactionService
     {
         if(body.getTransactionType() == Transaction.TransactionTypeEnum.TRANSACTION)
         {
-            account = accountRepository.getAccountByIban(body.getAccountFrom());
-            account.setBalance(account.getBalance() - body.getAmount());
-            accountRepository.save(account);
-
-            account = accountRepository.getAccountByIban(body.getAccountTo());
-            account.setBalance(account.getBalance() + body.getAmount());
-            accountRepository.save(account);
+            subtractAmountFromBalance(body.getAccountFrom(), body.getAmount());
+            addAmountToBalance(body.getAccountTo(), body.getAmount());
         }
         else if(body.getTransactionType() == Transaction.TransactionTypeEnum.WITHDRAW)
         {
-            account = accountRepository.getAccountByIban(body.getAccountFrom());
-            account.setBalance(account.getBalance() - body.getAmount());
-            accountRepository.save(account);
+            subtractAmountFromBalance(body.getAccountFrom(), body.getAmount());
         }
         if(body.getTransactionType() == Transaction.TransactionTypeEnum.DEPOSIT)
         {
-            account = accountRepository.getAccountByIban(body.getAccountFrom());
-            account.setBalance(account.getBalance() + body.getAmount());
-            accountRepository.save(account);
+            addAmountToBalance(body.getAccountFrom(), body.getAmount());
         }
 
         addTransaction(body);
+    }
+
+    //this is used to subtract the amount from the user's account
+    private void subtractAmountFromBalance(String accountNumber, float amount)
+    {
+        account = accountRepository.getAccountByIban(accountNumber);
+        account.setBalance(account.getBalance() - amount);
+        accountRepository.save(account);
+    }
+
+    //this is used to add the amount to the user's account
+    private void addAmountToBalance(String accountNumber, float amount)
+    {
+        account = accountRepository.getAccountByIban(accountNumber);
+        account.setBalance(account.getBalance() + amount);
+        accountRepository.save(account);
     }
 }
