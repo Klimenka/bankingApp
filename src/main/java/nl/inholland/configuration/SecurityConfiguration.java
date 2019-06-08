@@ -17,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-@EnableJpaRepositories(basePackageClasses = LoginRepository.class)
+@EnableJpaRepositories(basePackageClasses = LoginRepository.class) //inject jpa repo
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 

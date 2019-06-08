@@ -81,15 +81,15 @@ public interface UsersApi {
     ResponseEntity<List<User>> getUsers(@ApiParam(value = "", allowableValues = "Customer, Employee") @Valid @RequestParam(value = "userType", required = false) String userType);
 
 
-    @ApiOperation(value = "update the user's login info", nickname = "updateUserLogin", notes = "calling this will allow the user to change his/her credentials", tags = {"users",})
+    @ApiOperation(value = "update the user's password", nickname = "updateUserLogin", notes = "calling this will allow the user to change his/her password", tags = {"users",})
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "user credentials has successfully been updated"),
+            @ApiResponse(code = 201, message = "user password has successfully been updated"),
             @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
             @ApiResponse(code = 404, message = "The specified resource was not found", response = Error.class)})
-    @RequestMapping(value = "/users/{userId}/account",
+    @RequestMapping(value = "/users/{userId}/updatePassword",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.PUT)
-    ResponseEntity<Void> updateUserLogin(@ApiParam(value = "", required = true) @Valid @RequestBody Login body, @Min(1L) @ApiParam(value = "The id of the user to return", required = true, allowableValues = "") @PathVariable("userId") Long userId);
+    ResponseEntity<Login> updateUserLogin(@ApiParam(value = "", required = true) @Valid @RequestBody Login body, @Min(1L) @ApiParam(value = "The id of the user to return", required = true, allowableValues = "") @PathVariable("userId") Long userId);
 
 }

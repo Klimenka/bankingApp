@@ -44,6 +44,19 @@ public class LoginService implements UserDetailsService {
                 .map(CustomUserDetails::new).get();
     }
 
+    public Login updatePassword(String username, String password){
+        Optional<Login> optionalUser = loginRepository.findByUserName(username);
+        optionalUser.orElseThrow(()->new UsernameNotFoundException("username not found"));
+
+        Login user = optionalUser.get();
+        user.setPassword(password);
+        loginRepository.save(user);
+
+        return loginRepository.findByUserName(username).get();
+
+
+    }
+
     public Login createLogin(User user) {
         Login userCredentials = new Login(user.getEmailAddress(), user);
         Login userCredentialsForEncoding = loginRepository.save(userCredentials);
