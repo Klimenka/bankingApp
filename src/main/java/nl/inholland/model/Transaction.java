@@ -220,6 +220,10 @@ public class Transaction   {
         {
             throw new IllegalArgumentException("the amount must not be below zero");
         }
+        else if(amount == null)
+        {
+            throw new NullPointerException("the amount should have a value");
+        }
 
         this.amount = amount;
     }
