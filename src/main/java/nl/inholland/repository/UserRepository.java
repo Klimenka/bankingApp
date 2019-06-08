@@ -1,15 +1,17 @@
 package nl.inholland.repository;
 
+import nl.inholland.model.Role;
 import nl.inholland.model.User;
-import org.springframework.data.repository.CrudRepository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
-    Iterable<User> getUserByRolesEquals(String roles);
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findTopByOrderByIdDesc();
+    @Query("SELECT u FROM User u JOIN u.roles ur WHERE ur.role like ?1")
+    Iterable<User> getAllUsers(String role);
 
-    //retrievedUser.getRoles().contains("Employee"));
     User getUserByIdEquals(Long userId);
 }
