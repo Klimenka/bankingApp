@@ -54,13 +54,13 @@ public class UsersApiControllerIntegrationTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
-    @Test
+   /* @Test
     public void getUsersTest() throws Exception {
         String userType = "";
         ResponseEntity<List<User>> responseEntity = api.getUsers(userType);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
-
+*/
 //    @Test
 //    public void updateUserLoginTest() throws Exception {
 //        Login body = new Login();

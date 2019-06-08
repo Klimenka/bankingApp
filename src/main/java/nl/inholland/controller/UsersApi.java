@@ -8,6 +8,7 @@ package nl.inholland.controller;
 import nl.inholland.model.Error;
 import nl.inholland.model.Login;
 import io.swagger.annotations.*;
+import nl.inholland.model.Role;
 import nl.inholland.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
