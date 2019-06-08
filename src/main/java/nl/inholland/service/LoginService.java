@@ -58,6 +58,10 @@ public class LoginService implements UserDetailsService {
     }
 
     public Login createLogin(User user) {
+        if (loginRepository.findByUserName(user.getEmailAddress()).isPresent()) {
+            throw new IllegalArgumentException("Email already in use!");
+        }
+
         Login userCredentials = new Login(user.getEmailAddress(), user);
         Login userCredentialsForEncoding = loginRepository.save(userCredentials);
         encodePassword(userCredentialsForEncoding);
