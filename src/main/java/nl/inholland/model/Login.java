@@ -96,7 +96,7 @@ public class Login {
     }
 
 
-    //for test purpose, delete before sending to teachers
+    //for test purpose
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
