@@ -44,17 +44,16 @@ public class LoginService implements UserDetailsService {
                 .map(CustomUserDetails::new).get();
     }
 
-    public Login updatePassword(String username, String password){
+    public Login updatePassword(String username, String password) {
         Optional<Login> optionalUser = loginRepository.findByUserName(username);
-        optionalUser.orElseThrow(()->new UsernameNotFoundException("username not found"));
+        optionalUser.orElseThrow(() -> new UsernameNotFoundException("username not found"));
 
         Login user = optionalUser.get();
         user.setPassword(password);
-        loginRepository.save(user);
+        Login userCredentialsForEncoding = loginRepository.save(user);
+        encodePassword(userCredentialsForEncoding);
 
-        return loginRepository.findByUserName(username).get();
-
-
+        return user;
     }
 
     public Login createLogin(User user) {
