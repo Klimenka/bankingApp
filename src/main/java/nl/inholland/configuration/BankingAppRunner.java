@@ -29,7 +29,6 @@ public class BankingAppRunner implements ApplicationRunner {
     private TransactionRepository transactionRepository;
     private int index = 0;
     private LoginService loginService;
-
     private LoginRepository loginRepository;
 
     public BankingAppRunner(AccountRepository accountRepository, BankAccountConfig bankAccountConfig,
@@ -47,33 +46,12 @@ public class BankingAppRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        getBankOwnAccount();
         getAddressesFromFileAndSaveToInMemoryDB();
         getUsersFromFile();
-        getBankOwnAccount();
         getBankAccountsFromFile();
         getTransactionsFromFile();
-        //getLoginFromFile();
     }
-
-   /* private void getLoginFromFile() throws IOException {
-        Path path = Paths.get("src/main/resources/login.csv");
-        index = 0;
-        Files.lines(path)
-                .forEach(line -> saveLoginDetails(line));
-
-        loginRepository.findAll().forEach(System.out::println);
-    }
-
-    private void saveLoginDetails(String line) {
-        List<User> users = (List<User>) userRepository.findAll();
-        Login login = new Login();
-        login.setUser(users.get(index));
-        login.setPassword(passwordEncoder.encode(line));
-        loginRepository.save(login);
-
-        index++;
-    }*/
-
 
     private void getTransactionsFromFile() throws IOException {
         Path path = Paths.get("src/main/resources/transaction.csv");
@@ -95,10 +73,18 @@ public class BankingAppRunner implements ApplicationRunner {
     }
 
     private void getBankOwnAccount() {
+        Address address = new Address("Street", 505, "2032SA", "Haarlem", "Netherlands");
+        addressRepository.save(address);
+
+        User user = new Employee("Bank", "Bank", User.SexEnum.MALE, "01.01.2019",
+                address, address, "0650464266", "bank@bank.com",
+                User.CommercialMessagesEnum.BANKMAIL, User.PreferredLanguageEnum.ENGLISH, "Owner", "Manager");
+        userRepository.save(user);
+
+        generateLoginAccountsForUsers(user);
+
         Account bankAccount = new CurrentAccount(0,
-                LocalDate.now(), "euro", userRepository
-                .findById(Long.valueOf(1))
-                .orElseThrow(IllegalArgumentException::new));
+                LocalDate.now(), "euro", user);
         bankAccount.setIBAN(bankAccountConfig.getIBAN());
         accountRepository.save(bankAccount);
     }
@@ -115,6 +101,7 @@ public class BankingAppRunner implements ApplicationRunner {
         Account account;
         List<User> users = (List<User>) userRepository.findAll();
 
+        index++;
         if (line.split(",")[4].equals("current")) {
             account = accountRepository.save(new CurrentAccount(
                     Float.parseFloat(line.split(",")[0]),
@@ -128,7 +115,6 @@ public class BankingAppRunner implements ApplicationRunner {
                     line.split(",")[2],
                     users.get(index)));
         }
-        index++;
         account.buildIBAN(account.getAccountNumber());
         accountRepository.save(accountRepository.findById(account.getAccountNumber())
                 .map(account1 -> account).orElseThrow(IllegalArgumentException::new));

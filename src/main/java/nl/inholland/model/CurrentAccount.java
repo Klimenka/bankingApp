@@ -1,13 +1,9 @@
 package nl.inholland.model;
 
 
-import lombok.NoArgsConstructor;
-import org.iban4j.CountryCode;
-import org.iban4j.Iban;
 import org.springframework.validation.annotation.Validated;
 
 import javax.persistence.Entity;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 
 @Entity
@@ -39,21 +35,4 @@ public class CurrentAccount extends Account {
         }
         return o.toString().replace("\n", "\n    ");
     }
-
-  /*@Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    return true;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(super.hashCode());
-  }*/
-
 }

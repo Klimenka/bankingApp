@@ -44,9 +44,9 @@ public class LoginService implements UserDetailsService {
                 .map(CustomUserDetails::new).get();
     }
 
-    public Login updatePassword(String username, String password){
+    public Login updatePassword(String username, String password) {
         Optional<Login> optionalUser = loginRepository.findByUserName(username);
-        optionalUser.orElseThrow(()->new UsernameNotFoundException("username not found"));
+        optionalUser.orElseThrow(() -> new UsernameNotFoundException("username not found"));
 
         Login user = optionalUser.get();
         user.setPassword(password);

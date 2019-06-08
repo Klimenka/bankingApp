@@ -83,7 +83,7 @@ public class UsersApiController implements UsersApi {
              @PathVariable("userId") Long userId) {
         String accept = request.getHeader("Accept");
 
-        return new ResponseEntity<Login>(loginService.updatePassword(body.getUserName(), body.getPassword()),HttpStatus.OK);
+        return new ResponseEntity<Login>(loginService.updatePassword(body.getUserName(), body.getPassword()), HttpStatus.OK);
     }
 
 }

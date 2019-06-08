@@ -11,8 +11,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSwagger2
-//@EnableWebMvc
-@ComponentScan(basePackages = { "nl.inholland", "nl.inholland.controller", "nl.inholland.configuration"})
+@ComponentScan(basePackages = {"nl.inholland", "nl.inholland.controller", "nl.inholland.configuration"})
 public class BankingApp implements CommandLineRunner {
 
     @Override

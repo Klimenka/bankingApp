@@ -29,7 +29,8 @@ public class UserService {
         if (userType.equals("none")) {
             return userRepository.findAll();
         } else {
-            return userRepository.getUserByRolesEquals(userType);
+
+            return userRepository.getAllUsers(userType);
         }
 
     }
