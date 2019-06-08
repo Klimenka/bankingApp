@@ -44,7 +44,7 @@ public abstract class User {
     private SexEnum sex;
 
     @JsonProperty("dateOfBirth")
-    private String dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @ManyToOne
     @JsonProperty("primaryAddress")
@@ -74,14 +74,14 @@ public abstract class User {
     /**
      * Constructor with parameters
      **/
-    public User(String officialName, String preferedName, SexEnum sex, String dateOfBirth, Address primaryAddress,
+    public User(String officialName, String preferredName, SexEnum sex, String dateOfBirth, Address primaryAddress,
                 Address postAddress, String mobileNumber, String emailAddress, CommercialMessagesEnum commercialMessages,
                 PreferredLanguageEnum preferredLanguage, String roleString) {
 
         this.officialName = officialName;
         this.preferredName = preferredName;
         this.sex = sex;
-        this.dateOfBirth = dateOfBirth;
+
         setDateOfBirth(dateOfBirth);
         this.primaryAddress = primaryAddress;
         this.postAddress = postAddress;
@@ -127,6 +127,7 @@ public abstract class User {
                 if (String.valueOf(b.value).equals(text)) {
                     return b;
                 }
+
             }
             return null;
         }
@@ -255,7 +256,7 @@ public abstract class User {
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
-    public String getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
@@ -273,7 +274,7 @@ public abstract class User {
         if (date.compareTo(LocalDate.now()) > 0) {
             throw new IllegalArgumentException("DateOfBirth should be in the past");
         }
-        this.dateOfBirth = dateOfBirth;
+        this.dateOfBirth = date;
     }
 
     /**
