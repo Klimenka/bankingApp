@@ -44,7 +44,7 @@ public class TransactionsApiController implements TransactionsApi {
                     transactionService.addTransaction(body);
                     return new ResponseEntity<>("operation was a success", HttpStatus.CREATED);
                 } else {
-                    error.setMessage("Unable to perform a transaction due to low balance");
+                    error.setMessage("Unable to perform the transaction");
                     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
                 }
             else {
