@@ -9,7 +9,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.threeten.bp.OffsetDateTime;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -67,7 +66,7 @@ public class BankingAppRunner implements ApplicationRunner {
                 line.split(",")[1],
                 Float.parseFloat(line.split(",")[2]),
                 userRepository.getUserByIdEquals(Long.parseLong(line.split(",")[3])),
-                OffsetDateTime.parse(line.split(",")[4]),
+                LocalDate.parse(line.split(",")[4]),
                 Transaction.TransactionTypeEnum.fromValue(line.split(",")[5]))
         );
     }
