@@ -50,6 +50,7 @@ public class LoginService implements UserDetailsService {
 
         Login user = optionalUser.get();
         user.setPassword(password);
+        //I kept mine :)
         Login userForEncoding = loginRepository.save(user);
         encodePassword(userForEncoding);
 
