@@ -8,7 +8,6 @@ import nl.inholland.repository.AccountRepository;
 import nl.inholland.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -100,13 +99,10 @@ public class AccountService {
     }
 
     public Account createBankAccount(Account account) {
-        //Object princi = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //Login login = (Login) princi;
-        //System.out.println(login.getUser().getId());
 
         User user = userRepository
                 .findById(account.getUserIdentification())
-                .orElseThrow(() -> new IllegalArgumentException("The User Id is wrong"));
+                .orElseThrow(() -> new IllegalArgumentException("Incorrect user Id"));
 
         account.setUser(user);
         Account bankAccount = accountRepository
@@ -121,7 +117,7 @@ public class AccountService {
     public void closeBankAccount(long accountNumber) {
         Account account = accountRepository
                 .findById(accountNumber)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("Incorrect bank account number"));
         account.setAccountStatus(Account.AccountStatusEnum.CLOSED);
 
         accountRepository.save(account);

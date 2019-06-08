@@ -1,5 +1,6 @@
 package nl.inholland.controller;
 
+
 import nl.inholland.model.Account;
 import nl.inholland.model.Login;
 import nl.inholland.service.AccountService;
@@ -27,9 +28,7 @@ import java.util.List;
 public class AccountsApiController implements AccountsApi {
 
     private static final Logger log = LoggerFactory.getLogger(AccountsApiController.class);
-
     private final ObjectMapper objectMapper;
-
     private final HttpServletRequest request;
     private AccountService accountService;
 
@@ -41,20 +40,18 @@ public class AccountsApiController implements AccountsApi {
         this.accountService = accountService;
     }
 
-
-    public ResponseEntity<Void> closeBankAccount(@ApiParam(value = "the account number",
+    public ResponseEntity<String> closeBankAccount(@ApiParam(value = "the account number",
             required = true) @PathVariable("accountNumber") long accountNumber) {
 
         String accept = request.getHeader("Accept");
         accountService.closeBankAccount(accountNumber);
-        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<String>("The account has been successfully closed.", HttpStatus.NO_CONTENT);
     }
 
     public ResponseEntity<Account> createBankAccount(@ApiParam(value = "", required = true)
                                                      @Valid @RequestBody Account body) {
 
         String accept = request.getHeader("Accept");
-        //accountService.createBankAccount(body);
         return new ResponseEntity<Account>(accountService.createBankAccount(body), HttpStatus.CREATED);
     }
 
