@@ -158,8 +158,7 @@ public class TransactionService
     //performs the transaction function
     private Boolean performTransaction(Transaction body)
     {
-        if((getAccountType(body.getAccountFrom()) == Account.AccountTypeEnum.CURRENT && checkIfAccountBelongsToUser(body, body.getAccountFrom())) &&
-                getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.CURRENT)
+        if((getAccountType(body.getAccountFrom()) == Account.AccountTypeEnum.CURRENT && checkIfAccountBelongsToUser(body, body.getAccountFrom())))
         {
             subtractAmountFromBalance(body.getAccountFrom(), body.getAmount());
             addAmountToBalance(body.getAccountTo(), body.getAmount());
