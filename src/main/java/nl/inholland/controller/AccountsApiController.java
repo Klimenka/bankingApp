@@ -75,9 +75,9 @@ public class AccountsApiController implements AccountsApi {
         String accept = request.getHeader("Accept");
 
         //retrieving data from the session
-        Object princi = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Login login = (Login) princi;
-        System.out.println(login.getUser().getId());
+        //Object princi = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       // Login login = (Login) princi;
+        //System.out.println(login.getUser().getId());
 
         return new ResponseEntity<List<Account>>
                 (accountService.getBankAccounts(dateOfOpening, accountType), HttpStatus.OK);
