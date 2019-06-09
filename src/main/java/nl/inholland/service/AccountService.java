@@ -1,13 +1,12 @@
 package nl.inholland.service;
 
-import nl.inholland.model.Account;
-import nl.inholland.model.Login;
-import nl.inholland.model.Role;
-import nl.inholland.model.User;
+import net.bytebuddy.implementation.bytecode.Throw;
+import nl.inholland.model.*;
 import nl.inholland.repository.AccountRepository;
 import nl.inholland.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
@@ -57,8 +56,8 @@ public class AccountService {
     }
 
     private String getUserRole() {
-        Object Principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Login login = (Login) Principal;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomUserDetails login = (CustomUserDetails) principal;
         Set<Role> role = login.getUser().getRoles();
         String userRole = role.stream().map(Role::getRole).findAny().get();
         return userRole;
@@ -115,6 +114,9 @@ public class AccountService {
     }
 
     public void closeBankAccount(long accountNumber) {
+        if (accountNumber == 1) throw new IllegalArgumentException
+                ("Closing the account of the bank itself is not allowed");
+
         Account account = accountRepository
                 .findById(accountNumber)
                 .orElseThrow(() -> new IllegalArgumentException("Incorrect bank account number"));
