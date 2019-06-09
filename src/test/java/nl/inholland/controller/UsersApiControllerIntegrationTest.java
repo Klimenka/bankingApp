@@ -21,6 +21,7 @@ public class UsersApiControllerIntegrationTest {
 
     @Autowired
     private UsersApi api;
+
     private User user;
     @Before
     public void setup() {

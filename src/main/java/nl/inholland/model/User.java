@@ -89,7 +89,9 @@ public abstract class User {
         this.commercialMessages = commercialMessages;
         this.preferredLanguage = preferredLanguage;
         this.roles = new HashSet<>();
-        setRoles(roleString);
+        Role role = new Role();
+        role.setRole(roleString);
+        this.roles.add(role);
     }
 
     /**
@@ -380,11 +382,6 @@ public abstract class User {
         return roles;
     }
 
-    public void setRoles(String roleString) {
-        Role role = new Role();
-        role.setRole(roleString);
-        this.roles.add(role);
-    }
 
     @Override
     public String toString() {
