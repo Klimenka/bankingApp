@@ -5,10 +5,12 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+//This class is not used by Nadia.
 public class UserTest {
 
     private Employee employee;
     private Customer customer;
+
     @Before
     public void setup() {
         employee = new Employee("KL Poll", "Kile Poll",
@@ -27,10 +29,12 @@ public class UserTest {
                 User.CommercialMessagesEnum.fromValue("by bankmail"), User.PreferredLanguageEnum.fromValue("Dutch"),
                 "Customer");
     }
+
     @Test
     public void createEmployeeShouldNotBeNull() {
         assertNotNull(employee);
     }
+
     @Test
     public void createCustomerShouldNotBeNull() {
         assertNotNull(customer);
@@ -40,6 +44,7 @@ public class UserTest {
     public void getCustomerIdShouldNotBeNull() {
         assertNotNull(customer.getId());
     }
+
     @Test
     public void getEmployeeIdShouldNotBeNull() {
         assertNotNull(employee.getId());
@@ -49,6 +54,7 @@ public class UserTest {
     public void getOfficialNameOfEmployeeShouldBeCorrect() {
         assertEquals("KL Poll", employee.getOfficialName());
     }
+
     @Test
     public void getOfficialNameOfCustomerShouldBeCorrect() {
         assertEquals("KL Poll", customer.getOfficialName());
@@ -115,19 +121,19 @@ public class UserTest {
     }
 
     @Test
-    public void getCommrcialMessages() {
+    public void getCommercialMessages() {
     }
 
     @Test
-    public void setCommrcialMessages() {
+    public void setCommercialMessages() {
     }
 
     @Test
-    public void getPreferedLanguage() {
+    public void getPreferredLanguage() {
     }
 
     @Test
-    public void setPreferedLanguage() {
+    public void setPreferredLanguage() {
     }
 
     @Test

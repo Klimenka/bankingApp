@@ -81,18 +81,15 @@ public abstract class User {
         this.officialName = officialName;
         this.preferredName = preferredName;
         this.sex = sex;
-
         setDateOfBirth(dateOfBirth);
         this.primaryAddress = primaryAddress;
         this.postAddress = postAddress;
-        this.mobileNumber = mobileNumber;
+        setMobileNumber(mobileNumber);
         this.emailAddress = emailAddress;
         this.commercialMessages = commercialMessages;
         this.preferredLanguage = preferredLanguage;
         this.roles = new HashSet<>();
-        Role role = new Role();
-        role.setRole(roleString);
-        this.roles.add(role);
+        setRoles(roleString);
     }
 
     /**
@@ -323,7 +320,11 @@ public abstract class User {
     }
 
     public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
+        if (mobileNumber.matches("^\\(?([+]31|0031|0)-?6(\\s?|-)([0-9]\\s{0,3}){8}$")) {
+            this.mobileNumber = mobileNumber;
+        } else {
+            throw new IllegalArgumentException("This is not Dutch phone number");
+        }
     }
 
 
@@ -379,8 +380,10 @@ public abstract class User {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRoles(String roleString) {
+        Role role = new Role();
+        role.setRole(roleString);
+        this.roles.add(role);
     }
 
     @Override
