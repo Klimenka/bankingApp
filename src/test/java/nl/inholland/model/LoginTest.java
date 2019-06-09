@@ -13,7 +13,7 @@ public class LoginTest {
             User.SexEnum.fromValue("male"), "21.12.1972", new Address("Example",
             111, "1111OP", "Nen", "The Netherlands"),
             new Address("Example", 111, "1111OP", "Nen",
-                    "The Netherlands"), "+31611132156", "example@gmail.com",
+                    "The Netherlands"), "0650464266", "example@gmail.com",
             User.CommercialMessagesEnum.fromValue("by bankmail"), User.PreferredLanguageEnum.fromValue("Dutch"),
             "Customer");
 
@@ -43,7 +43,7 @@ public class LoginTest {
                 User.SexEnum.fromValue("male"), "21.12.1972", new Address("Example",
                 111, "1111OP", "Nen", "The Netherlands"),
                 new Address("Example", 111, "1111OP", "Nen",
-                        "The Netherlands"), "+31611132156", "example@gmail.com",
+                        "The Netherlands"), "0650464266", "example@gmail.com",
                 User.CommercialMessagesEnum.fromValue("by bankmail"), User.PreferredLanguageEnum.fromValue("Dutch"),
                 "Customer");
         login.setUser(newUser);

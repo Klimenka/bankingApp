@@ -44,7 +44,7 @@ public class AccountService {
         } else if (dateOfOpening != null && accountType != null) {
             return getBankAccountsByTypeAndByDate(dateOfOpening, accountType);
         } else {
-            if (getUserRole().equals("Owner")) {
+            if (getLoggedInUserRole().equals("Owner")) {
                 return accountRepository.findAll();
             } else {
                 return accountRepository.findAll()
@@ -55,7 +55,7 @@ public class AccountService {
         }
     }
 
-    private String getUserRole() {
+    private String getLoggedInUserRole() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomUserDetails login = (CustomUserDetails) principal;
         Set<Role> role = login.getUser().getRoles();
@@ -65,7 +65,7 @@ public class AccountService {
 
     private List<Account> getBankAccountsByDate(LocalDate dateOfOpening) {
 
-        if (getUserRole().equals("Owner")) {
+        if (getLoggedInUserRole().equals("Owner")) {
             return accountRepository.getAccountByDateOfOpeningEquals(dateOfOpening);
         } else {
             return accountRepository.getAccountByDateOfOpeningEqualsAndAccountNumberIsNot(
@@ -75,7 +75,7 @@ public class AccountService {
 
     private List<Account> getBankAccountsByType(String accountType) {
 
-        if (getUserRole().equals("Owner")) {
+        if (getLoggedInUserRole().equals("Owner")) {
             return accountRepository.getAccountByAccountTypeEquals
                     (Account.AccountTypeEnum.fromValue(accountType));
         } else {
@@ -87,7 +87,7 @@ public class AccountService {
     private List<Account> getBankAccountsByTypeAndByDate(LocalDate dateOfOpening,
                                                          String accountType) {
 
-        if (getUserRole().equals("Owner")) {
+        if (getLoggedInUserRole().equals("Owner")) {
             return accountRepository.getAccountByDateOfOpeningEqualsAndAccountTypeEquals
                     (dateOfOpening, Account.AccountTypeEnum.fromValue(accountType));
         } else {
@@ -103,6 +103,9 @@ public class AccountService {
                 .findById(account.getUserIdentification())
                 .orElseThrow(() -> new IllegalArgumentException("Incorrect user Id"));
 
+        if (!getUserRole(user).equals("Customer")) throw new IllegalArgumentException
+                ("Bank account can only be created for customers");
+
         account.setUser(user);
         Account bankAccount = accountRepository
                 .save(account);
@@ -111,6 +114,13 @@ public class AccountService {
         accountRepository.save(bankAccount);
 
         return bankAccount;
+    }
+
+    private String getUserRole(User user) {
+        Set<Role> role = user.getRoles();
+        String userRole = role.stream().map(Role::getRole).findAny().get();
+
+        return userRole;
     }
 
     public void closeBankAccount(long accountNumber) {

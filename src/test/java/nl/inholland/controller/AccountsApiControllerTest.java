@@ -65,7 +65,7 @@ public class AccountsApiControllerTest {
 
     @WithMockUser(roles = "Employee")
     @Test
-    public void givenAccountWithUserIdAndAccountTypeOfTheBankItself_accessedByEmployee_shouldReturnForbidden()
+    public void givenBankAccountWithUserIdAndAccountTypeOfTheBankItself_accessedByEmployee_shouldReturnForbidden()
             throws Exception {
         List<Account> accounts = Arrays.asList(account);
         given(service.getBankAccount(1, "current")).willReturn(accounts);
@@ -78,7 +78,7 @@ public class AccountsApiControllerTest {
 
     @WithMockUser(roles = {"Employee", "Owner"})
     @Test
-    public void givenAccountsWithDateAndAccountTypeShouldReturnIsOK() throws Exception {
+    public void givenBankAccountsWithDateAndAccountTypeShouldReturnIsOK() throws Exception {
         List<Account> accounts = Arrays.asList(account);
         given(service.getBankAccounts(LocalDate.now(), "current")).willReturn(accounts);
 
@@ -91,7 +91,8 @@ public class AccountsApiControllerTest {
 
     @WithMockUser(roles = "Customer")
     @Test
-    public void givenAccountsWithDateAndAccountTypeAccessedByCustomerShouldReturnForbidden() throws Exception {
+    public void givenBankAccountsWithDateAndAccountTypeAccessedByCustomerShouldReturnForbidden()
+            throws Exception {
         List<Account> accounts = Arrays.asList(account);
         given(service.getBankAccounts(LocalDate.now(), "current")).willReturn(accounts);
 
@@ -104,7 +105,7 @@ public class AccountsApiControllerTest {
 
     @WithMockUser(roles = {"Employee", "Owner"})
     @Test
-    public void whenCreateAccountShouldReturnCreated() throws Exception {
+    public void whenCreateBankAccountShouldReturnCreated() throws Exception {
         mvc.perform(post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -120,7 +121,7 @@ public class AccountsApiControllerTest {
 
     @WithMockUser(roles = "Customer")
     @Test
-    public void whenCustomerCreateAccountShouldReturnForbidden() throws Exception {
+    public void whenCustomerCreateBankAccountShouldReturnForbidden() throws Exception {
         mvc.perform(post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{}"))
@@ -129,14 +130,14 @@ public class AccountsApiControllerTest {
 
     @WithMockUser(roles = {"Employee", "Owner"})
     @Test
-    public void whenCloseAccountShouldReturnNoContent() throws Exception {
+    public void whenCloseBankAccountShouldReturnNoContent() throws Exception {
         mvc.perform(delete("/accounts/{accountNumber}", 2L))
                 .andExpect(status().isNoContent());
     }
 
     @WithMockUser(roles = "Customer")
     @Test
-    public void whenCustomerCloseAccountShouldReturnForbidden() throws Exception {
+    public void whenCustomerCloseBankAccountShouldReturnForbidden() throws Exception {
         mvc.perform(delete("/accounts/{accountNumber}", 2L))
                 .andExpect(status().isForbidden());
     }

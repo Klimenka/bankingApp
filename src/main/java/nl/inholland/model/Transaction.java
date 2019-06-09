@@ -170,6 +170,9 @@ public class Transaction   {
     }
 
     public void setAccountFrom(String accountFrom) {
+
+        if(accountFrom == null)
+            throw new IllegalArgumentException("Please fill in your account");
         this.accountFrom = accountFrom;
     }
 
@@ -239,11 +242,18 @@ public class Transaction   {
     @ApiModelProperty(required = true, value = "")
     @NotNull
 
-    public User getUserPerforming() {
+    public User getUserPerforming()
+    {
+        if(userPerforming.getId() == null)
+            throw new IllegalArgumentException("the user is missing their Id");
+
         return userPerforming;
     }
 
     public void setUserPerforming(User userPerforming) {
+        if(userPerforming == null)
+            throw new IllegalArgumentException("userPerforming should not be null");
+
         this.userPerforming = userPerforming;
     }
 
