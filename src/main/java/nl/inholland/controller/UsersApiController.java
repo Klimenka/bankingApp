@@ -42,6 +42,7 @@ public class UsersApiController implements UsersApi {
         return new ResponseEntity<Login>(userService.createUser(user), HttpStatus.CREATED);
     }
 
+    //I guess this one is not used
     public ResponseEntity<Void> getLoginTest(@RequestParam("username") String username) {
         //loginService.getLogin(username);
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);

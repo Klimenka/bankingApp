@@ -9,18 +9,26 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import springfox.documentation.spring.web.json.Json;
+
 import java.util.Arrays;
+
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringRunner.class)
@@ -53,6 +61,9 @@ public class UserControllerUnitTest {
 
     private User user;
 
+    @MockBean
+    private Login login;
+
     @Before
     public void setup() {
         // mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
@@ -64,6 +75,7 @@ public class UserControllerUnitTest {
                         "The Netherlands"), "+31611132156", "example@gmail.com",
                 User.CommercialMessagesEnum.fromValue("by bankmail"), User.PreferredLanguageEnum.fromValue("Dutch"),
                 "Employee", "Accountant");
+
     }
 
 
@@ -187,4 +199,29 @@ public class UserControllerUnitTest {
                 .andExpect(status().isNoContent());
 
     }
+
+    @Test
+    public void updateUserLoginShouldReturnOK() throws Exception {
+        mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        login = new Login(user.getEmailAddress(), user);
+        mvc.perform(put("/users/{userId}/updatePassword", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"userName\": \"example@gmail.com\",\n" +
+                        "\"password\": \"newPassword\"}"))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    @WithMockUser(roles = {"Employee", "Owner"})
+    public void CreateTokenShouldReturnOK() throws Exception {
+        mvc.perform(
+                post("/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"userName\": \"example@gmail.com\",\n" +
+                                "\"password\": \"Password\"}"))
+                .andExpect(status().isOk());
+
+    }
+
 }
