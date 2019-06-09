@@ -3,11 +3,8 @@ package nl.inholland.controller;
 import nl.inholland.configuration.BankAccountConfig;
 import nl.inholland.configuration.BankingAppRunner;
 
-import nl.inholland.model.Address;
+import nl.inholland.model.*;
 
-import nl.inholland.model.Customer;
-import nl.inholland.model.Employee;
-import nl.inholland.model.User;
 import nl.inholland.repository.*;
 import nl.inholland.service.LoginService;
 import nl.inholland.service.UserService;
@@ -31,9 +28,8 @@ import springfox.documentation.spring.web.json.Json;
 import java.util.Arrays;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 
 @RunWith(SpringRunner.class)
@@ -49,7 +45,7 @@ public class UserControllerUnitTest {
     @MockBean
     TransactionRepository transactionRepository;
     @MockBean
-    LoginService loginService;
+    private LoginService loginService;
     @MockBean
     LoginRepository loginRepository;
     @MockBean
@@ -64,6 +60,9 @@ public class UserControllerUnitTest {
     @MockBean
     private UserService service;
     private User user;
+
+    @MockBean
+    private Login login;
 
     @Before
     public void setup() {
@@ -133,6 +132,30 @@ public class UserControllerUnitTest {
                         "        \"userType\": \"Customer\"\n}"))
                 .andExpect(status().isCreated());
 
+
+    }
+
+    @Test
+    @WithMockUser(roles = {"Employee", "Owner"})
+    public void updateUserLoginShouldReturnOK() throws Exception {
+
+        login = new Login(user.getEmailAddress(), user);
+        mvc.perform(put("/users/{userId}/updatePassword", 1L )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"userName\": \"example@gmail.com\",\n"+
+                                "\"password\": \"newPassword\"}"))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+    public void CreateTokenShouldReturnOK() throws Exception {
+        mvc.perform(
+                post("/users/login" )
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"userName\": \"example@gmail.com\",\n"+
+                                "\"password\": \"Password\"}"))
+                .andExpect(status().isOk());
 
     }
 
