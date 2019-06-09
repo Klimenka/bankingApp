@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.http.*;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,24 +33,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = BankingAppRunner.class)
-@WebAppConfiguration
+@SpringBootTest
 public class UserIT {
 
     @Autowired
-    private MockMvc mvc;
+    private WebApplicationContext wac;
 
-    private UserService userService;
+    private MockMvc mockMvc;
 
-    private HttpHeaders headers = new HttpHeaders();
+    @Before
+    public void setup() throws Exception {
 
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+    }
 
   /*  @Test
-    @WithMockUser(roles = {"Employee", "Owner"})
+    @WithMockUser(roles = {"Customer"})
     public void testGetAllUsersShouldRetrieveAnArrayOfUsers() throws Exception {
 
-       // HttpEntity<String> entity = new HttpEntity<>(null, headers);
-        mvc.perform(get("/users"))
+       mockMvc.perform(get("/users"))
                 .andExpect(status().isOk());
     }
 */
