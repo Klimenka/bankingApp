@@ -52,6 +52,7 @@ public class UserService {
     private String getUserRole(User user) {
         Set<Role> role = user.getRoles();
         String userRole = role.stream().map(Role::getRole).findAny().get();
+       
         return userRole;
     }
 
