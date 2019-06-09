@@ -1,9 +1,7 @@
 package nl.inholland.service;
 
-import nl.inholland.model.Account;
-import nl.inholland.model.Login;
-import nl.inholland.model.Role;
-import nl.inholland.model.User;
+import net.bytebuddy.implementation.bytecode.Throw;
+import nl.inholland.model.*;
 import nl.inholland.repository.AccountRepository;
 import nl.inholland.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,8 +56,8 @@ public class AccountService {
     }
 
     private String getUserRole() {
-        Object Principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Login login = (Login) Principal;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        CustomUserDetails login = (CustomUserDetails) principal;
         Set<Role> role = login.getUser().getRoles();
         String userRole = role.stream().map(Role::getRole).findAny().get();
         return userRole;
@@ -100,13 +98,10 @@ public class AccountService {
     }
 
     public Account createBankAccount(Account account) {
-        //Object princi = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //Login login = (Login) princi;
-        //System.out.println(login.getUser().getId());
 
         User user = userRepository
                 .findById(account.getUserIdentification())
-                .orElseThrow(() -> new IllegalArgumentException("The User Id is wrong"));
+                .orElseThrow(() -> new IllegalArgumentException("Incorrect user Id"));
 
         account.setUser(user);
         Account bankAccount = accountRepository
@@ -119,9 +114,12 @@ public class AccountService {
     }
 
     public void closeBankAccount(long accountNumber) {
+        if (accountNumber == 1) throw new IllegalArgumentException
+                ("Closing the account of the bank itself is not allowed");
+
         Account account = accountRepository
                 .findById(accountNumber)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(() -> new IllegalArgumentException("Incorrect bank account number"));
         account.setAccountStatus(Account.AccountStatusEnum.CLOSED);
 
         accountRepository.save(account);

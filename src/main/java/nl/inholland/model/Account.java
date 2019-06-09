@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.springframework.validation.annotation.Validated;
+
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.text.DecimalFormat;
@@ -50,7 +51,7 @@ public abstract class Account {
     private String currency = "euro";
 
     @JsonIgnore
-    private float limitBalanace;
+    private float limitBalanace = 0f;
 
     @JsonProperty("accountStatus")
     private AccountStatusEnum accountStatus = AccountStatusEnum.OPENED;

@@ -6,6 +6,7 @@ import nl.inholland.repository.LoginRepository;
 import nl.inholland.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,11 +40,20 @@ public class UserService {
         addressRepository.save(user.getPrimaryAddress());
         User userCreated = userRepository.save(user);
 
-        Account bankAccount = new CurrentAccount();
-        bankAccount.setUserIdentification(userCreated.getId());
-        accountService.createBankAccount(bankAccount);
+        if (getUserRole(userCreated).equals("Customer")) {
+            Account bankAccount = new CurrentAccount();
+            bankAccount.setUserIdentification(userCreated.getId());
+            accountService.createBankAccount(bankAccount);
+        }
 
         return loginService.createLogin(userCreated);
+    }
+
+    private String getUserRole(User user) {
+        Set<Role> role = user.getRoles();
+        String userRole = role.stream().map(Role::getRole).findAny().get();
+
+        return userRole;
     }
 
     public User getUser(Long userId) {

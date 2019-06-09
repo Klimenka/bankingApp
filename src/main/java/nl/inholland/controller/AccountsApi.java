@@ -30,7 +30,7 @@ public interface AccountsApi {
     @RequestMapping(value = "/accounts/{accountNumber}",
             produces = {"application/json"},
             method = RequestMethod.DELETE)
-    ResponseEntity<Void> closeBankAccount(@ApiParam(value = "the account number", required = true) @PathVariable("accountNumber") long accountNumber);
+    ResponseEntity<String> closeBankAccount(@ApiParam(value = "the account number", required = true) @PathVariable("accountNumber") long accountNumber);
 
 
     @ApiOperation(value = "create a bank account", nickname = "createBankAccount", notes = "Calling this will allow epmployees to open an account for a specific customer", response = Account.class, authorizations = {
