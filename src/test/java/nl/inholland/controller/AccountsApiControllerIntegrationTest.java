@@ -163,6 +163,22 @@ public class AccountsApiControllerIntegrationTest {
 
     @WithUserDetails(value = "example@gmail.com") //role employee
     @Test
+    public void createBankAccountForEmployeeAccount_shouldReturnBadRequest400() throws Exception {
+        mvc.perform(post("/accounts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"balance\": 0,\n" +
+                        "    \"dateOfOpening\": \"2019-06-05\",\n" +
+                        "    \"userIdentification\": 2,\n" +
+                        "    \"currency\": \"euro\",\n" +
+                        "    \"accountStatus\": \"opened\",\n" +
+                        "    \"accountType\": \"current\"\n" +
+                        "}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @WithUserDetails(value = "example@gmail.com") //role employee
+    @Test
     public void createBankAccountByOwnerOrEmployee_shouldReturnCreated201() throws Exception {
         mvc.perform(post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
