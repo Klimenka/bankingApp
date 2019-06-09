@@ -32,39 +32,41 @@ public class TransactionService
     }
 
     //retrieves one transaction from the user
-    public Transaction getTransaction(long transactionId) {
+    public Transaction getTransaction(long transactionId)
+    {
         return this.transactionRepository
                 .findById(transactionId)
                 .orElseThrow(IllegalArgumentException::new);
     }
 
     //checks if the amount of transaction is below the dayLimit
-    public Boolean checkDayLimit(String account) {
+    public Boolean checkDayLimit(String account)
+    {
         List<Transaction> transactionList = this.transactionRepository.findAllByAccountFromEqualsAndDateEquals(account, LocalDate.now());
         return transactionList.size() < transaction.getDayLimit();
     }
 
     //checks if the amount is within the transaction limit
-    public Boolean checkTransactionLimit(float amount) {
+    public Boolean checkTransactionLimit(float amount)
+    {
         return amount > 1 || amount < transaction.getTransactionLimit();
     }
 
     //checks if the transaction will not reach the absolute limit of balance in the user's account
-    private Boolean checkAbsoluteLimit(Transaction body) {
+    private Boolean checkAbsoluteLimit(Transaction body)
+    {
         account = accountRepository.getAccountByIban(body.getAccountFrom());
-        return (account.getBalance() - body.getAmount()) > transaction.getAbsoluteLimit();
+        if((account.getBalance() - body.getAmount()) > transaction.getAbsoluteLimit())
+            return true;
+        return false;
     }
 
     //determines if the transaction can happen due to the transaction type
-    public Boolean checkTransactionPossibility(Transaction body) {
+    public Boolean checkTransactionPossibility(Transaction body)
+    {
         if(body.getTransactionType() == Transaction.TransactionTypeEnum.TRANSACTION || body.getTransactionType() == Transaction.TransactionTypeEnum.WITHDRAW)
-            if(checkAbsoluteLimit(body)) {
-                if (updateBalance(body)) {
-                    return true;
-                }
-
-                return false;
-            }
+            if(checkAbsoluteLimit(body))
+                return updateBalance(body);
             else
                 return false;
         else if(body.getTransactionType() == Transaction.TransactionTypeEnum.DEPOSIT)
@@ -74,52 +76,50 @@ public class TransactionService
     }
 
     //this is used to update the balance in a user's account
-    private Boolean updateBalance(Transaction body) {
+    private Boolean updateBalance(Transaction body)
+    {
         if(body.getTransactionType() == Transaction.TransactionTypeEnum.TRANSACTION)
-        {
-            if (performTransaction(body)) {
-                return true;
-            }
-        }
+          return performTransaction(body);
         else if(body.getTransactionType() == Transaction.TransactionTypeEnum.WITHDRAW)
-            if (performWithdraw(body))
-                return true;
+            return performWithdraw(body);
         if(body.getTransactionType() == Transaction.TransactionTypeEnum.DEPOSIT)
-        {
             return performDeposit(body);
-        }
 
         return false;
     }
 
     //this is used to subtract the amount from the user's account
-    private void subtractAmountFromBalance(String accountNumber, float amount) {
+    private void subtractAmountFromBalance(String accountNumber, float amount)
+    {
         account = accountRepository.getAccountByIban(accountNumber);
         account.setBalance(account.getBalance() - amount);
         accountRepository.save(account);
     }
 
     //this is used to add the amount to the user's account
-    private void addAmountToBalance(String accountNumber, float amount) {
+    private void addAmountToBalance(String accountNumber, float amount)
+    {
         account = accountRepository.getAccountByIban(accountNumber);
         account.setBalance(account.getBalance() + amount);
         accountRepository.save(account);
     }
 
     //checks if an account belongs to the user
-    private Boolean checkIfAccountBelongsToUser(Transaction body, String accountNumber) {
+    private Boolean checkIfAccountBelongsToUser(Transaction body, String accountNumber)
+    {
         account = accountRepository.getAccountByIban(accountNumber);
-
         return body.getUserPerforming().getId() == account.getUser().getId();
     }
 
     //retrieves the account type
-    private Account.AccountTypeEnum getAccountType(String accountNumber) {
+    private Account.AccountTypeEnum getAccountType(String accountNumber)
+    {
         return accountRepository.getAccountByIban(accountNumber).getAccountType();
     }
 
     //performs the withdraw function
-    private Boolean performWithdraw(Transaction body) {
+    private Boolean performWithdraw(Transaction body)
+    {
         if(getAccountType(body.getAccountFrom()) == Account.AccountTypeEnum.CURRENT && checkIfAccountBelongsToUser(body, body.getAccountFrom())){
             subtractAmountFromBalance(body.getAccountFrom(), body.getAmount());
             return true;
@@ -128,7 +128,8 @@ public class TransactionService
     }
 
     //performs the deposit function
-    private Boolean performDeposit(Transaction body) {
+    private Boolean performDeposit(Transaction body)
+    {
         if(getAccountType(body.getAccountFrom()) == Account.AccountTypeEnum.CURRENT && checkIfAccountBelongsToUser(body, body.getAccountFrom())){
             addAmountToBalance(body.getAccountFrom(), body.getAmount());
             return true;
@@ -137,26 +138,31 @@ public class TransactionService
     }
 
     //performs the transaction function
-    private Boolean performTransaction(Transaction body) {
-        if (getAccountType(body.getAccountFrom()) == Account.AccountTypeEnum.CURRENT) {
+    private Boolean performTransaction(Transaction body)
+    {
+        if(getAccountType(body.getAccountFrom()) == Account.AccountTypeEnum.CURRENT) {
             return performTransactionIfAccountTypeIsCurrent(body);
-        } else if (getAccountType(body.getAccountFrom()) == Account.AccountTypeEnum.SAVING) {
+        }
+        else if(getAccountType(body.getAccountFrom()) == Account.AccountTypeEnum.SAVING) {
             return performTransactionIfAccountTypeIsSaving(body);
         }
         return false;
     }
 
     //this transaction function only contains functions for the current account
-    private Boolean performTransactionIfAccountTypeIsCurrent(Transaction body) {
-        if (checkIfAccountBelongsToUser(body, body.getAccountFrom()) && (getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.CURRENT && checkIfAccountBelongsToUser(body, body.getAccountTo()))) {
+    private Boolean performTransactionIfAccountTypeIsCurrent(Transaction body)
+    {
+        if(checkIfAccountBelongsToUser(body, body.getAccountFrom()) && (getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.CURRENT && checkIfAccountBelongsToUser(body, body.getAccountTo()))) {
             subtractAmountFromBalance(body.getAccountFrom(), body.getAmount());
             addAmountToBalance(body.getAccountTo(), body.getAmount());
             return true;
-        } else if (checkIfAccountBelongsToUser(body, body.getAccountFrom()) && (getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.SAVING && checkIfAccountBelongsToUser(body, body.getAccountTo()))) {
+        }
+        else if(checkIfAccountBelongsToUser(body, body.getAccountFrom()) && (getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.SAVING && checkIfAccountBelongsToUser(body, body.getAccountTo()))) {
             subtractAmountFromBalance(body.getAccountFrom(), body.getAmount());
             addAmountToBalance(body.getAccountTo(), body.getAmount());
             return true;
-        } else if (checkIfAccountBelongsToUser(body, body.getAccountFrom()) && getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.CURRENT) {
+        }
+        else if(checkIfAccountBelongsToUser(body, body.getAccountFrom()) && getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.CURRENT) {
             subtractAmountFromBalance(body.getAccountFrom(), body.getAmount());
             addAmountToBalance(body.getAccountTo(), body.getAmount());
             return true;
@@ -166,12 +172,14 @@ public class TransactionService
     }
 
     //this transaction function only contains functions for the saving account
-    private Boolean performTransactionIfAccountTypeIsSaving(Transaction body) {
-        if (checkIfAccountBelongsToUser(body, body.getAccountFrom()) && (getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.SAVING && checkIfAccountBelongsToUser(body, body.getAccountTo()))) {
+    private Boolean performTransactionIfAccountTypeIsSaving(Transaction body)
+    {
+        if(checkIfAccountBelongsToUser(body, body.getAccountFrom()) && (getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.SAVING && checkIfAccountBelongsToUser(body, body.getAccountTo()))) {
             subtractAmountFromBalance(body.getAccountFrom(), body.getAmount());
             addAmountToBalance(body.getAccountTo(), body.getAmount());
             return true;
-        } else if (checkIfAccountBelongsToUser(body, body.getAccountFrom()) && (getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.CURRENT && checkIfAccountBelongsToUser(body, body.getAccountTo()))) {
+        }
+        else if(checkIfAccountBelongsToUser(body, body.getAccountFrom()) && (getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.CURRENT && checkIfAccountBelongsToUser(body, body.getAccountTo()))) {
             subtractAmountFromBalance(body.getAccountFrom(), body.getAmount());
             addAmountToBalance(body.getAccountTo(), body.getAmount());
             return true;

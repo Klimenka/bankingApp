@@ -39,20 +39,21 @@ public class TransactionsApiController implements TransactionsApi {
         accept = request.getHeader("Accept");
 
         if (transactionService.checkTransactionLimit(body.getAmount()))
-            if (transactionService.checkDayLimit(body.getAccountFrom()))
+            if (transactionService.checkDayLimit(body.getAccountFrom())) {
                 if (transactionService.checkTransactionPossibility(body)) {
+                    body.setTransactionStatus(Transaction.TransactionStatusEnum.SUCCESSFUL);
                     transactionService.addTransaction(body);
                     return new ResponseEntity<>("operation was a success", HttpStatus.CREATED);
                 } else {
                     error.setMessage("Unable to perform the transaction");
                     return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
                 }
+            }
             else {
                 error.setMessage("You have exceeded your daily limit");
                 return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
             }
-        else
-        {
+        else {
             error.setMessage("Please choose a number between 1 and 10000");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
@@ -72,7 +73,6 @@ public class TransactionsApiController implements TransactionsApi {
     }
 
     //retrieves one transaction
-    @RequestMapping("/getTransaction")
     public ResponseEntity<Transaction> getTransaction(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(name = "transactionId", required = true) long transactionId)
     {
         accept = request.getHeader("Accept");

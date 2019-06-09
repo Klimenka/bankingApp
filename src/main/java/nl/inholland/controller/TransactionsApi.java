@@ -34,7 +34,6 @@ public interface TransactionsApi {
             method = RequestMethod.POST)
     ResponseEntity<Object> createTransaction(@ApiParam(value = "") @Valid @RequestBody Transaction body);
 
-
     @ApiOperation(value = "retrieves all transactions which has been made from a user's account.", nickname = "getTransactionHistory", notes = "This function will retrieve the transaction acitivities of one account. The user will have the option to filter the transaction activities by using dates.", response = Transaction.class, responseContainer = "List", tags = {"transactions",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Transaction history has succesfully been retrieved.", response = Transaction.class, responseContainer = "List"),
@@ -43,5 +42,14 @@ public interface TransactionsApi {
             produces = {"application/json"},
             method = RequestMethod.GET)
     ResponseEntity<List<Transaction>> getTransactionHistory(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "accountNumber", required = true) String accountNumber, @ApiParam(value = "") @Valid @RequestParam(value = "dateFrom", required = false) LocalDate dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "dateTo", required = false) LocalDate dateTo);
+
+    @ApiOperation(value = "retrieves one transaction from the user", nickname = "getTransaction", notes = "This function will retrieve the transaction acitivities of one account bby using the transaction Id.", response = Transaction.class, responseContainer = "Transaction", tags = {"getTransactions",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Transaction has succesfully been retrieved.", response = Transaction.class, responseContainer = "List"),
+            @ApiResponse(code = 400, message = "Bad request.", response = Error.class)})
+    @RequestMapping(value = "/getTransaction",
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<Transaction> getTransaction(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(name = "transactionId", required = true) long transactionId);
 
 }
