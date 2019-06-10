@@ -23,16 +23,10 @@ public class LoginService implements UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     private LoginRepository loginRepository;
-    private UserRepository userRepository;
 
-    public LoginService(LoginRepository loginRepository, UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public LoginService(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
     }
-
-    /*public Login getLogin(String userName) {
-        return loginRepository.findByUserName(userName);
-    }*/
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -67,7 +67,7 @@ public abstract class User {
     private PreferredLanguageEnum preferredLanguage;
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "roleId")
     protected Set<Role> roles;
 

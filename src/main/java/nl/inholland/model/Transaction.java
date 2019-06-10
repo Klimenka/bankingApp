@@ -2,7 +2,6 @@ package nl.inholland.model;
 
 import java.time.LocalDate;
 import java.util.Objects;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -130,7 +129,7 @@ public class Transaction   {
     }
 
     @JsonProperty("transactionType")
-    private TransactionTypeEnum transactionType = null;
+    private TransactionTypeEnum transactionType;
 
     public Transaction transactionId(long transactionId) {
         this.transactionId = transactionId;
@@ -244,9 +243,6 @@ public class Transaction   {
 
     public User getUserPerforming()
     {
-        if(userPerforming.getId() == null)
-            throw new IllegalArgumentException("the user is missing their Id");
-
         return userPerforming;
     }
 
@@ -263,9 +259,9 @@ public class Transaction   {
     }
 
     /**
-     * Get timestamp
+     * Get date
      *
-     * @return timestamp
+     * @return date
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
@@ -275,7 +271,8 @@ public class Transaction   {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDate date)
+    {
         this.date = date;
     }
 

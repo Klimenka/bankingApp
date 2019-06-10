@@ -38,7 +38,6 @@ public class AccountsApiControllerIntegrationTest {
                 .build();
     }
 
-    // first one
     @WithUserDetails(value = "bank@bank.com") //role owner
     @Test
     public void getAllBankAccounts_shouldRetrieveAnArrayOfAccounts() throws Exception {
@@ -75,7 +74,7 @@ public class AccountsApiControllerIntegrationTest {
                 .andExpect(status().isForbidden());
     }
 
-    // second one
+
     @WithUserDetails(value = "bank@bank.com") //role owner
     @Test
     public void getBankAccountByUserId_shouldRetrieveAnArrayOfAccounts() throws Exception {
