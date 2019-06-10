@@ -77,6 +77,7 @@ public class TransactionsApiControllerIntegrationTest {
     }
 
     @Test
+    @WithMockUser(roles = {"Employee", "Owner"})
     public void testCreateTransactionShouldReturnIsCreated() throws Exception
     {
         mvc.perform(post("/transactions")
