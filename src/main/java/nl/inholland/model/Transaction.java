@@ -130,7 +130,7 @@ public class Transaction   {
     }
 
     @JsonProperty("transactionType")
-    private TransactionTypeEnum transactionType = null;
+    private TransactionTypeEnum transactionType;
 
     public Transaction transactionId(long transactionId) {
         this.transactionId = transactionId;
@@ -263,9 +263,9 @@ public class Transaction   {
     }
 
     /**
-     * Get timestamp
+     * Get date
      *
-     * @return timestamp
+     * @return date
      **/
     @ApiModelProperty(required = true, value = "")
     @NotNull
