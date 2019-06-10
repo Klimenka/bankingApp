@@ -3,9 +3,7 @@ package nl.inholland.controller;
 import nl.inholland.configuration.BankAccountConfig;
 import nl.inholland.configuration.BankingAppRunner;
 import nl.inholland.model.Transaction;
-import nl.inholland.repository.AccountRepository;
-import nl.inholland.repository.TransactionRepository;
-import nl.inholland.repository.UserRepository;
+import nl.inholland.repository.*;
 import nl.inholland.service.AccountService;
 import nl.inholland.service.TransactionService;
 import nl.inholland.service.UserService;
@@ -30,21 +28,21 @@ public class TransactionApiControllerTest {
     @Autowired
     private MockMvc mvc;
     @MockBean
-    private UserRepository userRepository;
+    private TransactionService service;
     @MockBean
-    private UserService userService;
+    AccountRepository accountRepository;
     @MockBean
-    private TransactionService transactionService;
+    UserRepository userRepository;
     @MockBean
-    private TransactionRepository transactionRepository;
+    AddressRepository addressRepository;
     @MockBean
-    private BankAccountConfig bankAccountConfig;
+    TransactionRepository transactionRepository;
     @MockBean
-    private BankingAppRunner bankingAppRunner;
+    LoginRepository loginRepository;
     @MockBean
-    private AccountRepository accountRepository;
+    BankAccountConfig bankAccountConfig;
     @MockBean
-    private AccountService accountService;
+    BankingAppRunner bankingAppRunner;
     private Transaction transaction;
 
     @Before
