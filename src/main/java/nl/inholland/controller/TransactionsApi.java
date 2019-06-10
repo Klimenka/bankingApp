@@ -29,7 +29,6 @@ public interface TransactionsApi {
             @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
             @ApiResponse(code = 403, message = "Insufficient balance.")})
     @RequestMapping(value = "/transactions",
-            produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
     ResponseEntity<Object> createTransaction(@ApiParam(value = "") @Valid @RequestBody Transaction body);

@@ -2,6 +2,7 @@ package nl.inholland.controller;
 
 import nl.inholland.model.Transaction;
 import nl.inholland.model.Error;
+import nl.inholland.repository.AccountRepository;
 import nl.inholland.service.TransactionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,7 @@ public class TransactionsApiController implements TransactionsApi {
     private TransactionService transactionService = new TransactionService();
     private String accept = "";
     private Error error = new Error();
+    private AccountRepository accountRepository;
 
     @org.springframework.beans.factory.annotation.Autowired
     public TransactionsApiController(ObjectMapper objectMapper, HttpServletRequest request, TransactionService transactionService) {
@@ -42,20 +44,19 @@ public class TransactionsApiController implements TransactionsApi {
             if (transactionService.checkDayLimit(body.getAccountFrom())) {
                 if (transactionService.checkTransactionPossibility(body)) {
                     body.setTransactionStatus(Transaction.TransactionStatusEnum.SUCCESSFUL);
-                    transactionService.addTransaction(body);
-                    return new ResponseEntity<>("operation was a success", HttpStatus.CREATED);
+                    return new ResponseEntity<>(transactionService.addTransaction(body), HttpStatus.CREATED);
                 } else {
-                    error.setMessage("Unable to perform the transaction");
-                    return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+                    body.setTransactionStatus(Transaction.TransactionStatusEnum.FAILED);
+                    return new ResponseEntity<>(transactionService.addTransaction(body), HttpStatus.BAD_REQUEST);
                 }
             }
             else {
-                error.setMessage("You have exceeded your daily limit");
-                return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+                body.setTransactionStatus(Transaction.TransactionStatusEnum.FAILED);
+                return new ResponseEntity<>(transactionService.addTransaction(body), HttpStatus.BAD_REQUEST);
             }
         else {
-            error.setMessage("Please choose a number between 1 and 10000");
-            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+            body.setTransactionStatus(Transaction.TransactionStatusEnum.FAILED);
+            return new ResponseEntity<>(transactionService.addTransaction(body), HttpStatus.BAD_REQUEST);
         }
     }
 
