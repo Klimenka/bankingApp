@@ -29,6 +29,7 @@ public class BankingAppRunner implements ApplicationRunner {
     private int index = 0;
     private LoginService loginService;
     private LoginRepository loginRepository;
+    private int counter = 3;
 
     public BankingAppRunner(AccountRepository accountRepository, BankAccountConfig bankAccountConfig,
                             UserRepository userRepository, AddressRepository addressRepository,
@@ -144,6 +145,7 @@ public class BankingAppRunner implements ApplicationRunner {
 
     private void saveUserToInMemoryDB(String userStringFromFile) {
         User user;
+
         if (userStringFromFile.split(",")[10].equals("Employee")) {
             user = userRepository.save(new Employee(
                     userStringFromFile.split(",")[0],
@@ -181,7 +183,15 @@ public class BankingAppRunner implements ApplicationRunner {
     }
 
     private void generateLoginAccountsForUsers(User user) {
-        Login login = loginRepository.save(new Login(user.getEmailAddress(), user));
+        Login login;
+
+        if (counter > 0) {
+            login = loginRepository.save(new Login(user.getEmailAddress(), "test777", user));
+            counter--;
+        } else {
+            login = loginRepository.save(new Login(user.getEmailAddress(), user));
+
+        }
         System.out.println(login.getPassword());
         loginService.encodePassword(login);
     }

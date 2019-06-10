@@ -48,6 +48,12 @@ public class Login {
         this.password = generatePassword();
     }
 
+    public Login(String userName, String password, User user) {
+        this.userName = userName;
+        this.user = user;
+        this.password = password;
+    }
+
     public Login() {
     }
 
