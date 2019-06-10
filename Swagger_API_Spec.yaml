@@ -6,6 +6,9 @@ info:
   contact:
     email: example@email.com
 servers:
+# Added by API Auto Mocking Plugin
+- description: SwaggerHub API Auto Mocking
+  url: https://virtserver.swaggerhub.com/Klimenka/Banking_Application_API/1.0.0
 - description: This the is a simple REST API banking application
   url: https://localhost
   
@@ -47,7 +50,7 @@ paths:
       tags:
         - users
       operationId: addUser
-      description: Adds a new user and returns it
+      description: Adds a new user and returns Login object. If it is a customer then a new bank account is created as well.
       summary: Adds a new user
       requestBody:
         required: true
@@ -63,9 +66,8 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/Customer'
-                  - $ref: '#/components/schemas/Employee'
+                $ref: '#/components/schemas/Login'
+                
         '400':
           $ref: '#/components/responses/BadRequest'
         '401': 
@@ -384,6 +386,10 @@ components:
           enum: 
             - Dutch 
             - English
+        roles:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Role'
     Customer:
       allOf:    
         - $ref: '#/components/schemas/User'
@@ -408,7 +414,13 @@ components:
           type: string
         country:
           type: string
-          
+    Role:
+      type: object
+      properties:
+        roleId:
+          type: integer
+        role:
+          type: string
     Account:
       type: object
       required:
