@@ -28,7 +28,7 @@ public class TransactionService
 
     //retrieves all the user's transactions between the dates
     public List<Transaction> getAllTransactions(String userAccount, LocalDate dateFrom, LocalDate dateTo) {
-        return transactionRepository.findAllByAccountFromEqualsAndDateGreaterThanEqualAndDateLessThanEqual(userAccount, dateFrom, dateTo);
+        return transactionRepository.findAllByAccountFromEqualsAndDateGreaterThanEqualAndDateLessThanEqualAndTransactionStatusEquals(userAccount, dateFrom, dateTo, Transaction.TransactionStatusEnum.SUCCESSFUL);
     }
 
     //retrieves one transaction from the user
@@ -56,9 +56,7 @@ public class TransactionService
     private Boolean checkAbsoluteLimit(Transaction body)
     {
         account = accountRepository.getAccountByIban(body.getAccountFrom());
-        if((account.getBalance() - body.getAmount()) > transaction.getAbsoluteLimit())
-            return true;
-        return false;
+        return (account.getBalance() - body.getAmount()) > transaction.getAbsoluteLimit();
     }
 
     //determines if the transaction can happen due to the transaction type
@@ -108,7 +106,7 @@ public class TransactionService
     private Boolean checkIfAccountBelongsToUser(Transaction body, String accountNumber)
     {
         account = accountRepository.getAccountByIban(accountNumber);
-        return body.getUserPerforming().getId() == account.getUser().getId();
+        return body.getUserPerforming().getId().equals(account.getUser().getId());
     }
 
     //retrieves the account type

@@ -34,8 +34,8 @@ public class TransactionModelTest
         assertNotNull(transactionExample.getTransactionId());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void getUserPerformingIsNullWillThrowIllegalException()
+    @Test
+    public void getUserPerformingIsNotNull()
     {
         assertNotNull(transactionExample.getUserPerforming());
     }
