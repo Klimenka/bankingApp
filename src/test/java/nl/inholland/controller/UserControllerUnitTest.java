@@ -204,7 +204,7 @@ public class UserControllerUnitTest {
     public void updateUserLoginShouldReturnOK() throws Exception {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         login = new Login(user.getEmailAddress(), user);
-        mvc.perform(put("/users/{userId}/updatePassword", 1L)
+        mvc.perform(put("/users/{userId}/updatePassword", 2L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"userName\": \"example@gmail.com\",\n" +
                         "\"password\": \"newPassword\"}"))
@@ -213,8 +213,20 @@ public class UserControllerUnitTest {
     }
 
     @Test
+    public void updateUserLoginWithNoInputShouldGiveBadRequest() throws Exception {
+        mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        login = new Login(user.getEmailAddress(), user);
+        mvc.perform(put("/users/{userId}/updatePassword", 2L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"userName\": ,\n" +
+                        "\"password\": }"))
+                .andExpect(status().isBadRequest());
+    }
+
+
+    @Test
     @WithMockUser(roles = {"Employee", "Owner"})
-    public void CreateTokenShouldReturnOK() throws Exception {
+    public void CreateTokenWithEmployeeShouldReturnOK() throws Exception {
         mvc.perform(
                 post("/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -222,6 +234,17 @@ public class UserControllerUnitTest {
                                 "\"password\": \"Password\"}"))
                 .andExpect(status().isOk());
 
+    }
+
+    @Test
+    @WithMockUser(roles = {"Customer"})
+    public void CreateTokenWithCustomerShouldReturnOK() throws Exception {
+        mvc.perform(
+                post("/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"userName\": \"example@gmail.com\",\n" +
+                                "\"password\": \"Password\"}"))
+                .andExpect(status().isOk());
     }
 
 }

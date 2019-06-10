@@ -246,4 +246,65 @@ public class UsersApiControllerIntegrationTest {
 
         ;
     }
+
+
+    @Test
+    @WithUserDetails(value = "example@student.inholland.nl")
+    public void updateUserLoginByEmployeeShouldReturnOK() throws Exception {
+        mockMvc.perform(put("/users/{userId}/updatePassword", 2L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"userName\": \"example@gmail.com\",\n" +
+                        "\"password\": \"newPassword\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails(value = "example@hotmail.com")
+    public void updateUserLoginByeCustomerShouldReturnOK() throws Exception {
+        mockMvc.perform(put("/users/{userId}/updatePassword", 4L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"userName\": \"example@hotmail.com\",\n" +
+                        "\"password\": \"newPassword\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails(value = "example@student.inholland.nl")
+    public void updateUserLoginByEmployeeWithNoInputShouldReturnBadRequest() throws Exception {
+        mockMvc.perform(put("/users/{userId}/updatePassword", 2L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"userName\": ,\n" +
+                        "\"password\": }"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithUserDetails(value = "example@hotmail.com")
+    public void updateUserLoginByCustomerWithNoInputShouldReturnBadRequest() throws Exception {
+        mockMvc.perform(put("/users/{userId}/updatePassword", 4L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"userName\": ,\n" +
+                        "\"password\": }"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithUserDetails(value = "example@student.inholland.nl")
+    public void createLoginTokenWithEmployeeShouldReturnOK() throws Exception {
+        mockMvc.perform(post("/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"userName\": \"example@student.inholland.nl\",\n" +
+                        "\"password\": \"Password\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithUserDetails(value = "example@hotmail.com")
+    public void createLoginTokenWithCustomerShouldReturnOK() throws Exception {
+        mockMvc.perform(post("/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"userName\": \"example@hotmail.com\",\n" +
+                        "\"password\": \"Password\"}"))
+                .andExpect(status().isOk());
+    }
 }
