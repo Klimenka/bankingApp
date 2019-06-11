@@ -35,34 +35,26 @@ public class TransactionApiControllerTest {
 
     @Autowired
     private MockMvc mvc;
-    @Autowired
-    private WebApplicationContext webApplicationContext;
     @MockBean
-    private TransactionService transactionService;
+    private TransactionService service;
     @MockBean
-    private AccountRepository accountRepository;
+    AccountRepository accountRepository;
     @MockBean
-    private UserRepository userRepository;
+    UserRepository userRepository;
     @MockBean
-    private UserService userService;
+    AddressRepository addressRepository;
     @MockBean
-    private AddressRepository addressRepository;
+    TransactionRepository transactionRepository;
     @MockBean
-    private LoginRepository loginRepository;
+    LoginRepository loginRepository;
     @MockBean
-    private TransactionRepository transactionRepository;
+    BankAccountConfig bankAccountConfig;
     @MockBean
-    private LoginService loginService;
-    @MockBean
-    private AccountService accountService;
-    @MockBean
-    private BankAccountConfig bankAccountConfig;
-    @MockBean
-    private BankingAppRunner bankingAppRunner;
+    BankingAppRunner bankingAppRunner;
     private Transaction transaction;
 
     @Before
-    @WithUserDetails(value = "example@student.inholland.nl")
+    //@WithUserDetails(value = "example@student.inholland.nl")
     public void setUp()
     {
         User user = new Customer("EL Pond", "Emily Pond", User.SexEnum.FEMALE,
@@ -92,10 +84,42 @@ public class TransactionApiControllerTest {
     @WithMockUser(roles = {"Customer"})
     public void whenUserCreatesTransactionShouldReturnIsCreated() throws Exception
     {
-        mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
+        //mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         mvc.perform(post("/transactions")
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(transaction.toString()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\n" +
+                        "    \"accountFrom\": \"NL49INHO0000000003\",\n" +
+                        "    \"accountTo\": \"NL76INHO0000000002\",\n" +
+                        "    \"amount\": 40.0,\n" +
+                        "    \"userPerforming\": {\n" +
+                        "        \"id\": 3,\n" +
+                        "        \"officialName\": \"EL Pond\",\n" +
+                        "        \"preferedName\": \"Emily Pond\",\n" +
+                        "        \"sex\": \"female\",\n" +
+                        "        \"dateOfBirth\": \"13.10.1990\",\n" +
+                        "        \"primaryAddress\": {\n" +
+                        "            \"street\": \"ExampleHolm\",\n" +
+                        "            \"houseNumber\": 13,\n" +
+                        "            \"postCode\": \"1412KL\",\n" +
+                        "            \"city\": \"Klopp\",\n" +
+                        "            \"country\": \"The Netherlands\"\n" +
+                        "        },\n" +
+                        "        \"postAddress\": {\n" +
+                        "            \"street\": \"ExampleHolm\",\n" +
+                        "            \"houseNumber\": 13,\n" +
+                        "            \"postCode\": \"1412KL\",\n" +
+                        "            \"city\": \"Klopp\",\n" +
+                        "            \"country\": \"The Netherlands\"\n" +
+                        "        },\n" +
+                        "        \"mobileNumber\": \"+31667533778\",\n" +
+                        "        \"emailAddress\": \"example@student.inholland.nl\",\n" +
+                        "        \"commrcialMessages\": \"by bankmail\",\n" +
+                        "        \"preferedLanguage\": \"Dutch\",\n" +
+                        "        \"userType\": \"Customer\"\n" +
+                        "    },\n" +
+                        "    \"date\": \"2019-05-02\",\n" +
+                        "    \"transactionType\": \"transaction\"\n" +
+                        "}"))
                 .andExpect(status().isCreated())
                 .andReturn();
     }

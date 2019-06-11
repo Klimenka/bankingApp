@@ -43,7 +43,7 @@ public class AccountsApiController implements AccountsApi {
     public ResponseEntity<String> closeBankAccount(@ApiParam(value = "the account number",
             required = true) @PathVariable("accountNumber") long accountNumber) {
 
-        String accept = request.getHeader("Accept");
+        //String accept = request.getHeader("Accept");
         accountService.closeBankAccount(accountNumber);
         return new ResponseEntity<String>("The account has been successfully closed.", HttpStatus.NO_CONTENT);
     }
@@ -51,7 +51,7 @@ public class AccountsApiController implements AccountsApi {
     public ResponseEntity<Account> createBankAccount(@ApiParam(value = "", required = true)
                                                      @Valid @RequestBody Account body) {
 
-        String accept = request.getHeader("Accept");
+        //String accept = request.getHeader("Accept");
         return new ResponseEntity<Account>(accountService.createBankAccount(body), HttpStatus.CREATED);
     }
 
@@ -61,7 +61,7 @@ public class AccountsApiController implements AccountsApi {
              @ApiParam(value = "", allowableValues = "current, saving")
              @Valid @RequestParam(value = "accountType", required = false) String accountType) {
 
-        String accept = request.getHeader("Accept");
+        //String accept = request.getHeader("Accept");
         return new ResponseEntity<List<Account>>
                 (accountService.getBankAccount(userId, accountType), HttpStatus.OK);
     }
@@ -72,12 +72,7 @@ public class AccountsApiController implements AccountsApi {
              @ApiParam(value = "", allowableValues = "current, saving")
              @Valid @RequestParam(value = "accountType", required = false) String accountType) {
 
-        String accept = request.getHeader("Accept");
-
-        //retrieving data from the session
-        //Object princi = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-       // Login login = (Login) princi;
-        //System.out.println(login.getUser().getId());
+        /*String accept = request.getHeader("Accept");*/
 
         return new ResponseEntity<List<Account>>
                 (accountService.getBankAccounts(dateOfOpening, accountType), HttpStatus.OK);
