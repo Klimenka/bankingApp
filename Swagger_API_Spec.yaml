@@ -327,8 +327,8 @@ paths:
       tags: 
         - transactions
       operationId: createTransaction
-      summary: transfer/withdar/depoit money 
-      description: Calling this will allow a user/employee to transfer/withdar/depoit money
+      summary: transfer/withdraw/deposit money 
+      description: Calling this will allow a user/employee to transfer/withdraw/deposit money
       requestBody:
         content:
           application/json:
@@ -345,6 +345,31 @@ paths:
           $ref: '#/components/responses/BadRequest'
         '403':
           description: Insufficient balance.
+          
+  /getTransaction:
+    get:
+      tags:
+      - transactions
+      summary: retrieves one transaction from the user
+      operationId: getTransaction
+      description: This function will retrieve the transaction acitivities of one account by using the transaction Id.
+      parameters:
+      - in: query
+        name: transactionId
+        schema:
+          type: integer
+        required: true 
+      responses:
+        '200':
+          description: Transaction has succesfully been retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '400': 
+          $ref: '#/components/responses/BadRequest'
     
 components:
   schemas:
@@ -478,7 +503,7 @@ components:
       - transaction_id
       - amount
       - userPerforming
-      - timestamp
+      - date
       - transactionType
       properties:
         transaction_id:
@@ -493,10 +518,11 @@ components:
           minimum: 1
           maximum: 10000
         userPerforming:
+          allOf:
+          - $ref: '#/components/schemas/User'
+        date:
           type: string
-        timestamp:
-          type: string
-          format: date-time
+          format: date
         transactionStatus:
           type: string
           enum:
