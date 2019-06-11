@@ -60,7 +60,7 @@ public class TransactionsApiController implements TransactionsApi {
         }
     }
 
-    //retrieves transactions
+    //retrieves all transactions
     public ResponseEntity<List<Transaction>> getTransactionHistory(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(name = "accountNumber", required = true) String accountNumber, @ApiParam(value = "") @Valid @RequestParam(value = "dateFrom", required = false) LocalDate dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "dateTo", required = false) LocalDate dateTo)
     {
         if (dateTo == null && dateFrom == null)

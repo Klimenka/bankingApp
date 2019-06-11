@@ -147,7 +147,7 @@ public class TransactionService
         return false;
     }
 
-    //this transaction function only contains functions for the current account
+    //this transaction function only contains statements for the current account
     private Boolean performTransactionIfAccountTypeIsCurrent(Transaction body)
     {
         if(checkIfAccountBelongsToUser(body, body.getAccountFrom()) && (getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.CURRENT && checkIfAccountBelongsToUser(body, body.getAccountTo()))) {
@@ -169,7 +169,7 @@ public class TransactionService
         return false;
     }
 
-    //this transaction function only contains functions for the saving account
+    //this transaction function only contains statements for the saving account
     private Boolean performTransactionIfAccountTypeIsSaving(Transaction body)
     {
         if(checkIfAccountBelongsToUser(body, body.getAccountFrom()) && (getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.SAVING && checkIfAccountBelongsToUser(body, body.getAccountTo()))) {
