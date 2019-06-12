@@ -35,7 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.requiresChannel()
                 .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null)
                 .requiresSecure();
-        
+
         http.csrf().disable();
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/accounts").hasAnyRole("Employee", "Owner")
