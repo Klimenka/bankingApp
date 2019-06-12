@@ -1,11 +1,8 @@
 package nl.inholland.controller;
 
 import nl.inholland.BankingApp;
-import org.json.JSONException;
 import org.junit.Before;
-import org.springframework.http.*;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,25 +54,6 @@ public class TransactionsApiControllerIntegrationTest {
                 .andExpect(content().contentType(APPLICATION_JSON_UTF8));
     }
 
-    @Test(expected = AssertionError.class)
-    @WithMockUser(roles = {"Employee", "Owner"})
-    public void testGetAllTransaction_ByAccountNumber_ShouldThrowAssertionError() throws Exception
-    {
-        mvc.perform(get("/transactions"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_UTF8));
-    }
-
-
-    @Test(expected = AssertionError.class)
-    @WithMockUser(roles = {"Employee", "Owner"})
-    public void testGetTransaction_ByTransactionId_ShouldThrowAssertionError() throws Exception
-    {
-        mvc.perform(get("/getTransaction"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(APPLICATION_JSON_UTF8));
-    }
-
     @Test
     @WithMockUser(roles = {"Employee", "Owner"})
     public void testCreateTransactionShouldReturnIsCreated() throws Exception
@@ -119,21 +97,12 @@ public class TransactionsApiControllerIntegrationTest {
                 .andExpect(status().isCreated());
     }
 
-    @Test(expected = AssertionError.class)
-    public void testCreateTransactionShouldThrowAssertionError() throws Exception
-    {
-        mvc.perform(post("/transactions")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{}"))
-                .andExpect(status().isCreated());
-    }
-
     @Test
     @WithMockUser(roles = {"Employee", "Owner"})
     public void testCreateTransactionShouldReturnBadRequest() throws Exception
     {
         mvc.perform(post("/transactions")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType("application/json")
                 .content("{\"accountFrom\": \"NL49INHO0000000003\",\n" +
                         "     \"accountTo\": ,\n" +
                         "     \"amount\": 40.0,\n" +
@@ -166,5 +135,32 @@ public class TransactionsApiControllerIntegrationTest {
                         "       \"date\": \"2019-05-02\",\n"+
                         "       \"transactionType\": \"deposit\" }"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test(expected = AssertionError.class)
+    @WithMockUser(roles = {"Employee", "Owner"})
+    public void testGetAllTransaction_ByAccountNumber_ShouldThrowAssertionError() throws Exception
+    {
+        mvc.perform(get("/transactions"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test(expected = AssertionError.class)
+    @WithMockUser(roles = {"Employee", "Owner"})
+    public void testGetTransaction_ByTransactionId_ShouldThrowAssertionError() throws Exception
+    {
+        mvc.perform(get("/getTransaction"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
+    }
+
+    @Test(expected = AssertionError.class)
+    public void testCreateTransactionShouldThrowAssertionError() throws Exception
+    {
+        mvc.perform(post("/transactions")
+                .contentType("application/json")
+                .content("{}"))
+                .andExpect(status().isCreated());
     }
 }

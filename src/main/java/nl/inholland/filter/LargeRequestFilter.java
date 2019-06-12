@@ -19,7 +19,7 @@ public class LargeRequestFilter implements Filter {
 
         int size = servletRequest.getContentLength();
         logger.info("Request size: " + size);
-        if (size > 10000000) {
+        if (size > 5000000) {
             logger.severe("Request with size " + size + "was rejected!");
             throw new ServletException("Request is too large");
         } else {
