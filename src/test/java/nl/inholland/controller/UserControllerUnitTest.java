@@ -2,31 +2,29 @@ package nl.inholland.controller;
 
 import nl.inholland.configuration.BankAccountConfig;
 import nl.inholland.configuration.BankingAppRunner;
-import nl.inholland.model.*;
+import nl.inholland.model.Address;
+import nl.inholland.model.Employee;
+import nl.inholland.model.Login;
+import nl.inholland.model.User;
 import nl.inholland.repository.*;
-import nl.inholland.service.*;
+import nl.inholland.service.LoginService;
+import nl.inholland.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import springfox.documentation.spring.web.json.Json;
 
 import java.util.Arrays;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
