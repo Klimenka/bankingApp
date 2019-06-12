@@ -12,5 +12,5 @@ public interface TransactionRepository extends CrudRepository<Transaction, Long>
 {
     List<Transaction> findAll();
     List<Transaction> findAllByAccountFromEqualsAndDateEquals(String accountFrom, LocalDate today);
-    List<Transaction> findAllByAccountFromEqualsAndDateGreaterThanEqualAndDateLessThanEqualAndTransactionStatusEquals(String userAccount, LocalDate dateFrom, LocalDate dateTo, Transaction.TransactionStatusEnum transactionStatusEnum);
+    List<Transaction> findAllByAccountFromEqualsAndDateGreaterThanEqualAndDateLessThanEqual(String userAccount, LocalDate dateFrom, LocalDate dateTo);
 }

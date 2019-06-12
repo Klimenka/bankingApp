@@ -22,7 +22,7 @@ import java.util.List;
 @Api(value = "transactions", description = "the transactions API")
 public interface TransactionsApi {
 
-    @ApiOperation(value = "transfer/withdraw/deposit money", nickname = "createTransaction", notes = "Calling this will allow a user/employee to transfer/withdar/depoit money", tags = {"transactions",})
+    @ApiOperation(value = "transfer/withdraw/deposit money", nickname = "createTransaction", notes = "Calling this will allow a user/employee to transfer/withdraw/deposit money", tags = {"transactions",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Transaction has successfully been send."),
             @ApiResponse(code = 400, message = "Bad request."),
@@ -41,7 +41,7 @@ public interface TransactionsApi {
             method = RequestMethod.GET)
     ResponseEntity<List<Transaction>> getTransactionHistory(@NotNull @ApiParam(value = "", required = true) @Valid @RequestParam(value = "accountNumber", required = true) String accountNumber, @ApiParam(value = "") @Valid @RequestParam(value = "dateFrom", required = false) LocalDate dateFrom, @ApiParam(value = "") @Valid @RequestParam(value = "dateTo", required = false) LocalDate dateTo);
 
-    @ApiOperation(value = "retrieves one transaction from the user", nickname = "getTransaction", notes = "This function will retrieve the transaction acitivities of one account bby using the transaction Id.", response = Transaction.class, responseContainer = "Transaction", tags = {"getTransactions",})
+    @ApiOperation(value = "retrieves one transaction from the user", nickname = "getTransaction", notes = "This function will retrieve the transaction acitivities of one account by using the transaction Id.", response = Transaction.class, responseContainer = "Transaction", tags = {"getTransactions",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Transaction has succesfully been retrieved.", response = Transaction.class, responseContainer = "List"),
             @ApiResponse(code = 400, message = "Bad request.")})
