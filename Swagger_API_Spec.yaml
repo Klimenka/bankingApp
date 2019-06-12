@@ -2,15 +2,12 @@ openapi: 3.0.0
 info:
   title: Banking API
   version: 1.0.0
-  description: Bankining api
+  description: Banking api
   contact:
     email: example@email.com
 servers:
-# Added by API Auto Mocking Plugin
-- description: SwaggerHub API Auto Mocking
-  url: https://virtserver.swaggerhub.com/Klimenka/Banking_Application_API/1.0.0
 - description: This the is a simple REST API banking application
-  url: https://localhost
+  url: https://banking-application-api.herokuapp.com
   
 paths:
   /users:
@@ -133,13 +130,13 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
   
-  /users/{userId}/account:
+  /users/{userId}/updatePassword:
     put:
       tags:
         - users
       operationId: updateUserLogin
       summary: update the user's login info
-      description: calling this will allow the user to change his/her credentials 
+      description: calling this will allow the user to change his/her password 
       parameters:
       - $ref: '#/components/parameters/userId'
       requestBody:
@@ -150,7 +147,7 @@ paths:
               $ref: '#/components/schemas/Login'
       responses:
         '201':
-          description: user credentials has successfully been updated
+          description: user password has successfully been updated
         '400': 
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -162,7 +159,7 @@ paths:
       - accounts 
       summary: get all bank accounts
       operationId: getBankAccounts
-      description: Calling this will allow Employees to check data of all accounts or filter them by the date of opening Asc or Desc or based on the type of bank account [saving or current]
+      description: Calling this will allow Employees to check data of all accounts or filter them by the date of opening or based on the type of bank account [saving or current]
       parameters:
       - in: query
         name: dateOfOpening
@@ -202,7 +199,7 @@ paths:
       - accounts 
       summary: create a bank account
       operationId: createBankAccount
-      description: Calling this will allow epmployees to open an account for a specific customer
+      description: Calling this will allow employees to open an account for a specific customer
       requestBody:
         required: true
         content:
@@ -292,7 +289,7 @@ paths:
       - transactions
       summary: retrieves all transactions which has been made from a user's account.
       operationId: getTransactionHistory
-      description: This function will retrieve the transaction acitivities of one account. The user will have the option to filter the transaction activities by using dates.
+      description: This function will retrieve the transaction activities of one account. The user will have the option to filter the transaction activities by using dates.
       parameters:
       - in: query
         name: accountNumber
@@ -313,7 +310,7 @@ paths:
         required: false
       responses:
         '200':
-          description: Transaction history has succesfully been retrieved.
+          description: Transaction history has successfully been retrieved.
           content:
             application/json:
               schema:
@@ -352,7 +349,7 @@ paths:
       - transactions
       summary: retrieves one transaction from the user
       operationId: getTransaction
-      description: This function will retrieve the transaction acitivities of one account by using the transaction Id.
+      description: This function will retrieve the transaction activities of one account by using the transaction Id.
       parameters:
       - in: query
         name: transactionId
@@ -361,7 +358,7 @@ paths:
         required: true 
       responses:
         '200':
-          description: Transaction has succesfully been retrieved.
+          description: Transaction has successfully been retrieved.
           content:
             application/json:
               schema:
@@ -388,7 +385,7 @@ components:
           type: integer
         officialName:
           type: string
-        preferedName:
+        preferredName:
           type: string
         sex:
           type: string
@@ -403,10 +400,10 @@ components:
           type: string
         emailAddress:
           type: string
-        commrcialMessages:
+        commercialMessages:
           type: string
           enum: [by post, by bankmail, by telephone, by email]
-        preferedLanguage:
+        preferredLanguage:
           type: string
           enum: 
             - Dutch 
@@ -446,6 +443,7 @@ components:
           type: integer
         role:
           type: string
+          
     Account:
       type: object
       required:
@@ -454,14 +452,21 @@ components:
         - accountType
       properties:
         accountNumber:
+          type: integer
+          format: int64
+        iban:
           type: string
         balance:
           type: number
           format: float
         dateOfOpening:
           type: string
-        userId:
+        userIdentification:
           type: integer
+          format: int64
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
         currency:
           type: string
         accountType: 
@@ -486,16 +491,16 @@ components:
     Login:
       type: object
       required:
-        - userId
         - userName
         - password
       properties:
-        userId:
-          type: integer
         userName:
           type: string
         password:
           type: string
+        user:
+          allOf:
+          - $ref: '#/components/schemas/User'
        
     Transaction:
       type: object
@@ -536,17 +541,7 @@ components:
           - transaction
           - withdraw
           - deposit
-    Error:
-      type: object
-      properties:
-        code:
-          type: string
-        message:
-          type: string
-      required:
-        - code
-        - message
-        
+    
   parameters:
     userId:
       in: path
@@ -561,22 +556,13 @@ components:
   responses: 
     NotFound:
       description: The specified resource was not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+      
     Unauthorized:
       description: Unauthorized
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+      
     BadRequest:
       description: Bad request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
+      
   
   securitySchemes:
     api_key:
