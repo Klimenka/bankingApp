@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class is a helper class to help give the right authority
+ * based on the user ID
+ */
 @Component
 public class WebSecurity {
 

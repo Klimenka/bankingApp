@@ -5,7 +5,6 @@
  */
 package nl.inholland.controller;
 
-import nl.inholland.model.Error;
 import nl.inholland.model.Transaction;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public interface TransactionsApi {
     @ApiOperation(value = "transfer/withdraw/deposit money", nickname = "createTransaction", notes = "Calling this will allow a user/employee to transfer/withdar/depoit money", tags = {"transactions",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Transaction has successfully been send."),
-            @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
+            @ApiResponse(code = 400, message = "Bad request."),
             @ApiResponse(code = 403, message = "Insufficient balance.")})
     @RequestMapping(value = "/transactions",
             consumes = {"application/json"},
@@ -36,7 +35,7 @@ public interface TransactionsApi {
     @ApiOperation(value = "retrieves all transactions which has been made from a user's account.", nickname = "getTransactionHistory", notes = "This function will retrieve the transaction acitivities of one account. The user will have the option to filter the transaction activities by using dates.", response = Transaction.class, responseContainer = "List", tags = {"transactions",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Transaction history has succesfully been retrieved.", response = Transaction.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad request.", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad request.")})
     @RequestMapping(value = "/transactions",
             produces = {"application/json"},
             method = RequestMethod.GET)
@@ -45,7 +44,7 @@ public interface TransactionsApi {
     @ApiOperation(value = "retrieves one transaction from the user", nickname = "getTransaction", notes = "This function will retrieve the transaction acitivities of one account bby using the transaction Id.", response = Transaction.class, responseContainer = "Transaction", tags = {"getTransactions",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Transaction has succesfully been retrieved.", response = Transaction.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad request.", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad request.")})
     @RequestMapping(value = "/getTransaction",
             produces = {"application/json"},
             method = RequestMethod.GET)

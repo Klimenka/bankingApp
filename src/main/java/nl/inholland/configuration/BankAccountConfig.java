@@ -4,6 +4,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * set and get the bank own account
+ */
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "iban.number")

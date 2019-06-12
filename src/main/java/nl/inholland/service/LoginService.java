@@ -30,11 +30,11 @@ public class LoginService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Login> optionalUsers = loginRepository.findByUserName(username);
-        optionalUsers
-                .orElseThrow(() -> new UsernameNotFoundException("username not found"));
+        Optional<Login> user = loginRepository.findByUserName(username);
 
-        return optionalUsers
+        user.orElseThrow(() -> new UsernameNotFoundException("username not found"));
+
+        return user
                 .map(CustomUserDetails::new).get();
     }
 
@@ -44,7 +44,7 @@ public class LoginService implements UserDetailsService {
 
         Login user = optionalUser.get();
         user.setPassword(password);
-        //I kept mine :)
+
         Login userForEncoding = loginRepository.save(user);
         encodePassword(userForEncoding);
 

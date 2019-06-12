@@ -5,13 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
 
+import javax.annotation.Generated;
 import javax.persistence.Entity;
 import java.time.LocalDate;
 
 
 @Entity
 @Validated
-@javax.annotation.Generated(value = "io.inholland.codegen.v3.generators.java.SpringCodegen", date = "2019-05-23T16:34:19.518Z[GMT]")
+@Generated(value = "io.inholland.codegen.v3.generators.java.SpringCodegen", date = "2019-05-23T16:34:19.518Z[GMT]")
 public class SavingAccount extends Account {
 
     @JsonProperty("interestRate")

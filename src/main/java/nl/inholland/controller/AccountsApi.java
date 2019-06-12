@@ -1,7 +1,6 @@
 package nl.inholland.controller;
 
 import nl.inholland.model.Account;
-import nl.inholland.model.Error;
 import io.swagger.annotations.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.annotation.Generated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
+@Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
 @Api(value = "accounts", description = "the accounts API")
 public interface AccountsApi {
 
@@ -24,9 +24,9 @@ public interface AccountsApi {
             @Authorization(value = "api_key")}, tags = {"accounts",})
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "the bank account has successfully been closed"),
-            @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 404, message = "The specified resource was not found", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 404, message = "The specified resource was not found")})
     @RequestMapping(value = "/accounts/{accountNumber}",
             produces = {"application/json"},
             method = RequestMethod.DELETE)
@@ -37,8 +37,8 @@ public interface AccountsApi {
             @Authorization(value = "api_key")}, tags = {"accounts",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "the account has been created", response = Account.class),
-            @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad request."),
+            @ApiResponse(code = 401, message = "Unauthorized")})
     @RequestMapping(value = "/accounts",
             produces = {"application/json"},
             consumes = {"application/json"},
@@ -49,8 +49,8 @@ public interface AccountsApi {
     @ApiOperation(value = "get bank accounts of a specific user", nickname = "getBankAccount", notes = "Calling this will allow both customer and employee to check data of a specific account userId and filter them by bank account type", response = Account.class, responseContainer = "List", tags = {"accounts",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "the account data", response = Account.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
-            @ApiResponse(code = 404, message = "The specified resource was not found", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad request."),
+            @ApiResponse(code = 404, message = "The specified resource was not found")})
     @RequestMapping(value = "/accounts/{userId}",
             produces = {"application/json"},
             method = RequestMethod.GET)
@@ -61,9 +61,9 @@ public interface AccountsApi {
             @Authorization(value = "api_key")}, tags = {"accounts",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "the accounts data", response = Account.class, responseContainer = "List"),
-            @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 404, message = "The specified resource was not found", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad request."),
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 404, message = "The specified resource was not found")})
     @RequestMapping(value = "/accounts",
             produces = {"application/json"},
             method = RequestMethod.GET)

@@ -15,6 +15,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+/**
+ * This class is to handle the authentication using the user Details
+ * model and service. also give authorities based on the endpoint(uri)
+ * and the user ID (who is logged in) and encrypt all passwords.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableJpaRepositories(basePackageClasses = LoginRepository.class) //inject jpa repo
@@ -37,7 +42,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/accounts").hasAnyRole("Employee", "Owner")
                 .antMatchers(HttpMethod.POST, "/users").hasAnyRole("Employee", "Owner")
                 .antMatchers(HttpMethod.GET, "/accounts/{userId}")
-                .access("@webSecurity.checkUserId(authentication,#userId)")
+                .access("@webSecurity.checkUserId(authentication,#userId)") // give authority based on user ID
                 .antMatchers(HttpMethod.GET, "/accounts").hasAnyRole("Employee", "Owner")
                 .antMatchers(HttpMethod.GET, "/users").hasAnyRole("Employee", "Owner")
                 .antMatchers(HttpMethod.GET, "/users/{userId}")

@@ -5,10 +5,8 @@
  */
 package nl.inholland.controller;
 
-import nl.inholland.model.Error;
 import nl.inholland.model.Login;
 import io.swagger.annotations.*;
-import nl.inholland.model.Role;
 import nl.inholland.model.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,8 +27,8 @@ public interface UsersApi {
             @Authorization(value = "api_key")}, tags = {"users",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "the user has been created.", response = Login.class),
-            @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad request."),
+            @ApiResponse(code = 401, message = "Unauthorized")})
     @RequestMapping(value = "/users",
             produces = {"application/json"},
             consumes = {"application/json"},
@@ -40,8 +38,8 @@ public interface UsersApi {
     @ApiOperation(value = "Returns an auth token", nickname = "createUserToken", notes = "", tags = {"users",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Token send"),
-            @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
-            @ApiResponse(code = 404, message = "The specified resource was not found", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad request."),
+            @ApiResponse(code = 404, message = "The specified resource was not found")})
     @RequestMapping(value = "/users/login",
             produces = {"application/json"},
             consumes = {"application/json"},
@@ -53,8 +51,8 @@ public interface UsersApi {
             @Authorization(value = "api_key")}, tags = {"users",})
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "No content"),
-            @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad request."),
+            @ApiResponse(code = 401, message = "Unauthorized")})
     @RequestMapping(value = "/users/{userId}",
             produces = {"application/json"},
             method = RequestMethod.DELETE)
@@ -74,8 +72,8 @@ public interface UsersApi {
             @Authorization(value = "api_key")}, tags = {"users",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK", response = User.class, responseContainer = "List"),
-            @ApiResponse(code = 401, message = "Unauthorized", response = Error.class),
-            @ApiResponse(code = 404, message = "The specified resource was not found", response = Error.class)})
+            @ApiResponse(code = 401, message = "Unauthorized"),
+            @ApiResponse(code = 404, message = "The specified resource was not found")})
     @RequestMapping(value = "/users",
             produces = {"application/json"},
             method = RequestMethod.GET)
@@ -85,8 +83,8 @@ public interface UsersApi {
     @ApiOperation(value = "update the user's password", nickname = "updateUserLogin", notes = "calling this will allow the user to change his/her password", tags = {"users",})
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "user password has successfully been updated"),
-            @ApiResponse(code = 400, message = "Bad request.", response = Error.class),
-            @ApiResponse(code = 404, message = "The specified resource was not found", response = Error.class)})
+            @ApiResponse(code = 400, message = "Bad request."),
+            @ApiResponse(code = 404, message = "The specified resource was not found")})
     @RequestMapping(value = "/users/{userId}/updatePassword",
             produces = {"application/json"},
             consumes = {"application/json"},

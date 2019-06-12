@@ -1,7 +1,6 @@
 package nl.inholland.controller;
 
 import nl.inholland.model.Transaction;
-import nl.inholland.model.Error;
 import nl.inholland.repository.AccountRepository;
 import nl.inholland.service.TransactionService;
 import org.springframework.stereotype.Controller;
@@ -26,7 +25,6 @@ public class TransactionsApiController implements TransactionsApi {
     private final HttpServletRequest request;
     private TransactionService transactionService = new TransactionService();
     private String accept = "";
-    private Error error = new Error();
     private AccountRepository accountRepository;
 
     @org.springframework.beans.factory.annotation.Autowired
