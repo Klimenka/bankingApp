@@ -42,9 +42,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(
-                new StaticAllowFromStrategy(URI.create("http://localhost:8080/One"))
-        ));
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/accounts").hasAnyRole("Employee", "Owner")
                 .antMatchers(HttpMethod.POST, "/users").hasAnyRole("Employee", "Owner")
