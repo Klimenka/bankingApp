@@ -38,6 +38,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
+        http.headers().frameOptions();
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/accounts").hasAnyRole("Employee", "Owner")
                 .antMatchers(HttpMethod.POST, "/users").hasAnyRole("Employee", "Owner")
