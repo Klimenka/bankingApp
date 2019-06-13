@@ -48,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/accounts/{userId}")
                 .access("@webSecurity.checkUserId(authentication,#userId)") // give authority based on user ID
                 .antMatchers(HttpMethod.GET, "/accounts").hasAnyRole("Employee", "Owner")
-                .antMatchers(HttpMethod.GET, "/users").permitAll()/*.hasAnyRole("Employee", "Owner")*/
+                .antMatchers(HttpMethod.GET, "/users").hasAnyRole("Employee", "Owner")
                 .antMatchers(HttpMethod.GET, "/users/{userId}")
                 .access("@webSecurity.checkUserId(authentication,#userId)")
                 .antMatchers(HttpMethod.DELETE, "/accounts/**").hasAnyRole("Employee", "Owner")
