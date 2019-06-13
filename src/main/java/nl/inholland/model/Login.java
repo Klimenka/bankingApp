@@ -42,18 +42,26 @@ public class Login {
         this.userName = login.user.getEmailAddress();
     }
 
+    /*
+        this constructor is for when creating a login with random password
+     */
     public Login(String userName, User user) {
         this.userName = userName;
         this.user = user;
         this.password = generatePassword();
     }
-
+    /*
+        this constructor is for when creating a login with fixed password
+     */
     public Login(String userName, String password, User user) {
         this.userName = userName;
         this.user = user;
         this.password = password;
     }
 
+    /*
+      default empy constructor
+   */
     public Login() {
     }
 
@@ -101,14 +109,11 @@ public class Login {
         return user.getId();
     }
 
-
-    //for test purpose
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class Login {\n");
 
-        //sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
+        sb.append("class Login {\n");
         sb.append("    userName: ").append(toIndentedString(userName)).append("\n");
         sb.append("    password: ").append(toIndentedString(password)).append("\n");
         sb.append("    userId: ").append(toIndentedString(user.getId())).append("\n");

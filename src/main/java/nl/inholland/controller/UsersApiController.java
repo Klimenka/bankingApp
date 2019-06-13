@@ -36,12 +36,6 @@ public class UsersApiController implements UsersApi {
         return new ResponseEntity<Login>(userService.createUser(user), HttpStatus.CREATED);
     }
 
-
-    public ResponseEntity<Void> getLoginTest(@RequestParam("username") String username) {
-
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-    }
-
     public ResponseEntity<Void> createUserToken
             (@ApiParam(value = "Logs a user in and return an auth token, if the specified username and password are correct.", required = true)
              @Valid @RequestBody Login body) {

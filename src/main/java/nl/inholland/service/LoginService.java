@@ -81,5 +81,5 @@ public class LoginService implements UserDetailsService {
         userCredentials.setPassword(passwordEncoder.encode(userCredentials.getPassword()));
         return loginRepository.save(userCredentials);
     }
-
+    
 }
