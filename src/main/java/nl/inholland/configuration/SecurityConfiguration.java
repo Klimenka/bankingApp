@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
 
 /**
  * This class is to handle the authentication using the user Details
@@ -38,7 +39,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.headers().frameOptions().sameOrigin();
+        http.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(
+                XFrameOptionsHeaderWriter.XFrameOptionsMode.ALLOW_FROM
+        ));
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/accounts").hasAnyRole("Employee", "Owner")
                 .antMatchers(HttpMethod.POST, "/users").hasAnyRole("Employee", "Owner")
