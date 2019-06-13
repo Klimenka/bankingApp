@@ -167,7 +167,7 @@ public class TransactionService
             addAmountToBalance(body.getAccountTo(), body.getAmount());
             return true;
         }
-        else if(checkIfAccountBelongsToUser(body, body.getAccountFrom())) {
+        else if(checkIfAccountBelongsToUser(body, body.getAccountFrom()) && (getAccountType(body.getAccountTo()) == Account.AccountTypeEnum.CURRENT)) {
             subtractAmountFromBalance(body.getAccountFrom(), body.getAmount());
             addAmountToBalance(body.getAccountTo(), body.getAmount());
             return true;
