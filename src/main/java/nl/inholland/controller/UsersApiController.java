@@ -19,19 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
-@Controller
+@RestController
 public class UsersApiController implements UsersApi {
 
     private static final Logger log = LoggerFactory.getLogger(UsersApiController.class);
 
-    private final ObjectMapper objectMapper;
+
     private UserService userService;
     private LoginService loginService;
     private final HttpServletRequest request;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public UsersApiController(ObjectMapper objectMapper, HttpServletRequest request, UserService userService, LoginService loginService) {
-        this.objectMapper = objectMapper;
+    public UsersApiController(HttpServletRequest request, UserService userService, LoginService loginService) {
         this.request = request;
         this.userService = userService;
         this.loginService = loginService;
