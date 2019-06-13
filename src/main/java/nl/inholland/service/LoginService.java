@@ -51,6 +51,14 @@ public class LoginService implements UserDetailsService {
         return user;
     }
 
+    /**
+     * Creates a new Login object, return it, calls a method which encodes password
+     * and saves the object to in memory DB.
+     * Checks a email before creation, because it serves for unique user name
+     *
+     * @param user
+     * @return Login object
+     */
     public Login createLogin(User user) {
         if (loginRepository.findByUserName(user.getEmailAddress()).isPresent()) {
             throw new IllegalArgumentException("Email already in use!");
@@ -62,9 +70,16 @@ public class LoginService implements UserDetailsService {
         return userCredentials;
     }
 
+    /**
+     * Encodes password
+     * and saves the object to in memory DB.
+     *
+     * @param userCredentials
+     * @return
+     */
     public Login encodePassword(Login userCredentials) {
         userCredentials.setPassword(passwordEncoder.encode(userCredentials.getPassword()));
         return loginRepository.save(userCredentials);
     }
-
+    
 }
