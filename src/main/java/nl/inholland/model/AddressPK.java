@@ -3,6 +3,9 @@ package nl.inholland.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * AddressPK is a way to map a Composite Primary Key with JPA and Hibernate
+ */
 public class AddressPK implements Serializable {
 
     protected String postCode;

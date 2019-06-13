@@ -17,6 +17,10 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * populate the repositories with some data from external files
+ * for testing purposes.
+ */
 @Component
 public class BankingAppRunner implements ApplicationRunner {
 

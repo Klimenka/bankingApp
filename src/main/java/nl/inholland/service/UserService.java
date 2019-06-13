@@ -25,6 +25,12 @@ public class UserService {
 
     }
 
+    /**
+     * Gets all users from repository by their type (Possible values: Customer, Employee, none)
+     *
+     * @param userType
+     * @return Iterable User list
+     */
     public Iterable<User> getUsers(String userType) {
         if (userType.equals("none")) {
             return userRepository.findAll();
@@ -35,6 +41,13 @@ public class UserService {
 
     }
 
+    /**
+     * Creates a user object, saves it to in-memory DB, generates a new Login.
+     * If the user object has a role Customer, it creates a new current account for it.
+     *
+     * @param user
+     * @return Login object
+     */
     public Login createUser(User user) {
         addressRepository.save(user.getPrimaryAddress());
         User userCreated = userRepository.save(user);
@@ -48,6 +61,12 @@ public class UserService {
         return loginService.createLogin(userCreated);
     }
 
+    /**
+     * Converts user; roles hash set value to String
+     *
+     * @param user
+     * @return user role as a String
+     */
     private String getUserRole(User user) {
         Set<Role> role = user.getRoles();
         String userRole = role.stream().map(Role::getRole).findAny().get();
@@ -55,11 +74,22 @@ public class UserService {
         return userRole;
     }
 
+    /**
+     * Gets a user by userId
+     *
+     * @param userId
+     * @return User object (Customer or Employee)
+     */
     public User getUser(Long userId) {
 
         return userRepository.getUserByIdEquals(userId);
     }
 
+    /**
+     * Deletes a user by userId
+     *
+     * @param userId
+     */
     public void deleteUser(Long userId) {
         User user = userRepository
                 .findById(userId)

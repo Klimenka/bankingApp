@@ -10,6 +10,7 @@ import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.springframework.validation.annotation.Validated;
 
+import javax.annotation.Generated;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.text.DecimalFormat;
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 @JsonDeserialize(as = CurrentAccount.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Validated
-@javax.annotation.Generated(value = "io.inholland.codegen.v3.generators.java.SpringCodegen", date = "2019-05-23T16:34:19.518Z[GMT]")
+@Generated(value = "io.inholland.codegen.v3.generators.java.SpringCodegen", date = "2019-05-23T16:34:19.518Z[GMT]")
 public abstract class Account {
 
     @Id
@@ -37,6 +38,11 @@ public abstract class Account {
     @JsonProperty("dateOfOpening")
     private LocalDate dateOfOpening = LocalDate.now();
 
+    /**
+     * I have added this property to only hold user Id when Employee wants
+     * to create new Bank account. it is better than passing a User object
+     * and it is not being saved in database.
+     */
     @Transient
     @JsonProperty("userIdentification")
     private long userIdentification;
@@ -127,6 +133,10 @@ public abstract class Account {
         }
     }
 
+    /**
+     * I am using the auto generated account number and from it
+     * I generate an IBAN using iban library.
+     */
     public void buildIBAN(long accountNumber) {
 
         DecimalFormat df = new DecimalFormat("0000000000");
@@ -141,6 +151,10 @@ public abstract class Account {
                 .build().toString());
     }
 
+    /**
+     * getters and
+     * setters
+     */
     @ApiModelProperty(value = "")
     public long getAccountNumber() {
         return accountNumber;

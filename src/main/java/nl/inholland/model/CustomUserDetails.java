@@ -7,6 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+/**
+ * this class will save the user object to be used later by user details
+ * service and also populate all user roles to be used by authentication
+ * manager.
+ */
 public class CustomUserDetails extends Login implements UserDetails {
 
     public CustomUserDetails(final Login login) {

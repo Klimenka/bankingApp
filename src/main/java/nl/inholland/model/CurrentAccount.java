@@ -3,12 +3,13 @@ package nl.inholland.model;
 
 import org.springframework.validation.annotation.Validated;
 
+import javax.annotation.Generated;
 import javax.persistence.Entity;
 import java.time.LocalDate;
 
 @Entity
 @Validated
-@javax.annotation.Generated(value = "io.inholland.codegen.v3.generators.java.SpringCodegen", date = "2019-05-23T16:34:19.518Z[GMT]")
+@Generated(value = "io.inholland.codegen.v3.generators.java.SpringCodegen", date = "2019-05-23T16:34:19.518Z[GMT]")
 public class CurrentAccount extends Account {
 
     public CurrentAccount(float balance, LocalDate dateOfOpening, String currency, User user) {

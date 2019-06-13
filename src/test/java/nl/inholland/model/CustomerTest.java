@@ -1,10 +1,9 @@
 package nl.inholland.model;
 
-import java.time.LocalDate;
-import java.util.HashSet;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import java.time.LocalDate;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

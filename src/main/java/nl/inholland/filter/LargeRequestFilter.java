@@ -7,6 +7,11 @@ import javax.servlet.*;
 import java.io.IOException;
 import java.util.logging.Logger;
 
+/**
+ * This class is to handle the requests and responses
+ * checking them if they are not above 5 mg, if so they will be
+ * rejected.
+ */
 @Component
 @Order(1)
 public class LargeRequestFilter implements Filter {

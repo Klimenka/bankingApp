@@ -1,6 +1,5 @@
 package nl.inholland.service;
 
-import net.bytebuddy.implementation.bytecode.Throw;
 import nl.inholland.model.*;
 import nl.inholland.repository.AccountRepository;
 import nl.inholland.repository.UserRepository;
@@ -24,6 +23,10 @@ public class AccountService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * get all bank active accounts that belong to a specific user. if accountType
+     * is specified then only that type will be returned.
+     */
     public List<Account> getBankAccount(long userId, String accountType) {
 
         if (accountType != null) {
@@ -35,6 +38,11 @@ public class AccountService {
         }
     }
 
+    /**
+     * Get all bank accounts except the bank own account that cannot be seen
+     * except by the Owner. Accounts can be filtered based on type
+     * and date of opening and for each case there is a separate method.
+     */
     public List<Account> getBankAccounts(LocalDate dateOfOpening, String accountType) {
 
         if (dateOfOpening != null && accountType == null) {
@@ -55,6 +63,9 @@ public class AccountService {
         }
     }
 
+    /**
+     * retrieve the user role from the session.
+     */
     private String getLoggedInUserRole() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         CustomUserDetails login = (CustomUserDetails) principal;
@@ -97,6 +108,10 @@ public class AccountService {
 
     }
 
+    /**
+     * only for customers accounts can be made, that is why there is
+     * a method to check the user role.
+     */
     public Account createBankAccount(Account account) {
 
         User user = userRepository

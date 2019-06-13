@@ -40,17 +40,18 @@ public class Transaction   {
     @JsonProperty("date")
     private LocalDate date;
 
-    private int dayLimit = 20;
+    private int DAYLIMIT = 20;
 
-    private float transactionLimit = 10000;
+    private float TRANSACTIONLIMIT = 10000;
 
-    private float absoluteLimit = 10;
+    private float ABSOLUTELIMIT = 10;
 
     public Transaction() {
 
     }
 
-    public Transaction(String accountFrom, String accountTo, Float amount, User userPerforming, LocalDate date, TransactionTypeEnum transactionType) {
+    public Transaction(String accountFrom, String accountTo, Float amount, User userPerforming, LocalDate date, TransactionTypeEnum transactionType)
+    {
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
         this.amount = amount;
@@ -304,34 +305,19 @@ public class Transaction   {
     @Valid
     public int getDayLimit()
     {
-        return dayLimit;
-    }
-
-    public void setDayLimit(int dayLimit)
-    {
-        this.dayLimit = dayLimit;
+        return DAYLIMIT;
     }
 
     @Valid
     public float getTransactionLimit()
     {
-        return transactionLimit;
-    }
-
-    public void setTransactionLimit(float transactionLimit)
-    {
-        this.transactionLimit = transactionLimit;
+        return TRANSACTIONLIMIT;
     }
 
     @Valid
     public float getAbsoluteLimit()
     {
-        return absoluteLimit;
-    }
-
-    public void setAbsoluteLimit(float absoluteLimit)
-    {
-        this.absoluteLimit = absoluteLimit;
+        return ABSOLUTELIMIT;
     }
 
     /**
@@ -349,7 +335,6 @@ public class Transaction   {
     public void setTransactionType(TransactionTypeEnum transactionType) {
         this.transactionType = transactionType;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {
