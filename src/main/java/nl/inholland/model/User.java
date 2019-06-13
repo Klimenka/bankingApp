@@ -131,6 +131,7 @@ public abstract class User {
         }
     }
 
+    
     public enum CommercialMessagesEnum {
         POST("by post"),
 
