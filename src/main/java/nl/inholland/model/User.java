@@ -131,7 +131,7 @@ public abstract class User {
         }
     }
 
-    
+
     public enum CommercialMessagesEnum {
         POST("by post"),
 
@@ -198,7 +198,7 @@ public abstract class User {
      *
      * @return id
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(value = "")
 
     public Long getId() {
         return id;
