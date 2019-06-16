@@ -1,0 +1,68 @@
+<!DOCTYPE htlm>
+<html>
+    <head>
+        <title>Banking API</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="shortcut icon" href="css/hydra.ico" type="image/x-icon"/>
+        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">           
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+        <link rel="stylesheet" href="css/header2.css">
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>           
+        <script defer src="https://use.fontawesome.com/releases/v5.0.1/js/all.js"></script>  
+    </head>
+
+    <style>
+        th, td, p, input {
+            font:14px Verdana;
+        }
+        table, th, td 
+        {
+            border: solid 1px #DDD;
+            border-collapse: collapse;
+            padding: 2px 3px;
+            text-align: center;
+        }
+        th {
+            font-weight:bold;
+        }
+    </style>
+
+    <script src='//unpkg.com/swagger-client' type='text/javascript'></script>
+    <script type='text/javascript' src='js/tf.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <body>
+
+        <header class="header" id="header1">
+            <div class="center">
+                <div class="caption animated bounceInDown">
+                    <h2 class="title display-3"> Perform Withd</h2>
+                    <p class="text">Where you can perform a transaction</p>
+                    <button class="action btn btn-Light" onclick="location.href = 'index.html'"> Home </button>
+                    <button class="action btn btn-Light" onclick="location.href = 'transaction.html'">Go to Transaction page</button>
+                    <button class="action btn btn-Light">Perform withdraw</button>
+                    <button class="action btn btn-Light">Perform deposit</button>
+                </div>	
+            </div>
+        </header>
+
+        <form style="width: 500px; margin-left: 700px; margin-top: 80px;" id=createForm>
+             <input id=accountFrom placeholder="Fill in your account number" type="text" style="width: 600px; font-size: 30px;">
+            <br>
+            <input id=accountTo placeholder="Fill in the second account number" type="text" style="width: 600px; font-size: 30px;">
+            <br>
+            <input id=amount placeholder="Fill in the amount you want to give" type="number" min=1 style="width: 600px; font-size: 30px;">
+            <br>
+            <br>
+            <button type=submit style="width: 600px; font-size: 30px;"> Proceed </button>
+        </form>
+        
+        <p id=message></p>
+
+        <div class="footer-more d-lg-flex justify-content-around"></div>
+
+    </body>
+</html>

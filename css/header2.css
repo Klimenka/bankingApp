@@ -1,0 +1,138 @@
+
+.header {
+    position: relative;
+    width: 100vw;	
+    height: 300px;	
+}
+.header .center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90%;
+    transform:translate(-50%,-50%);
+    z-index: 5; 
+    padding: 1rem;
+}
+.header .left {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90%;
+    transform:translate(-50%,-50%);
+    z-index: 5; 
+    padding: 1rem;
+}
+.header .right {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90%;
+    transform:translate(-50%,-50%);
+    z-index: 5; 
+    padding: 1rem;
+}
+
+@media (min-width: 992px) {
+    .header .center {
+        width: 50%;
+    }
+    .header .left {
+        position: absolute;
+        top: 20%;
+        left: 10%;
+        width: 40%;
+        height: 60%;
+        transform:translate(0, 0);
+        padding: 1rem;
+    }
+    .header .right {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        width: 40%;
+        height: 60%;
+        transform:translate(0, 0);
+        padding: 1rem;
+    }
+    .delay {
+        animation-delay: 0.6s;
+    }
+}
+
+#header1 {
+    background: #355c7d;
+    background:
+        /* gradient overlay */
+        linear-gradient(
+        to bottom,
+        rgba(203, 53, 107, 0.6), /* #cb356b */
+        rgba(189, 63, 50, 0.5) /* #bd3f32 */
+        );
+    background-size: cover;  
+    z-index: 0; 
+}
+#header1 .caption {
+    text-align: center;
+    color: #fff;
+}
+#header1 .caption .title {
+    margin-bottom: 1.5rem;
+} 
+#header1 .caption .text {
+    margin-bottom: 1.5rem;
+}
+#header1 .caption .action {
+    margin-bottom: 1rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    border-radius: 15px;
+}
+
+
+.haed-title {
+    text-align: center;
+    color: #808080;
+    padding-top: 20vh;
+    padding-bottom: 20vh;
+}
+.footer-more {
+    text-align: center;
+    color: #808080;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+}
+.footer-more i {
+    color: #696969;
+}
+.update-note {
+    position: absolute;
+    top: 2%;
+    left: 2%;
+    background-color: rgb(33, 33, 33);
+    color: #fff;
+    border-radius: 10px;
+    padding: 0 15px;  
+}
+a {
+    text-decoration: underline;
+    color: #696969;
+    font-weight: 600;
+}
+a:hover {
+    color: #696969;
+}
+body {
+    overflow-x: hidden;
+}
+.btn-primary {
+    background-color: #d03e62; 
+    border-color: #d03e62; 
+}
+.btn-primary:hover {
+    background-color: #a71f41; 
+    border-color: #a71f41; 
+}
+.btn-Light:hover, .btn-Light:focus{
+    background-color: #d03e62;
+    color: white;
+}

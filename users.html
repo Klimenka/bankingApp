@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="application/json; charset=utf-8"/>
+        <link rel="shortcut icon" href="css/hydra.ico" type="image/x-icon"/>
+        <title>Title</title>
+
+
+        <script src='//unpkg.com/swagger-client' type='text/javascript'></script>
+        <script src='js/userjs.js' type='text/javascript'></script>
+
+        <link rel="stylesheet" href="css/styleUser.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+        <script type="text/javascript">
+
+            function clearBox(elementID)
+            {
+                document.getElementById('changePassForm').style.display = 'none'
+                document.getElementById('newUserForm').style.display = 'none'
+                document.getElementById(elementID).innerHTML = "";
+            }
+
+            function ShowForm() {
+                document.getElementById('changePassForm').style.display = 'none'
+                document.getElementById('putOutput').innerHTML = "";
+                document.getElementById('newUserForm').style.display = 'block'
+            }
+            function ShowChangePass() {
+                document.getElementById('putOutput').innerHTML = "";
+                document.getElementById('newUserForm').style.display = 'none'
+                document.getElementById('changePassForm').style.display = 'block'
+
+            }
+
+            async function CreateTable(getAll) {
+                document.getElementById('changePassForm').style.display = 'none'
+                document.getElementById('newUserForm').style.display = 'none'
+                var noOfUsers = getAll.length;
+
+                if (noOfUsers > 0) {
+
+                    var table = document.createElement("table");
+                    table.style.width = '60%';
+                    table.setAttribute('border', '1');
+                    table.setAttribute('cellspacing', '0');
+                    table.setAttribute('cellpadding', '5');
+                    table.setAttribute("id", "users");
+
+                    var col = [];
+                    for (var i = 0; i < noOfUsers; i++) {
+                        for (var key in getAll[i]) {
+                            if (col.indexOf(key) === -1) {
+                                col.push(key);
+                            }
+                        }
+                    }
+
+                    var tHead = document.createElement("thead");
+                    var hRow = document.createElement("tr");
+
+                    for (var i = 0; i < col.length; i++) {
+                        var th = document.createElement("th");
+                        th.innerHTML = col[i];
+                        hRow.appendChild(th);
+                    }
+                    tHead.appendChild(hRow);
+                    table.appendChild(tHead);
+
+                    var tBody = document.createElement("tbody");
+
+                    for (var i = 0; i < noOfUsers; i++) {
+                        var bRow = document.createElement("tr");
+
+                        for (var j = 0; j < col.length; j++) {
+                            var td = document.createElement("td");
+                            if (typeof getAll[i][col[j]] === "object") {
+                                td.innerHTML = JSON.stringify(getAll[i][col[j]])
+                            } else {
+                                td.innerHTML = getAll[i][col[j]];
+                            }
+                            bRow.appendChild(td);
+                        }
+                        tBody.appendChild(bRow)
+
+                    }
+                    table.appendChild(tBody);
+
+                    var divContainer = document.getElementById("putOutput");
+                    divContainer.innerHTML = "";
+                    divContainer.appendChild(table);
+
+                }
+            }
+            async function CreateOneRowTable(getAll) {
+                clearBox("putOutput")
+                for (oneField in getAll) {
+                    if (typeof getAll[oneField] === "object") {
+                        for (oneItem in getAll[oneField]) {
+
+                            document.getElementById("putOutput").innerHTML += oneItem + ":                 " + getAll[oneField][oneItem] + "<br>";
+                        }
+                    } else {
+                        document.getElementById("putOutput").innerHTML += oneField + ":                 " + getAll[oneField] + "<br>";
+                    }
+                }
+
+
+            }
+            async function GetUsersAndDoTable() {
+                var getAll = await GetUsers();
+                CreateTable(getAll);
+
+            }
+            async function GetCustomersAndDoTable() {
+                var getCustomers = await GetCustomers();
+                CreateTable(getCustomers);
+
+            }
+            async function GetEmployeesAndDoTable() {
+                var getEmployees = await GetEmployees();
+                CreateTable(getEmployees);
+
+            }
+            async function GetUserById(userId) {
+                var getUserById = await GetOneUser(userId);
+
+                CreateOneRowTable(getUserById);
+            }
+            async function DeleteUserById(userId) {
+                var deleteUserById = await DeleteUser(userId);
+                clearBox("putOutput")
+                document.getElementById("putOutput").innerHTML + "The user with ID = " + userId + " was deleted" + "<br>"
+            }
+
+            async function ShowNewLogin(form) {
+                clearBox("putOutput")
+                var loginData = await addUser(form);
+                console.log(loginData);
+                document.getElementById("putOutput").innerHTML + "The user with ID = " + loginData + " was deleted" + "<br>"
+            }
+
+            async function addUser(form) {
+
+                var objectString = '{"officialName":"' + form.officialName.value +
+                        '","preferredName":"' + form.preferredName.value +
+                        '","sex":"' + form.sex.value +
+                        '","dateOfBirth":"' + form.dateOfBirth.value +
+                        '","primaryAddress":{"Street":"' + form.Street.value +
+                        '","houseNumber":' + form.houseNumber.value +
+                        ',"postCode":"' + form.postCode.value +
+                        '","city":"' + form.city.value +
+                        '","country":"' + form.country.value +
+                        '"},"postAddress":{"Street":"' + form.Street.value +
+                        '","houseNumber":' + form.houseNumber.value +
+                        ',"postCode":"' + form.postCode.value +
+                        '","city":"' + form.city.value +
+                        '","country":"' + form.country.value +
+                        '"},"mobileNumber":"' + form.mobileNumber.value +
+                        '","emailAddress":"' + form.emailAddress.value +
+                        '","commrcialMessages":"' + form.commrcialMessages.value +
+                        '","preferedLanguage":"' + form.preferedLanguage.value +
+                        '","roles":[{"role":"' + form.role.value +
+                        '"}]}';
+                console.log(objectString);
+                $.ajax({
+                    type: "POST",
+                    data: objectString,
+                    url: "https://banking-application-api.herokuapp.com/users",
+                    contentType: "application/json",
+                    success: function (data) {
+                        if (data.success == true) {
+                            alert("success");
+                            return data;
+                        }
+                        console.log(data)
+                    }});
+            }
+
+
+        </script>
+    </head>
+    <body>
+
+        <header>
+            <nav class="navigation">
+                <div class="main-wrapper">
+                    <ul>
+                        <li> 
+                            <button type="button"  onclick="GetUsersAndDoTable()">Get all users </button>
+                        </li>
+                        <li> 
+                            <button type="button"  onclick="GetCustomersAndDoTable()">Get customers </button>
+                        </li>
+                        <li> 
+                            <button type="button"  onclick="GetEmployeesAndDoTable()">Get employees </button>
+                        </li>
+
+                        <li> 
+                            <button type="button"  onclick="GetUserById(document.getElementById('ID').value)">Get user by ID </button>
+                            <span aria-hidden="true"></span>
+
+                            </button>
+                            <input type="number" min="2" id="ID" name="ID" style="width: 50px"  oninput="validity.valid||(value='');">
+
+                        </li>
+                        <li> 
+                            <button type="button"  onclick="DeleteUserById(document.getElementById('IDForDelete').value)">Delete user by ID </button>
+                            <span aria-hidden="true"></span>
+
+                            </button>
+                            <input type="number" min="2" id="IDForDelete" name="IDForDelete" style="width: 50px" oninput="validity.valid||(value='');">
+
+                        </li>
+                        <li> 
+                            <button type="button"  id="addUserBtn" name="addUserBtn" onclick="ShowForm()">Add user </button>
+                        </li>
+                        </li>
+                        <li> 
+                            <button type="button"  id="changePass" name="changePass" onclick="ShowChangePass()"> Change password </button>
+                        </li>
+                    </ul>
+
+                </div>
+            </nav>
+
+        </header>
+
+        <div id="putOutput">
+
+            <p></p>
+        </div>
+        <div id = "newUserForm" style = "display:none">
+            <form id="myForm" title="" method ="POST" >
+                <div>
+                    <label class="title">Official Name</label>
+                    <input type="text" id="officialName" name="officialName" >
+                </div>
+                <div>
+                    <label class="title">Preferred Name</label>
+                    <input type="text" id="preferredName" name="preferredName" >
+                </div>
+                <div>
+                    <label class="title">Sex</label>
+                    <input type="text" id="sex" name="sex" >
+                </div>
+                <div>
+                    <label class="title">Date Of Birth</label>
+                    <input type="text" id="dateOfBirth" name="dateOfBirth" >
+                </div>
+                <div>
+                    <label class="title">Street</label>
+                    <input type="text" id="Street" name="Street" >
+                </div>
+                <div>
+                    <label class="title">House Number</label>
+                    <input type="number" id="houseNumber" name="houseNumber" >
+                </div>
+                <div>
+                    <label class="title">Post Code</label>
+                    <input type="text" id="postCode" name="postCode" >
+                </div>
+                <div>
+                    <label class="title">City</label>
+                    <input type="text" id="city" name="city" >
+                </div>
+                <div>
+                    <label class="title">Country</label>
+                    <input type="text" id="country" name="country" >
+                </div>
+                <div>
+                    <label class="title">Mobile Number</label>
+                    <input type="text" id="mobileNumber" name="mobileNumber" >
+                </div>
+                <div>
+                    <label class="title">Email Address</label>
+                    <input type="text" id="emailAddress" name="emailAddress" >
+                </div>
+                <div>
+                    <label class="title">Commrcial Messages</label>
+                    <input type="text" id="commrcialMessages" name="commrcialMessages" >
+                </div>
+                <div>
+                    <label class="title">Prefered Language</label>
+                    <input type="text" id="preferedLanguage" name="preferedLanguage" >
+                </div>
+                <div>
+                    <label class="title">Role</label>
+                    <input type="text" id="role" name="role" >
+                </div>
+
+                <div>
+                    <input input type="button" NAME="button" Value="ADD NEW USER" onClick="addUser(this.form)">
+                </div>
+            </form>
+        </div >
+        <script src='js/changePass.js' type='text/javascript'></script>
+        <div id = "changePassForm" style = "display:none">
+
+            <form name="resetform" id="resetform" class="passform" method="post">
+                <h3>Change Your Password</h3>
+                <br />
+
+                <p id="user"></p>
+
+
+                <label>Enter User Id</label>
+                <input type="text" class="form-control" name="userId" id="userId">
+                <label>Enter Your Username</label>
+                <input type="email" class="form-control" name="username" id="username">
+                <label>Enter New Password</label>
+                <input type="password" class="form-control" name="new_password" id="newPassword">
+                <br>
+                <input type="submit" class="btn btn-warning" name="password_change" id="submit_btn" value="Change Password" />
+            </form>
+            <!--display success/error message-->
+            <div id="message"></div>
+        </div>
+    </body>
+</html>
