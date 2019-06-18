@@ -1,26 +1,28 @@
 package nl.inholland.controller;
 
-import io.swagger.annotations.ApiParam;
 import nl.inholland.model.Login;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.*;
 import nl.inholland.model.User;
 import nl.inholland.service.LoginService;
 import nl.inholland.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.*;
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-06-02T11:27:08.122Z[GMT]")
-@RestController
+@Controller
 public class UsersApiController implements UsersApi {
 
-     private static final Logger log = LoggerFactory.getLogger(UsersApiController.class);
+    private static final Logger log = LoggerFactory.getLogger(UsersApiController.class);
 
     private final ObjectMapper objectMapper;
     private UserService userService;
@@ -38,6 +40,12 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<Login> addUser(@ApiParam(value = "", required = true) @Valid @RequestBody User user) {
         String accept = request.getHeader("Accept");
         return new ResponseEntity<Login>(userService.createUser(user), HttpStatus.CREATED);
+    }
+
+    //I guess this one is not used
+    public ResponseEntity<Void> getLoginTest(@RequestParam("username") String username) {
+        //loginService.getLogin(username);
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
     public ResponseEntity<Void> createUserToken
@@ -75,6 +83,7 @@ public class UsersApiController implements UsersApi {
              @ApiParam(value = "The id of the user to return", required = true, allowableValues = "")
              @PathVariable("userId") Long userId) {
         String accept = request.getHeader("Accept");
+
         return new ResponseEntity<Login>(loginService.updatePassword(body.getUserName(), body.getPassword()), HttpStatus.OK);
     }
 
