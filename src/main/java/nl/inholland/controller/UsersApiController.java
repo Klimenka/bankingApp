@@ -20,31 +20,35 @@ import java.util.List;
 @RestController
 public class UsersApiController implements UsersApi {
 
+     private static final Logger log = LoggerFactory.getLogger(UsersApiController.class);
+
+    private final ObjectMapper objectMapper;
     private UserService userService;
     private LoginService loginService;
-
+    private final HttpServletRequest request;
 
     @org.springframework.beans.factory.annotation.Autowired
-    public UsersApiController(UserService userService, LoginService loginService) {
-
+    public UsersApiController(ObjectMapper objectMapper, HttpServletRequest request, UserService userService, LoginService loginService) {
+        this.objectMapper = objectMapper;
+        this.request = request;
         this.userService = userService;
         this.loginService = loginService;
     }
 
     public ResponseEntity<Login> addUser(@ApiParam(value = "", required = true) @Valid @RequestBody User user) {
-
+        String accept = request.getHeader("Accept");
         return new ResponseEntity<Login>(userService.createUser(user), HttpStatus.CREATED);
     }
 
     public ResponseEntity<Void> createUserToken
             (@ApiParam(value = "Logs a user in and return an auth token, if the specified username and password are correct.", required = true)
              @Valid @RequestBody Login body) {
-
+        String accept = request.getHeader("Accept");
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     public ResponseEntity<Void> deleteUserById(@Min(1L) @ApiParam(value = "The id of the user to return", required = true, allowableValues = "") @PathVariable("userId") Long userId) {
-
+        String accept = request.getHeader("Accept");
         userService.deleteUser(userId);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
     }
@@ -52,14 +56,14 @@ public class UsersApiController implements UsersApi {
     public ResponseEntity<User> getUserById(@Min(1L)
                                             @ApiParam(value = "The id of the user to return", required = true, allowableValues = "")
                                             @PathVariable("userId") Long userId) {
-
+        String accept = request.getHeader("Accept");
         return new ResponseEntity<User>(userService.getUser(userId), HttpStatus.OK);
     }
 
     public ResponseEntity<List<User>> getUsers(
             @ApiParam(value = "", allowableValues = "Customer, Employee")
             @Valid @RequestParam(value = "userType", required = false, defaultValue = "none") String userType) {
-
+        String accept = request.getHeader("Accept");
         return new ResponseEntity<List<User>>
                 ((List<User>) userService.getUsers(userType), HttpStatus.OK);
     }
@@ -70,7 +74,7 @@ public class UsersApiController implements UsersApi {
              @Min(1L)
              @ApiParam(value = "The id of the user to return", required = true, allowableValues = "")
              @PathVariable("userId") Long userId) {
-
+        String accept = request.getHeader("Accept");
         return new ResponseEntity<Login>(loginService.updatePassword(body.getUserName(), body.getPassword()), HttpStatus.OK);
     }
 
