@@ -37,10 +37,10 @@ public interface UsersApi {
 
     @ApiOperation(value = "Returns an auth token", nickname = "createUserToken", notes = "", tags = {"users",})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Token send"),
+            @ApiResponse(code = 200, message = "ok"),
             @ApiResponse(code = 400, message = "Bad request."),
             @ApiResponse(code = 404, message = "The specified resource was not found")})
-    @RequestMapping(value = "/users/login",
+    @RequestMapping(value = "/login",
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
